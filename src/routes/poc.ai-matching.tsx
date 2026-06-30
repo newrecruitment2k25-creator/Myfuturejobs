@@ -1,21 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Brain, Briefcase, Users, Search, Sparkles, Loader2, ArrowRight,
-  CheckCircle2, AlertCircle, XCircle, Target, MapPin, GraduationCap, DollarSign,
+  CheckCircle2, XCircle, Target, MapPin, GraduationCap, DollarSign,
+  AlertCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/poc/ai-matching")({
   ssr: false,
   component: PocAiMatchingPage,
   head: () => ({
     meta: [
-      { title: "PERKESO AI Matching Demo — MYFutureJobs" },
-      { name: "description", content: "Semantic candidate matching, skill gap analysis, and explainable AI recommendation demo." },
+      { title: "AI Matching Demo  Praxo AI" },
+      { name: "description", content: "Semantic candidate matching, skill gap analysis, and explainable AI recommendation demo for PERKESO." },
     ],
   }),
 });
@@ -54,11 +53,7 @@ type Explanation = {
   summary: string;
   strengths: string[];
   gaps: string[];
-  skillGap: {
-    matchedSkills: string[];
-    missingSkills: string[];
-    recommendedTraining: string[];
-  };
+  skillGap: { matchedSkills: string[]; missingSkills: string[]; recommendedTraining: string[] };
   salaryFit: string;
   locationFit: string;
   experienceFit: string;
@@ -77,21 +72,43 @@ type MatchReport = {
   error?: string;
 };
 
-function StatusChip({ icon: Icon, label, value, active }: { icon: any; label: string; value: string; active?: boolean }) {
+/*  Tiny design-system helpers  */
+const card: React.CSSProperties = {
+  background: "#fff",
+  border: "1px solid var(--line)",
+  borderRadius: 12,
+  padding: "1.25rem",
+};
+
+const sectionLabel: React.CSSProperties = {
+  fontSize: "0.6875rem",
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase" as const,
+  color: "var(--accent-blue)",
+  marginBottom: "0.625rem",
+};
+
+function ScorePill({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium ${active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"}`}>
-      <Icon className="size-3.5" />
-      <span>{label}: {value}</span>
+    <div style={{ ...card, padding: "1rem", textAlign: "center" as const, borderTop: `3px solid ${color}` }}>
+      <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.75rem", fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 4 }}>{label}</div>
     </div>
   );
 }
 
-function SectionCard({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
+function SkillTag({ label, variant }: { label: string; variant: "match" | "miss" | "transfer" | "train" }) {
+  const styles = {
+    match:    { background: "rgba(13,124,102,0.08)", color: "#0d7c66", border: "1px solid rgba(13,124,102,0.2)" },
+    miss:     { background: "rgba(185,28,28,0.07)",  color: "#b91c1c", border: "1px solid rgba(185,28,28,0.18)" },
+    transfer: { background: "rgba(32,82,149,0.08)",  color: "#205295", border: "1px solid rgba(32,82,149,0.2)" },
+    train:    { background: "rgba(180,120,14,0.08)", color: "#b47c0e", border: "1px solid rgba(180,120,14,0.2)" },
+  }[variant];
   return (
-    <div className={`rounded-xl border border-border bg-card p-5 shadow-sm ${className}`}>
-      <h2 className="text-base font-semibold text-foreground mb-4">{title}</h2>
-      {children}
-    </div>
+    <span style={{ ...styles, borderRadius: 6, fontSize: "0.75rem", fontWeight: 600, padding: "3px 10px", display: "inline-block" }}>
+      {label}
+    </span>
   );
 }
 
@@ -112,7 +129,6 @@ function PocAiMatchingPage() {
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState<string | null>(null);
 
-  // Load first 50 vacancies
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -141,8 +157,7 @@ function PocAiMatchingPage() {
     return vacancies.filter((v) =>
       (v.job_title ?? "").toLowerCase().includes(q) ||
       (v.occupation_name ?? "").toLowerCase().includes(q) ||
-      (v.state ?? "").toLowerCase().includes(q) ||
-      (v.city ?? "").toLowerCase().includes(q)
+      (v.state ?? "").toLowerCase().includes(q)
     );
   }, [vacancies, vacancySearch]);
 
@@ -158,17 +173,10 @@ function PocAiMatchingPage() {
       const res = await fetch("/api/interview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "match_candidates_for_vacancy",
-          vacancy_id: selectedVacancy.id,
-          limit: 10,
-        }),
+        body: JSON.stringify({ action: "match_candidates_for_vacancy", vacancy_id: selectedVacancy.id, limit: 10 }),
       });
       const data = await res.json();
-      if (!data.ok) {
-        setCandidateError(data.error ?? "Matching failed");
-        return;
-      }
+      if (!data.ok) { setCandidateError(data.error ?? "Matching failed"); return; }
       setCandidates(data.candidates ?? []);
       if (data.warning) setCandidateWarning(data.warning);
     } catch (e: any) {
@@ -188,17 +196,10 @@ function PocAiMatchingPage() {
       const res = await fetch("/api/interview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "candidate_match_report",
-          candidate_id: candidate.id,
-          vacancy_id: selectedVacancy.id,
-        }),
+        body: JSON.stringify({ action: "candidate_match_report", candidate_id: candidate.id, vacancy_id: selectedVacancy.id }),
       });
       const data = await res.json();
-      if (!data.ok) {
-        setReportError(data.error ?? "Report failed");
-        return;
-      }
+      if (!data.ok) { setReportError(data.error ?? "Report failed"); return; }
       setReport(data as MatchReport);
     } catch (e: any) {
       setReportError(e?.message ?? "Network error");
@@ -208,323 +209,298 @@ function PocAiMatchingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
-              PERKESO POC
-            </span>
-            <span className="text-xs text-muted-foreground">Proof of Concept</span>
+    <div style={{ minHeight: "100vh", background: "var(--base-alt)" }}>
+      {/*  Page header  */}
+      <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", padding: "1.5rem 2rem" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", background: "rgba(32,82,149,0.08)", borderRadius: 6, padding: "3px 10px" }}>PERKESO POC</span>
+            <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Semantic AI Demonstration</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
-            PERKESO AI Matching Demo
+          <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.25rem,3vw,1.75rem)", fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.025em", margin: 0 }}>
+            AI Candidate Matching
           </h1>
-          <p className="mt-2 text-muted-foreground max-w-2xl">
-            <span className="font-semibold text-foreground">POC Demo View.</span> This page demonstrates the same semantic AI matching, skill gap analysis, and explainable AI recommendation used inside the Jobs and Employer modules.
+          <p style={{ fontSize: "0.9375rem", color: "var(--muted)", marginTop: 6, maxWidth: 640, lineHeight: 1.6 }}>
+            Select a vacancy  run semantic matching  pick a candidate  generate an explainable AI match report.
           </p>
-          <div className="flex flex-wrap gap-2 mt-4">
-            <StatusChip icon={Briefcase} label="Vacancy embeddings" value="5,828" active />
-            <StatusChip icon={Users} label="Candidate embeddings" value="1,449" active />
-            <StatusChip icon={Search} label="Vector search" value="Active" active />
-            <StatusChip icon={Brain} label="AI Engine" value="Enabled" active />
+          {/* Status chips */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
+            {[
+              { Icon: Briefcase, label: "5,828 Vacancies" },
+              { Icon: Users,     label: "1,449 Candidates" },
+              { Icon: Search,    label: "Vector Search Active" },
+              { Icon: Brain,     label: "Semantic AI Enabled" },
+            ].map(({ Icon, label }) => (
+              <div key={label} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(32,82,149,0.07)", border: "1px solid rgba(32,82,149,0.15)", borderRadius: 6, padding: "4px 12px", fontSize: "0.75rem", fontWeight: 600, color: "var(--accent-blue)" }}>
+                <Icon size={13} />
+                {label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/*  3-column layout  */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "1.5rem 2rem", display: "grid", gridTemplateColumns: "280px 240px 1fr", gap: "1.25rem", alignItems: "start" }}>
+
+        {/*  Col 1: Vacancy selector  */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div style={card}>
+            <div style={sectionLabel}>1. Select Vacancy</div>
+            {vacancyLoading ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.875rem" }}>
+                <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Loading
+              </div>
+            ) : vacancyError ? (
+              <div style={{ color: "#b91c1c", fontSize: "0.875rem", display: "flex", gap: 6 }}>
+                <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 2 }} /> {vacancyError}
+              </div>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Search vacancies"
+                  value={vacancySearch}
+                  onChange={e => setVacancySearch(e.target.value)}
+                  style={{ width: "100%", border: "1px solid var(--line)", borderRadius: 8, padding: "7px 10px", fontSize: "0.8125rem", outline: "none", marginBottom: "0.625rem", color: "var(--ink)", background: "#fff", boxSizing: "border-box" }}
+                />
+                <div style={{ maxHeight: 280, overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 }}>
+                  {filteredVacancies.length === 0 && <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>No vacancies found.</p>}
+                  {filteredVacancies.map(v => (
+                    <button key={v.id}
+                      onClick={() => { setSelectedVacancy(v); setCandidates([]); setSelectedCandidate(null); setReport(null); setCandidateError(null); setCandidateWarning(null); }}
+                      style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedVacancy?.id === v.id ? "2px solid var(--accent-blue)" : "1px solid var(--line)", background: selectedVacancy?.id === v.id ? "rgba(32,82,149,0.05)" : "#fff", cursor: "pointer", transition: "all 0.1s" }}
+                    >
+                      <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.3 }}>{v.job_title || v.occupation_name || "Untitled"}</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{v.state}{v.city ? `, ${v.city}` : ""}{v.salary ? `  ${v.salary}` : ""}</div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Find button */}
+          <div style={card}>
+            <div style={sectionLabel}>2. Run Matching</div>
+            <button
+              onClick={findMatchingCandidates}
+              disabled={!selectedVacancy || candidateLoading}
+              style={{ width: "100%", background: selectedVacancy && !candidateLoading ? "var(--accent-blue)" : "var(--line)", color: selectedVacancy && !candidateLoading ? "#fff" : "var(--muted)", border: "none", borderRadius: 8, padding: "10px 0", fontSize: "0.875rem", fontWeight: 700, cursor: selectedVacancy && !candidateLoading ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "background 0.15s" }}
+            >
+              {candidateLoading ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Sparkles size={14} />}
+              Find Candidates
+            </button>
+            {candidateError && (
+              <div style={{ marginTop: 10, color: "#b91c1c", fontSize: "0.8125rem", display: "flex", gap: 6 }}>
+                <XCircle size={14} style={{ flexShrink: 0, marginTop: 2 }} /> {candidateError}
+              </div>
+            )}
+            {candidateWarning && (
+              <div style={{ marginTop: 10, color: "#b47c0e", fontSize: "0.8125rem", display: "flex", gap: 6 }}>
+                <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 2 }} /> Semantic matching not available for this vacancy yet. Try another.
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left column — vacancy + candidates */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Vacancy selector */}
-            <SectionCard title="1. Select Vacancy">
-              {vacancyLoading ? (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="size-4 animate-spin" /> Loading vacancies...
-                </div>
-              ) : vacancyError ? (
-                <div className="flex items-start gap-2 text-sm text-red-600">
-                  <AlertCircle className="size-4 mt-0.5" />
-                  <span>{vacancyError}</span>
-                </div>
-              ) : (
-                <>
-                  <Input
-                    placeholder="Search vacancies..."
-                    value={vacancySearch}
-                    onChange={(e) => setVacancySearch(e.target.value)}
-                    className="mb-3"
-                  />
-                  <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
-                    {filteredVacancies.length === 0 && (
-                      <p className="text-sm text-muted-foreground">No vacancies found.</p>
-                    )}
-                    {filteredVacancies.map((v) => (
-                      <button
-                        key={v.id}
-                        onClick={() => {
-                          setSelectedVacancy(v);
-                          setCandidates([]);
-                          setSelectedCandidate(null);
-                          setReport(null);
-                          setCandidateError(null);
-                          setCandidateWarning(null);
-                        }}
-                        className={`w-full text-left rounded-lg border p-3 transition-all ${
-                          selectedVacancy?.id === v.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border bg-card hover:border-primary/40"
-                        }`}
-                      >
-                        <p className="text-sm font-semibold text-foreground">{v.job_title || v.occupation_name || "Untitled Vacancy"}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {v.state}{v.city ? `, ${v.city}` : ""} {v.salary ? `· ${v.salary}` : ""}
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {selectedVacancy && (
-                <div className="mt-4 rounded-lg border border-border bg-secondary/50 p-3">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Selected</p>
-                  <p className="text-sm font-semibold text-foreground mt-1">{selectedVacancy.job_title || selectedVacancy.occupation_name || "Untitled"}</p>
-                  {selectedVacancy.skills && (
-                    <p className="text-xs text-muted-foreground mt-1">Skills: {selectedVacancy.skills}</p>
-                  )}
-                </div>
-              )}
-            </SectionCard>
-
-            {/* Find candidates */}
-            <SectionCard title="2. Find Matching Candidates">
-              <Button
-                onClick={findMatchingCandidates}
-                disabled={!selectedVacancy || candidateLoading}
-                className="w-full"
-              >
-                {candidateLoading ? <Loader2 className="size-4 animate-spin mr-2" /> : <Sparkles className="size-4 mr-2" />}
-                Find Matching Candidates
-              </Button>
-
-              {candidateError && (
-                <div className="mt-3 flex items-start gap-2 text-sm text-red-600">
-                  <XCircle className="size-4 mt-0.5" />
-                  <span>{candidateError}</span>
-                </div>
-              )}
-              {candidateWarning && (
-                <div className="mt-3 flex items-start gap-2 text-sm text-amber-600">
-                  <AlertCircle className="size-4 mt-0.5" />
-                  <span>Semantic candidate matching is not available for this vacancy yet. Please try another vacancy or run embedding sync.</span>
-                </div>
-              )}
-            </SectionCard>
-
-            {/* Candidate list */}
-            <SectionCard title="3. Matching Candidates">
-              {candidates.length === 0 && !candidateLoading && !candidateError && (
-                <p className="text-sm text-muted-foreground">Select a vacancy and click find to see candidates.</p>
-              )}
-              <div className="space-y-3">
-                {candidates.map((c) => (
-                  <div
-                    key={c.id}
-                    className={`rounded-lg border p-3 transition-all ${
-                      selectedCandidate?.id === c.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border bg-card"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{c.preferred_name || c.previous_occupation || `Candidate ${c.id}`}</p>
-                        <p className="text-xs text-muted-foreground">{c.previous_occupation || "—"}</p>
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {Math.round((c.semanticScore ?? 0) * 100)}%
-                      </Badge>
+        {/*  Col 2: Candidate list  */}
+        <div style={card}>
+          <div style={sectionLabel}>3. Candidates</div>
+          {candidates.length === 0 && !candidateLoading && (
+            <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>Run matching to see candidates.</p>
+          )}
+          {candidateLoading && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.875rem" }}>
+              <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Matching
+            </div>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {candidates.map(c => {
+              const pct = Math.round((c.semanticScore ?? 0) * 100);
+              const isSelected = selectedCandidate?.id === c.id;
+              return (
+                <div key={c.id} style={{ border: isSelected ? "2px solid var(--accent-blue)" : "1px solid var(--line)", borderRadius: 10, padding: "10px 12px", background: isSelected ? "rgba(32,82,149,0.04)" : "#fff" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 6, marginBottom: 6 }}>
+                    <div>
+                      <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{c.preferred_name || c.previous_occupation || `Candidate ${c.id.slice(0, 6)}`}</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{c.previous_occupation || ""}</div>
                     </div>
-                    {c.skills && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.skills}</p>}
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {c.preferred_state} {c.preferred_salary ? `· ${c.preferred_salary}` : ""}
-                    </p>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="w-full mt-2"
-                      onClick={() => generateReport(c)}
-                      disabled={reportLoading}
-                    >
-                      {reportLoading && selectedCandidate?.id === c.id ? <Loader2 className="size-3 animate-spin mr-1" /> : <ArrowRight className="size-3 mr-1" />}
-                      Generate Match Report
-                    </Button>
+                    <span style={{ flexShrink: 0, background: pct >= 70 ? "rgba(13,124,102,0.1)" : "rgba(32,82,149,0.08)", color: pct >= 70 ? "#0d7c66" : "var(--accent-blue)", borderRadius: 6, fontSize: "0.75rem", fontWeight: 800, padding: "2px 8px" }}>{pct}%</span>
+                  </div>
+                  {c.skills && <div style={{ fontSize: "0.6875rem", color: "var(--muted)", marginBottom: 6, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{c.skills}</div>}
+                  {/* Score bar */}
+                  <div style={{ height: 4, background: "var(--line)", borderRadius: 2, marginBottom: 8 }}>
+                    <div style={{ height: 4, width: `${pct}%`, background: pct >= 70 ? "#0d7c66" : "var(--accent-blue)", borderRadius: 2, transition: "width 0.4s ease" }} />
+                  </div>
+                  <button
+                    onClick={() => generateReport(c)}
+                    disabled={reportLoading}
+                    style={{ width: "100%", background: "none", border: "1px solid var(--line)", borderRadius: 6, padding: "6px 0", fontSize: "0.75rem", fontWeight: 600, color: "var(--accent-blue)", cursor: reportLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}
+                  >
+                    {reportLoading && isSelected ? <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} /> : <ArrowRight size={11} />}
+                    Generate Report
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/*  Col 3: AI Match Report  */}
+        <div style={card}>
+          <div style={sectionLabel}>4. AI Match Report</div>
+
+          {!report && !reportLoading && !reportError && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 220, textAlign: "center", color: "var(--muted)" }}>
+              <Target size={36} style={{ marginBottom: 12, opacity: 0.3 }} />
+              <p style={{ fontSize: "0.875rem" }}>Select a candidate and generate a report.</p>
+            </div>
+          )}
+
+          {reportLoading && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 220, textAlign: "center", color: "var(--muted)" }}>
+              <Loader2 size={28} style={{ marginBottom: 12, animation: "spin 1s linear infinite", color: "var(--accent-blue)" }} />
+              <p style={{ fontSize: "0.875rem" }}>Generating AI match report</p>
+            </div>
+          )}
+
+          {reportError && (
+            <div style={{ color: "#b91c1c", fontSize: "0.875rem", display: "flex", gap: 8 }}>
+              <XCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} /> {reportError}
+            </div>
+          )}
+
+          {report && report.ok && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+              {/* Score row */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.75rem" }}>
+                <ScorePill label="Match Score"        value={`${report.matchScore}`}                                                                 color="var(--accent-blue)" />
+                <ScorePill label="Semantic Similarity" value={report.semanticScore != null ? `${Math.round(report.semanticScore * 100)}%` : ""} color="#205295" />
+                <ScorePill label="Skill Match"        value={`${report.skillGap.score}%`}                                                            color="#0d7c66" />
+              </div>
+
+              {/* Summary */}
+              <div style={{ background: "rgba(32,82,149,0.04)", border: "1px solid rgba(32,82,149,0.12)", borderLeft: "3px solid var(--accent-blue)", borderRadius: 8, padding: "0.875rem 1rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-blue)" }}>
+                  <Brain size={13} /> Summary
+                </div>
+                <p style={{ fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.7, margin: 0 }}>{report.explanation.summary}</p>
+              </div>
+
+              {/* Fit row */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.75rem" }}>
+                {[
+                  { Icon: DollarSign,   label: "Salary Fit",     value: report.explanation.salaryFit },
+                  { Icon: MapPin,       label: "Location Fit",   value: report.explanation.locationFit },
+                  { Icon: GraduationCap,label: "Experience Fit", value: report.explanation.experienceFit },
+                ].map(({ Icon, label, value }) => (
+                  <div key={label} style={{ border: "1px solid var(--line)", borderRadius: 8, padding: "0.75rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 4 }}>
+                      <Icon size={12} style={{ color: "var(--accent-blue)" }} /> {label}
+                    </div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--muted)", textTransform: "capitalize" }}>{value || "Unknown"}</div>
                   </div>
                 ))}
               </div>
-            </SectionCard>
-          </div>
 
-          {/* Right column — report */}
-          <div className="lg:col-span-2 space-y-6">
-            <SectionCard title="4. AI Match Report" className="h-full">
-              {!report && !reportLoading && !reportError && (
-                <div className="flex flex-col items-center justify-center h-48 text-center">
-                  <Target className="size-10 text-muted-foreground/50 mb-3" />
-                  <p className="text-sm text-muted-foreground">Select a candidate and generate a report to see the AI explanation.</p>
+              {/* Recommendation */}
+              <div style={{ background: "rgba(32,82,149,0.05)", border: "1px solid rgba(32,82,149,0.18)", borderRadius: 8, padding: "0.875rem 1rem" }}>
+                <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", marginBottom: 6 }}>Recommendation</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ background: "var(--accent-blue)", color: "#fff", borderRadius: 6, fontSize: "0.8125rem", fontWeight: 700, padding: "4px 12px", textTransform: "capitalize" }}>
+                    {report.explanation.recommendation.replace(/_/g, " ")}
+                  </span>
+                  <span style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>Confidence: <strong style={{ color: "var(--ink)" }}>{report.explanation.confidence}%</strong></span>
                 </div>
-              )}
+              </div>
 
-              {reportLoading && (
-                <div className="flex flex-col items-center justify-center h-48 text-center">
-                  <Loader2 className="size-8 animate-spin text-primary mb-3" />
-                  <p className="text-sm text-muted-foreground">Generating AI match report...</p>
-                </div>
-              )}
-
-              {reportError && (
-                <div className="flex items-start gap-2 text-sm text-red-600">
-                  <XCircle className="size-4 mt-0.5" />
-                  <span>{reportError}</span>
-                </div>
-              )}
-
-              {report && report.ok && (
-                <div className="space-y-6">
-                  {/* Scores */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <div className="rounded-lg border border-border bg-secondary/50 p-3 text-center">
-                      <p className="text-2xl font-bold text-primary">{report.matchScore}</p>
-                      <p className="text-xs text-muted-foreground">Match Score</p>
-                    </div>
-                    <div className="rounded-lg border border-border bg-secondary/50 p-3 text-center">
-                      <p className="text-2xl font-bold text-primary">{report.semanticScore != null ? `${Math.round(report.semanticScore * 100)}%` : "—"}</p>
-                      <p className="text-xs text-muted-foreground">Semantic Similarity</p>
-                    </div>
-                    <div className="rounded-lg border border-border bg-secondary/50 p-3 text-center">
-                      <p className="text-2xl font-bold text-primary">{report.skillGap.score}%</p>
-                      <p className="text-xs text-muted-foreground">Skill Match</p>
-                    </div>
+              {/* Strengths + Gaps */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                <div style={{ border: "1px solid var(--line)", borderRadius: 8, padding: "0.875rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#0d7c66", marginBottom: 8 }}>
+                    <CheckCircle2 size={12} /> Strengths
                   </div>
-
-                  {/* Summary */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                      <Brain className="size-4 text-primary" /> Summary
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{report.explanation.summary}</p>
-                  </div>
-
-                  {/* Fit */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <FitCard icon={DollarSign} label="Salary Fit" value={report.explanation.salaryFit} />
-                    <FitCard icon={MapPin} label="Location Fit" value={report.explanation.locationFit} />
-                    <FitCard icon={GraduationCap} label="Experience Fit" value={report.explanation.experienceFit} />
-                  </div>
-
-                  {/* Recommendation */}
-                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1">Recommendation</p>
-                    <div className="flex items-center gap-2">
-                      <Badge className="capitalize">{report.explanation.recommendation.replace(/_/g, " ")}</Badge>
-                      <span className="text-sm text-muted-foreground">Confidence: {report.explanation.confidence}%</span>
-                    </div>
-                  </div>
-
-                  {/* Strengths & Gaps */}
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <ListCard icon={CheckCircle2} title="Strengths" items={report.explanation.strengths} empty="No specific strengths listed." color="text-green-600" />
-                    <ListCard icon={XCircle} title="Gaps" items={report.explanation.gaps} empty="No specific gaps listed." color="text-red-500" />
-                  </div>
-
-                  {/* Skills */}
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <TagList title="Matched Skills" items={report.skillGap.matchedSkills} empty="No direct skill matches." variant="success" />
-                    <TagList title="Missing Skills" items={report.skillGap.missingSkills} empty="No missing skills identified." variant="danger" />
-                  </div>
-
-                  <TagList title="Transferable Skills" items={report.skillGap.transferableSkills} empty="No transferable skills identified." variant="neutral" />
-                  <TagList title="Recommended Training" items={report.skillGap.recommendedTraining} empty="No training recommendations." variant="primary" />
-
-                  {report.skillGap.nextSteps.length > 0 && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-foreground mb-2">Next Steps</h3>
-                      <ul className="space-y-1.5">
-                        {report.skillGap.nextSteps.map((step, i) => (
-                          <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                            <ArrowRight className="size-3.5 mt-0.5 text-primary shrink-0" />
-                            {step}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                  {report.explanation.strengths.length === 0 ? <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>None listed.</p> : (
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
+                      {report.explanation.strengths.map((s, i) => (
+                        <li key={i} style={{ fontSize: "0.8125rem", color: "var(--muted)", display: "flex", gap: 6 }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#0d7c66", flexShrink: 0, marginTop: 5 }} />{s}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </div>
-              )}
-            </SectionCard>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
+                <div style={{ border: "1px solid var(--line)", borderRadius: 8, padding: "0.875rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#b91c1c", marginBottom: 8 }}>
+                    <XCircle size={12} /> Gaps
+                  </div>
+                  {report.explanation.gaps.length === 0 ? <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>None listed.</p> : (
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
+                      {report.explanation.gaps.map((g, i) => (
+                        <li key={i} style={{ fontSize: "0.8125rem", color: "var(--muted)", display: "flex", gap: 6 }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#b91c1c", flexShrink: 0, marginTop: 5 }} />{g}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
 
-function FitCard({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-card p-3">
-      <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-1">
-        <Icon className="size-4 text-primary" />
-        {label}
+              {/* Skill tags */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+                {report.skillGap.matchedSkills.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 6 }}>Matched Skills</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {report.skillGap.matchedSkills.map((s, i) => <SkillTag key={i} label={s} variant="match" />)}
+                    </div>
+                  </div>
+                )}
+                {report.skillGap.missingSkills.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 6 }}>Missing Skills</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {report.skillGap.missingSkills.map((s, i) => <SkillTag key={i} label={s} variant="miss" />)}
+                    </div>
+                  </div>
+                )}
+                {report.skillGap.transferableSkills.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 6 }}>Transferable Skills</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {report.skillGap.transferableSkills.map((s, i) => <SkillTag key={i} label={s} variant="transfer" />)}
+                    </div>
+                  </div>
+                )}
+                {report.skillGap.recommendedTraining.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 6 }}>Recommended Training</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {report.skillGap.recommendedTraining.map((s, i) => <SkillTag key={i} label={s} variant="train" />)}
+                    </div>
+                  </div>
+                )}
+                {report.skillGap.nextSteps.length > 0 && (
+                  <div style={{ borderTop: "1px solid var(--line)", paddingTop: "0.875rem" }}>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>Next Steps</div>
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
+                      {report.skillGap.nextSteps.map((step, i) => (
+                        <li key={i} style={{ fontSize: "0.8125rem", color: "var(--muted)", display: "flex", gap: 8 }}>
+                          <ArrowRight size={13} style={{ color: "var(--accent-blue)", flexShrink: 0, marginTop: 2 }} />
+                          {step}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <p className="text-sm text-muted-foreground capitalize">{value || "Unknown"}</p>
-    </div>
-  );
-}
 
-function ListCard({ icon: Icon, title, items, empty, color }: { icon: any; title: string; items: string[]; empty: string; color: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-card p-4">
-      <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-        <Icon className={`size-4 ${color}`} />
-        {title}
-      </h3>
-      {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{empty}</p>
-      ) : (
-        <ul className="space-y-2">
-          {items.map((item, i) => (
-            <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-              <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${color.replace("text-", "bg-")}`} />
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-function TagList({ title, items, empty, variant }: { title: string; items: string[]; empty: string; variant: "success" | "danger" | "neutral" | "primary" }) {
-  const styles = {
-    success: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    danger: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    neutral: "bg-secondary text-secondary-foreground",
-    primary: "bg-primary/10 text-primary",
-  };
-  return (
-    <div>
-      <h3 className="text-sm font-semibold text-foreground mb-2">{title}</h3>
-      {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{empty}</p>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {items.map((item, i) => (
-            <span key={i} className={`text-xs font-medium px-2.5 py-1 rounded-full ${styles[variant]}`}>
-              {item}
-            </span>
-          ))}
-        </div>
-      )}
+      <SiteFooter />
     </div>
   );
 }
