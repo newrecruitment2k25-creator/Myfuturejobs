@@ -254,6 +254,15 @@ const DEFAULT_CHIPS = [
   "Senior HR Selangor", "Mechanical Engineer Penang", "Customer Service",
 ];
 
+const BM_EN_DEMO_CHIPS = [
+  { label: "jurutera perisian",  hint: "BM → software engineer" },
+  { label: "jururawat",          hint: "BM → nurse" },
+  { label: "pemandu lori",       hint: "BM → lorry driver" },
+  { label: "kerani akaun",       hint: "BM → account clerk" },
+  { label: "programmer",        hint: "EN → software developer" },
+  { label: "doctor",            hint: "EN → medical officer" },
+];
+
 function SmartSearchBar({
   value, onChange, onSearch, jobs, total, parsedQuery, hasSearched,
   personalChips, userVector, semanticActive, locationFilters,
@@ -384,8 +393,19 @@ function SmartSearchBar({
             </button>
           </div>
           <p style={{ fontSize: 12, color: 'var(--muted)', margin: '8px 0 0 2px' }}>
-            Search by role, skill, occupation, or related terms. Semantic AI matching is enabled when you search.
+            Search in <strong>Bahasa Melayu or English</strong> — semantic AI understands both. Try: "jurutera perisian" → software engineer roles.
           </p>
+          {/* BM+EN demo chips */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10, alignItems: 'center' }}>
+            <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 700 }}>🌐 Multilingual demo:</span>
+            {BM_EN_DEMO_CHIPS.map(chip => (
+              <button key={chip.label} onClick={() => { onChange(chip.label); onSearch(chip.label); }}
+                title={chip.hint}
+                style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand)', background: 'rgba(33,31,96,0.06)', border: '1px solid rgba(33,31,96,0.12)', borderRadius: 999, padding: '3px 10px', cursor: 'pointer' }}>
+                {chip.label}
+              </button>
+            ))}
+          </div>
 
           {/* Autocomplete dropdown */}
           {showDrop && (value.length >= 2 ? suggestions.length > 0 : recentSearches.length > 0) && (

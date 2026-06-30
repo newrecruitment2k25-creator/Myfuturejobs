@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TaxonomyRouteImport } from './routes/taxonomy'
 import { Route as SkillsPassportRouteImport } from './routes/skills-passport'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResumeBuilderRouteImport } from './routes/resume-builder'
@@ -18,9 +19,12 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MyCvRouteImport } from './routes/my-cv'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LinkedinReviewRouteImport } from './routes/linkedin-review'
+import { Route as LabourInsightsRouteImport } from './routes/labour-insights'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InterviewPreparationRouteImport } from './routes/interview-preparation'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as DocumentIntelligenceRouteImport } from './routes/document-intelligence'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CaseworkerRouteImport } from './routes/caseworker'
@@ -63,6 +67,7 @@ import { Route as AdminEmployersRouteImport } from './routes/admin.employers'
 import { Route as AdminConfigurationRouteImport } from './routes/admin.configuration'
 import { Route as AdminCandidatesRouteImport } from './routes/admin.candidates'
 import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
+import { Route as AdminAiRulesRouteImport } from './routes/admin.ai-rules'
 import { Route as InterviewSessionIdSummaryRouteImport } from './routes/interview.$sessionId.summary'
 import { Route as InterviewSessionIdRoomRouteImport } from './routes/interview.$sessionId.room'
 import { Route as EmployerInterviewsCreateRouteImport } from './routes/employer.interviews.create'
@@ -82,6 +87,11 @@ import { Route as EmployerInterviewTemplatesTemplateIdReportInvitationIdRouteImp
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaxonomyRoute = TaxonomyRouteImport.update({
+  id: '/taxonomy',
+  path: '/taxonomy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SkillsPassportRoute = SkillsPassportRouteImport.update({
@@ -124,6 +134,11 @@ const LinkedinReviewRoute = LinkedinReviewRouteImport.update({
   path: '/linkedin-review',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LabourInsightsRoute = LabourInsightsRouteImport.update({
+  id: '/labour-insights',
+  path: '/labour-insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
@@ -137,6 +152,16 @@ const InterviewPreparationRoute = InterviewPreparationRouteImport.update({
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentIntelligenceRoute = DocumentIntelligenceRouteImport.update({
+  id: '/document-intelligence',
+  path: '/document-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -353,6 +378,11 @@ const AdminAuditLogsRoute = AdminAuditLogsRouteImport.update({
   path: '/audit-logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAiRulesRoute = AdminAiRulesRouteImport.update({
+  id: '/ai-rules',
+  path: '/ai-rules',
+  getParentRoute: () => AdminRoute,
+} as any)
 const InterviewSessionIdSummaryRoute =
   InterviewSessionIdSummaryRouteImport.update({
     id: '/summary',
@@ -452,9 +482,12 @@ export interface FileRoutesByFullPath {
   '/caseworker': typeof CaseworkerRouteWithChildren
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
+  '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
   '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/labour-insights': typeof LabourInsightsRoute
   '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
@@ -463,7 +496,9 @@ export interface FileRoutesByFullPath {
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
   '/skills-passport': typeof SkillsPassportRoute
+  '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
+  '/admin/ai-rules': typeof AdminAiRulesRoute
   '/admin/audit-logs': typeof AdminAuditLogsRoute
   '/admin/candidates': typeof AdminCandidatesRouteWithChildren
   '/admin/configuration': typeof AdminConfigurationRoute
@@ -522,9 +557,12 @@ export interface FileRoutesByTo {
   '/caseworker': typeof CaseworkerRouteWithChildren
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
+  '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
   '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/labour-insights': typeof LabourInsightsRoute
   '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
@@ -533,7 +571,9 @@ export interface FileRoutesByTo {
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
   '/skills-passport': typeof SkillsPassportRoute
+  '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
+  '/admin/ai-rules': typeof AdminAiRulesRoute
   '/admin/audit-logs': typeof AdminAuditLogsRoute
   '/admin/candidates': typeof AdminCandidatesRouteWithChildren
   '/admin/configuration': typeof AdminConfigurationRoute
@@ -594,9 +634,12 @@ export interface FileRoutesById {
   '/caseworker': typeof CaseworkerRouteWithChildren
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/demo': typeof DemoRoute
+  '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
   '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/labour-insights': typeof LabourInsightsRoute
   '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
@@ -605,7 +648,9 @@ export interface FileRoutesById {
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
   '/skills-passport': typeof SkillsPassportRoute
+  '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
+  '/admin/ai-rules': typeof AdminAiRulesRoute
   '/admin/audit-logs': typeof AdminAuditLogsRoute
   '/admin/candidates': typeof AdminCandidatesRouteWithChildren
   '/admin/configuration': typeof AdminConfigurationRoute
@@ -667,9 +712,12 @@ export interface FileRouteTypes {
     | '/caseworker'
     | '/contact'
     | '/dashboard'
+    | '/demo'
+    | '/document-intelligence'
     | '/events'
     | '/interview-preparation'
     | '/jobs'
+    | '/labour-insights'
     | '/linkedin-review'
     | '/login'
     | '/my-cv'
@@ -678,7 +726,9 @@ export interface FileRouteTypes {
     | '/resume-builder'
     | '/signup'
     | '/skills-passport'
+    | '/taxonomy'
     | '/terms'
+    | '/admin/ai-rules'
     | '/admin/audit-logs'
     | '/admin/candidates'
     | '/admin/configuration'
@@ -737,9 +787,12 @@ export interface FileRouteTypes {
     | '/caseworker'
     | '/contact'
     | '/dashboard'
+    | '/demo'
+    | '/document-intelligence'
     | '/events'
     | '/interview-preparation'
     | '/jobs'
+    | '/labour-insights'
     | '/linkedin-review'
     | '/login'
     | '/my-cv'
@@ -748,7 +801,9 @@ export interface FileRouteTypes {
     | '/resume-builder'
     | '/signup'
     | '/skills-passport'
+    | '/taxonomy'
     | '/terms'
+    | '/admin/ai-rules'
     | '/admin/audit-logs'
     | '/admin/candidates'
     | '/admin/configuration'
@@ -808,9 +863,12 @@ export interface FileRouteTypes {
     | '/caseworker'
     | '/contact'
     | '/dashboard'
+    | '/demo'
+    | '/document-intelligence'
     | '/events'
     | '/interview-preparation'
     | '/jobs'
+    | '/labour-insights'
     | '/linkedin-review'
     | '/login'
     | '/my-cv'
@@ -819,7 +877,9 @@ export interface FileRouteTypes {
     | '/resume-builder'
     | '/signup'
     | '/skills-passport'
+    | '/taxonomy'
     | '/terms'
+    | '/admin/ai-rules'
     | '/admin/audit-logs'
     | '/admin/candidates'
     | '/admin/configuration'
@@ -880,9 +940,12 @@ export interface RootRouteChildren {
   CaseworkerRoute: typeof CaseworkerRouteWithChildren
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  DemoRoute: typeof DemoRoute
+  DocumentIntelligenceRoute: typeof DocumentIntelligenceRoute
   EventsRoute: typeof EventsRoute
   InterviewPreparationRoute: typeof InterviewPreparationRoute
   JobsRoute: typeof JobsRouteWithChildren
+  LabourInsightsRoute: typeof LabourInsightsRoute
   LinkedinReviewRoute: typeof LinkedinReviewRouteWithChildren
   LoginRoute: typeof LoginRoute
   MyCvRoute: typeof MyCvRoute
@@ -891,6 +954,7 @@ export interface RootRouteChildren {
   ResumeBuilderRoute: typeof ResumeBuilderRoute
   SignupRoute: typeof SignupRoute
   SkillsPassportRoute: typeof SkillsPassportRoute
+  TaxonomyRoute: typeof TaxonomyRoute
   TermsRoute: typeof TermsRoute
   ApiInterviewRoute: typeof ApiInterviewRoute
   ApiOpsRoute: typeof ApiOpsRoute
@@ -926,6 +990,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/taxonomy': {
+      id: '/taxonomy'
+      path: '/taxonomy'
+      fullPath: '/taxonomy'
+      preLoaderRoute: typeof TaxonomyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/skills-passport': {
@@ -984,6 +1055,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinkedinReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/labour-insights': {
+      id: '/labour-insights'
+      path: '/labour-insights'
+      fullPath: '/labour-insights'
+      preLoaderRoute: typeof LabourInsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs': {
       id: '/jobs'
       path: '/jobs'
@@ -1003,6 +1081,20 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/document-intelligence': {
+      id: '/document-intelligence'
+      path: '/document-intelligence'
+      fullPath: '/document-intelligence'
+      preLoaderRoute: typeof DocumentIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -1299,6 +1391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuditLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ai-rules': {
+      id: '/admin/ai-rules'
+      path: '/ai-rules'
+      fullPath: '/admin/ai-rules'
+      preLoaderRoute: typeof AdminAiRulesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/interview/$sessionId/summary': {
       id: '/interview/$sessionId/summary'
       path: '/summary'
@@ -1420,6 +1519,7 @@ const AdminCandidatesRouteWithChildren = AdminCandidatesRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAiRulesRoute: typeof AdminAiRulesRoute
   AdminAuditLogsRoute: typeof AdminAuditLogsRoute
   AdminCandidatesRoute: typeof AdminCandidatesRouteWithChildren
   AdminConfigurationRoute: typeof AdminConfigurationRoute
@@ -1434,6 +1534,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAiRulesRoute: AdminAiRulesRoute,
   AdminAuditLogsRoute: AdminAuditLogsRoute,
   AdminCandidatesRoute: AdminCandidatesRouteWithChildren,
   AdminConfigurationRoute: AdminConfigurationRoute,
@@ -1570,9 +1671,12 @@ const rootRouteChildren: RootRouteChildren = {
   CaseworkerRoute: CaseworkerRouteWithChildren,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  DemoRoute: DemoRoute,
+  DocumentIntelligenceRoute: DocumentIntelligenceRoute,
   EventsRoute: EventsRoute,
   InterviewPreparationRoute: InterviewPreparationRoute,
   JobsRoute: JobsRouteWithChildren,
+  LabourInsightsRoute: LabourInsightsRoute,
   LinkedinReviewRoute: LinkedinReviewRouteWithChildren,
   LoginRoute: LoginRoute,
   MyCvRoute: MyCvRoute,
@@ -1581,6 +1685,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResumeBuilderRoute: ResumeBuilderRoute,
   SignupRoute: SignupRoute,
   SkillsPassportRoute: SkillsPassportRoute,
+  TaxonomyRoute: TaxonomyRoute,
   TermsRoute: TermsRoute,
   ApiInterviewRoute: ApiInterviewRoute,
   ApiOpsRoute: ApiOpsRoute,

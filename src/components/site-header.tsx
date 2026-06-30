@@ -4,7 +4,7 @@ import {
   Menu, X, LogOut, Home, Briefcase, Brain,
   GitBranch, Building2,
   Users, BarChart2, LayoutDashboard, FileText, Award,
-  Sparkles,
+  Sparkles, FileSearch, MapPin, Play, Settings2,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,6 +77,7 @@ export function SiteHeader() {
 
   const adminLinks = [
     { to: "/admin",                   icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/admin/ai-rules",          icon: Settings2,       label: "AI Rules" },
     { to: "/admin/users",             icon: Users,           label: "Users" },
     { to: "/admin/candidates",        icon: Users,           label: "Candidates" },
     { to: "/admin/employers",         icon: Building2,       label: "Employers" },
@@ -88,9 +89,12 @@ export function SiteHeader() {
   ];
 
   const pocLinks = [
-    { to: "/poc/ai-matching",       icon: Sparkles,    label: "AI Matching" },
-    { to: "/poc/dashboard",         icon: BarChart2,   label: "POC Dashboard" },
-    { to: "/employer/labour-market-intelligence", icon: Brain, label: "Labour Insights" },
+    { to: "/poc/ai-matching",            icon: Sparkles,    label: "AI Matching" },
+    { to: "/document-intelligence",      icon: FileSearch,  label: "Document Intelligence" },
+    { to: "/taxonomy",                   icon: GitBranch,   label: "Taxonomy Intelligence" },
+    { to: "/labour-insights",            icon: BarChart2,   label: "Labour Insights" },
+    { to: "/poc/dashboard",              icon: MapPin,      label: "POC Dashboard" },
+    { to: "/demo",                       icon: Play,        label: "Guided Demo" },
   ];
 
   const SidebarContents = ({ onNav }: { onNav?: () => void }) => (

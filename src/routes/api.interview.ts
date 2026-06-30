@@ -1650,6 +1650,11 @@ Return ONLY valid JSON:
                 nextSteps: skillGap.nextSteps,
               },
               explanation,
+              sources: [
+                { type: "candidate", id: candidate_id, label: `Candidate #${String(candidate_id).slice(0, 8)}` },
+                { type: "vacancy",   id: vacancy_id,   label: `Vacancy #${String(vacancy_id).slice(0, 8)} — ${vacancy.job_title ?? vacancy.occupation_name ?? "Role"}` },
+                ...(vacancy.occupation_name ? [{ type: "taxonomy", id: `MASCO`, label: `Taxonomy: ${vacancy.occupation_name}` }] : []),
+              ],
             });
           } catch (e) {
             console.warn("[api/interview] candidate_match_report failed:", e);
