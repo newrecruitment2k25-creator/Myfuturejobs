@@ -4,7 +4,7 @@ import { Loader2, Brain, FileText, BarChart2, CheckCircle2, Star, Users, Buildin
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/lib/language-context";
-import { PublicNav, PublicFooter } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/login")({
   ssr: false,
@@ -122,8 +122,7 @@ function LoginPage() {
 
   return (
     <>
-    <PublicNav />
-    <div style={{ minHeight: "calc(100vh - 56px)", background: "var(--base)", display: "flex" }}>
+    <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--base)", display: "flex" }}>
 
       {/* ── Left info panel (changes per role) ── */}
       <div style={{ flex: "0 0 42%", background: panel.bg, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 48px", transition: "background 0.3s" }} className="login-panel">
@@ -265,7 +264,7 @@ function LoginPage() {
       </div>
       </div>
     </div>
-    <PublicFooter />
+    <SiteFooter />
     </>
   );
 }
