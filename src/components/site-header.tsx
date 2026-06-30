@@ -1,343 +1,225 @@
-import { useState, useCallback, useEffect } from "react";
+/**
+ * Praxo AI — PERKESO Government Intelligence Header
+ * White top-bar, horizontal nav, Intelligence dropdown, status chip, mobile overlay
+ */
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  Menu, X, LogOut, Home, Briefcase, Brain,
-  GitBranch, Building2,
-  Users, BarChart2, LayoutDashboard, FileText, Award,
-  Sparkles, FileSearch, MapPin, Play, Settings2,
+  Menu, X, ChevronDown, LogOut,
+  BarChart2, FileSearch, GitBranch, TrendingUp,
+  Sparkles, Play, ArrowRight, Brain,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { NotificationBell } from "@/components/notification-bell";
-import { useLanguage } from "@/lib/language-context";
 
-const SB = {
-  sidebar: { background: 'var(--brand)', height: '100%' } as React.CSSProperties,
-  link: (active: boolean): React.CSSProperties => ({
-    display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px',
-    borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 500,
-    color: active ? '#ffffff' : 'rgba(255,255,255,0.65)',
-    background: active ? 'rgba(255,255,255,0.14)' : 'transparent',
-    textDecoration: 'none', transition: 'background 0.13s, color 0.13s', cursor: 'pointer',
-  }),
-  groupLabel: {
-    fontSize: 10, fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase' as const,
-    color: 'rgba(255,255,255,0.38)', padding: '14px 14px 4px', marginTop: 4,
-  },
-  divider: { height: 1, background: 'rgba(255,255,255,0.1)', margin: '8px 0' } as React.CSSProperties,
-};
+const INTEL_ITEMS = [
+  { to: "/skill-gap",             icon: Brain,      label: "Skill Gap Analysis",   desc: "Compare candidate skills to vacancy" },
+  { to: "/career-pathway",        icon: TrendingUp, label: "Career Pathway",        desc: "Progression map to target role" },
+  { to: "/taxonomy",              icon: GitBranch,  label: "Taxonomy Intelligence", desc: "MASCO / NEC / NOSS / MQA mapping" },
+  { to: "/document-intelligence", icon: FileSearch, label: "Document Intelligence", desc: "Parse resumes and vacancies" },
+  { to: "/labour-insights",       icon: BarChart2,  label: "Labour Insights",       desc: "Market & salary intelligence" },
+  { to: "/recommended-jobs",      icon: Sparkles,   label: "Recommended Jobs",      desc: "Personalised job recommendations" },
+] as const;
 
-function NavLink({ to, icon: Icon, label, onClick }: { to: string; icon: any; label: string; onClick?: () => void }) {
-  const router = useRouterState();
-  const active = router.location.pathname === to || (to !== '/' && router.location.pathname.startsWith(to));
-  return (
-    <Link to={to} style={SB.link(active)} onClick={onClick}
-      onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.09)'; }}
-      onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-    >
-      <Icon size={15} /> {label}
-    </Link>
-  );
+const MOBILE_LINKS = [
+  { to: "/",                      label: "Home" },
+  { to: "/jobs",                  label: "Job Search" },
+  { to: "/poc/ai-matching",       label: "AI Matching" },
+  { to: "/skill-gap",             label: "Skill Gap Analysis" },
+  { to: "/career-pathway",        label: "Career Pathway" },
+  { to: "/taxonomy",              label: "Taxonomy Intelligence" },
+  { to: "/document-intelligence", label: "Document Intelligence" },
+  { to: "/labour-insights",       label: "Labour Insights" },
+  { to: "/recommended-jobs",      label: "Recommended Jobs" },
+  { to: "/admin/ai-rules",        label: "AI Rules (Admin)" },
+  { to: "/demo",                  label: "Guided Demo" },
+] as const;
+
+function isActive(pathname: string, to: string) {
+  if (to === "/") return pathname === "/";
+  return pathname.startsWith(to);
 }
 
 export function SiteHeader() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const pathname = useRouterState().location.pathname;
   const [role, setRole] = useState<string | null>(null);
-  const { lang, setLang, t } = useLanguage();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [intelOpen, setIntelOpen] = useState(false);
+  const intelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) { setRole(null); return; }
     supabase.from("profiles").select("role").eq("id", user.id).maybeSingle()
-      .then(({ data }) => setRole(data?.role ?? "job_seeker"));
+      .then(({ data }: any) => setRole((data as any)?.role ?? "job_seeker"));
   }, [user]);
 
-  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (intelRef.current && !intelRef.current.contains(e.target as Node)) setIntelOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-  const handleLogout = async () => {
-    closeDrawer();
+  useEffect(() => { setMobileOpen(false); setIntelOpen(false); }, [pathname]);
+
+  const handleSignOut = async () => {
     await signOut();
-    toast.success("Logged out");
     void navigate({ to: "/" });
   };
 
-  const initials = user?.email ? user.email.slice(0, 2).toUpperCase() : "?";
-
-  const aiLinks = [
-    { to: "/career-pathway",        icon: GitBranch, label: t("careerPathway") },
-  ];
-
-  const hiringLinks = [
-    { to: "/employer/vacancy-builder",            icon: Briefcase,    label: t("postVacancy") },
-    { to: "/employer/talent-discovery",           icon: Users,        label: t("talentDiscovery") },
-    { to: "/employer/labour-market-intelligence", icon: BarChart2,    label: t("labourMarket") },
-  ];
-
-  const adminLinks = [
-    { to: "/admin",                   icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/admin/ai-rules",          icon: Settings2,       label: "AI Rules" },
-    { to: "/admin/users",             icon: Users,           label: "Users" },
-    { to: "/admin/candidates",        icon: Users,           label: "Candidates" },
-    { to: "/admin/employers",         icon: Building2,       label: "Employers" },
-    { to: "/admin/placements",        icon: Award,           label: "Placements" },
-    { to: "/admin/audit-logs",        icon: FileText,        label: "Audit Logs" },
-    { to: "/admin/system-monitoring", icon: BarChart2,       label: "Monitoring" },
-    { to: "/admin/configuration",     icon: LayoutDashboard, label: "Configuration" },
-    { to: "/admin/taxonomy",          icon: GitBranch,       label: "Taxonomy" },
-  ];
-
-  const pocLinks = [
-    { to: "/poc/ai-matching",            icon: Sparkles,    label: "AI Matching" },
-    { to: "/document-intelligence",      icon: FileSearch,  label: "Document Intelligence" },
-    { to: "/taxonomy",                   icon: GitBranch,   label: "Taxonomy Intelligence" },
-    { to: "/labour-insights",            icon: BarChart2,   label: "Labour Insights" },
-    { to: "/poc/dashboard",              icon: MapPin,      label: "POC Dashboard" },
-    { to: "/demo",                       icon: Play,        label: "Guided Demo" },
-  ];
-
-  const SidebarContents = ({ onNav }: { onNav?: () => void }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
-      {/* Logo */}
-      <div style={{ padding: '22px 20px 16px' }}>
-        <Link to="/" onClick={onNav} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>Praxo<span style={{ color: 'var(--accent)' }}> AI</span></span>
-        </Link>
-      </div>
-
-      <div style={SB.divider} />
-
-      {/* Main group */}
-      <div style={{ padding: '0 8px' }}>
-        <div style={SB.groupLabel}>Main</div>
-        <NavLink to="/" icon={Home} label={t("home")} onClick={onNav} />
-        <NavLink to="/jobs" icon={Briefcase} label={t("jobs")} onClick={onNav} />
-      </div>
-
-      {/* POC group */}
-      <>
-        <div style={SB.divider} />
-        <div style={{ padding: '0 8px' }}>
-          <div style={SB.groupLabel}>POC</div>
-          {pocLinks.map(l => <NavLink key={l.to} to={l.to} icon={l.icon} label={l.label} onClick={onNav} />)}
-        </div>
-      </>
-
-      {/* Tools group — job seeker */}
-      {(!user || role === "job_seeker") && (
-        <>
-          <div style={SB.divider} />
-          <div style={{ padding: '0 8px' }}>
-            <div style={SB.groupLabel}>Tools</div>
-            {user && role === "job_seeker" && (
-              <NavLink to="/dashboard" icon={LayoutDashboard} label={t("dashboard")} onClick={onNav} />
-            )}
-            {aiLinks.map(l => <NavLink key={l.to} to={l.to} icon={l.icon} label={l.label} onClick={onNav} />)}
-          </div>
-        </>
-      )}
-
-      {/* Employer group */}
-      {user && role === "employer" && (
-        <>
-          <div style={SB.divider} />
-          <div style={{ padding: '0 8px' }}>
-            <div style={SB.groupLabel}>Employer</div>
-            <NavLink to="/employer/dashboard" icon={LayoutDashboard} label={t("dashboard")} onClick={onNav} />
-            {hiringLinks.map(l => <NavLink key={l.to} to={l.to} icon={l.icon} label={l.label} onClick={onNav} />)}
-          </div>
-        </>
-      )}
-
-      {/* Admin group */}
-      {user && role === "admin" && (
-        <>
-          <div style={SB.divider} />
-          <div style={{ padding: '0 8px' }}>
-            <div style={SB.groupLabel}>Admin</div>
-            {adminLinks.map(l => <NavLink key={l.to} to={l.to} icon={l.icon} label={l.label} onClick={onNav} />)}
-          </div>
-        </>
-      )}
-
-      {/* Spacer */}
-      <div style={{ flex: 1 }} />
-
-      {/* Bottom section */}
-      <div style={SB.divider} />
-      <div style={{ padding: '8px 8px 6px' }}>
-        {/* Language */}
-        <div style={{ display: 'flex', gap: 4, padding: '4px 6px 8px' }}>
-          {(['en', 'bm'] as const).map(code => (
-            <button key={code} onClick={() => setLang(code)} style={{
-              flex: 1, padding: '5px 0', borderRadius: 'var(--radius-xs)', border: 'none',
-              fontSize: 11, fontWeight: 600, cursor: 'pointer', transition: 'all 0.13s',
-              background: lang === code ? 'rgba(255,255,255,0.18)' : 'transparent',
-              color: lang === code ? '#ffffff' : 'rgba(255,255,255,0.45)',
-            }}>
-              {code.toUpperCase()}
-            </button>
-          ))}
-        </div>
-
-        {user ? (
-          <>
-            {/* User row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 'var(--radius-sm)', background: 'rgba(255,255,255,0.08)' }}>
-              <div style={{
-                width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0,
-              }}>{initials}</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', textTransform: 'capitalize' }}>{role ?? 'user'}</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
-              <NotificationBell />
-              <button onClick={handleLogout} style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '7px 0', border: 'none', borderRadius: 'var(--radius-xs)',
-                background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)',
-                fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'background 0.13s',
-              }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.18)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
-              >
-                <LogOut size={13} /> {t("logOut")}
-              </button>
-            </div>
-          </>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '0 0 6px' }}>
-            <Link to="/login" onClick={onNav} style={{
-              display: 'block', textAlign: 'center', padding: '8px 0',
-              background: 'rgba(255,255,255,0.15)', color: '#ffffff',
-              borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 600, textDecoration: 'none',
-            }}>{t("login")}</Link>
-            <Link to="/employer/login" onClick={onNav} style={{
-              display: 'block', textAlign: 'center', padding: '8px 0',
-              background: 'var(--accent)', color: '#ffffff',
-              borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 600, textDecoration: 'none',
-            }}>{t("employerLogin")}</Link>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <>
-      {/* ── DESKTOP SIDEBAR (lg+) ─────────────────────────────────────────── */}
-      <aside style={{
-        position: 'fixed', left: 0, top: 0, width: 220, height: '100vh',
-        background: 'var(--brand)', zIndex: 50, borderRight: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', flexDirection: 'column',
-      }} className="hidden lg:flex">
-        <SidebarContents />
-      </aside>
+      <header className="perkeso-header">
+        <div className="perkeso-header-inner">
+          {/* Brand */}
+          <Link to="/" className="perkeso-brand">
+            <span style={{ display: "inline-flex", width: 28, height: 28, borderRadius: 6, background: "var(--brand)", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ width: 10, height: 10, background: "#fff", borderRadius: 2 }} />
+            </span>
+            <span className="perkeso-brand-name">Praxo AI</span>
+          </Link>
 
-      {/* ── MOBILE TOP BAR (below lg) ─────────────────────────────────────── */}
-      <header style={{
-        position: 'sticky', top: 0, height: 56, zIndex: 50,
-        background: 'var(--brand)', borderBottom: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 16px',
-      }} className="lg:hidden">
-        <button onClick={() => setDrawerOpen(true)} style={{ color: '#fff', background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-          <Menu size={22} />
-        </button>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>Praxo<span style={{ color: 'var(--accent)' }}> AI</span></span>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {user && <NotificationBell />}
-          {user ? (
-            <div style={{
-              width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 11, fontWeight: 700, color: '#fff',
-            }}>{initials}</div>
-          ) : (
-            <Link to="/login" style={{ fontSize: 13, fontWeight: 600, color: '#fff', opacity: 0.85, textDecoration: 'none' }}>{t("login")}</Link>
-          )}
+          {/* Desktop nav */}
+          <nav className="perkeso-nav">
+            <Link to="/" className={`perkeso-nav-link${pathname === "/" ? " active" : ""}`}>Home</Link>
+            <Link to="/jobs" className={`perkeso-nav-link${isActive(pathname, "/jobs") ? " active" : ""}`}>Job Search</Link>
+            <Link to="/poc/ai-matching" className={`perkeso-nav-link${isActive(pathname, "/poc/ai-matching") ? " active" : ""}`}>AI Matching</Link>
+
+            {/* Intelligence dropdown */}
+            <div ref={intelRef} className="perkeso-dropdown">
+              <button onClick={() => setIntelOpen(v => !v)}
+                className={`perkeso-nav-link${INTEL_ITEMS.some(i => isActive(pathname, i.to)) ? " active" : ""}`}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
+                Intelligence
+                <ChevronDown size={13} style={{ transition: "transform 0.15s", transform: intelOpen ? "rotate(180deg)" : "none" }} />
+              </button>
+              {intelOpen && (
+                <div className="perkeso-dropdown-menu" style={{ minWidth: 280 }}>
+                  {INTEL_ITEMS.map(item => (
+                    <Link key={item.to} to={item.to as any} className="perkeso-dropdown-item">
+                      <item.icon size={14} style={{ color: "var(--accent-blue)", flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontWeight: 600, color: "var(--ink)", fontSize: "0.875rem" }}>{item.label}</div>
+                        <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 1 }}>{item.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
+                  <div style={{ height: 1, background: "var(--line)", margin: "6px 0" }} />
+                  <Link to="/demo" className="perkeso-dropdown-item">
+                    <Play size={14} style={{ color: "var(--success)", flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontWeight: 600, color: "var(--ink)", fontSize: "0.875rem" }}>Guided Demo</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 1 }}>Walk through all demo steps</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {user && role === "admin" && (
+              <Link to="/admin" className={`perkeso-nav-link${isActive(pathname, "/admin") ? " active" : ""}`}>Admin</Link>
+            )}
+
+            <span style={{ flex: 1 }} />
+
+            {user ? (
+              <button onClick={handleSignOut}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "1px solid var(--line)", borderRadius: 6, padding: "5px 12px", fontSize: "0.8125rem", color: "var(--muted)", cursor: "pointer", fontFamily: "inherit" }}>
+                <LogOut size={13} /> Sign out
+              </button>
+            ) : (
+              <Link to="/login"
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--brand)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 14px", fontSize: "0.8125rem", fontWeight: 600, textDecoration: "none" }}>
+                Sign in <ArrowRight size={12} />
+              </Link>
+            )}
+          </nav>
+
+          {/* Status chip */}
+          <div className="perkeso-status-chip">
+            <span className="perkeso-status-dot" />
+            Semantic AI Active
+          </div>
+
+          {/* Mobile burger */}
+          <button onClick={() => setMobileOpen(v => !v)}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 6, marginLeft: "auto", display: "none" }}
+            className="perkeso-mobile-burger">
+            <Menu size={22} style={{ color: "var(--brand)" }} />
+          </button>
         </div>
       </header>
 
-      {/* ── MOBILE DRAWER ─────────────────────────────────────────────────── */}
-      {drawerOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
-          {/* backdrop */}
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)' }} onClick={closeDrawer} />
-          {/* drawer */}
-          <div style={{
-            position: 'absolute', left: 0, top: 0, width: 240, height: '100%',
-            background: 'var(--brand)', boxShadow: '4px 0 20px rgba(0,0,0,0.3)',
-            display: 'flex', flexDirection: 'column',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 12px 0' }}>
-              <button onClick={closeDrawer} style={{ color: 'rgba(255,255,255,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-                <X size={20} />
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="perkeso-mobile-overlay">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+            <span style={{ fontFamily: "var(--font-heading)", fontSize: "1.125rem", fontWeight: 800, color: "#fff" }}>Praxo AI</span>
+            <button onClick={() => setMobileOpen(false)}
+              style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 6, cursor: "pointer", padding: 8, display: "flex" }}>
+              <X size={18} style={{ color: "#fff" }} />
+            </button>
+          </div>
+          {MOBILE_LINKS.map(l => (
+            <Link key={l.to} to={l.to as any} className="perkeso-mobile-nav-link">{l.label}</Link>
+          ))}
+          <div style={{ marginTop: "auto", paddingTop: "2rem" }}>
+            {user ? (
+              <button onClick={handleSignOut}
+                style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, padding: "10px 16px", color: "#fff", fontSize: "0.875rem", cursor: "pointer", width: "100%", fontFamily: "inherit" }}>
+                <LogOut size={14} /> Sign out
               </button>
-            </div>
-            <SidebarContents onNav={closeDrawer} />
+            ) : (
+              <Link to="/login"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#fff", borderRadius: 8, padding: "10px 16px", color: "var(--brand)", fontSize: "0.875rem", fontWeight: 700, textDecoration: "none" }}>
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       )}
+      <style>{`@media (max-width: 767px) { .perkeso-mobile-burger { display: flex !important; } }`}</style>
     </>
   );
 }
 
 export function SiteFooter() {
-  const linkStyle: React.CSSProperties = { fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color 0.13s' };
-  const deadStyle: React.CSSProperties = { fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.3)', cursor: 'default' };
-
+  const ls: React.CSSProperties = { fontSize: "0.8125rem", fontWeight: 500, color: "rgba(255,255,255,0.6)", textDecoration: "none" };
   return (
     <footer className="site-footer">
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 32, paddingBottom: 32 }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32, paddingBottom: 32 }}>
           <div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
-              Praxo<span style={{ color: 'var(--accent)' }}> AI</span>
-            </div>
-            <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>
-              PERKESO Employment Intelligence — AI-powered job matching, candidate scoring, and labour market insights.
+            <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.125rem", fontWeight: 800, color: "#fff", marginBottom: 8 }}>Praxo AI</div>
+            <p style={{ fontSize: "0.8125rem", lineHeight: 1.65, color: "rgba(255,255,255,0.5)", marginBottom: 8 }}>
+              PERKESO Employment Intelligence — Semantic job matching, skill gap analysis, and labour market insights.
             </p>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>AI-Powered · PERKESO · SOCSO</p>
+            <p style={{ fontSize: "0.6875rem", color: "rgba(255,255,255,0.25)" }}>Semantic AI · PERKESO · SOCSO</p>
           </div>
-
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Job Seekers</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Link to="/jobs" style={linkStyle}>Find Jobs</Link>
-              <Link to="/career-pathway" style={linkStyle}>Career Pathway</Link>
-              <Link to="/contact" style={linkStyle}>Contact</Link>
+            <div style={{ fontSize: "0.6875rem", fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>Explore</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link to="/jobs" style={ls}>Job Search</Link>
+              <Link to="/skill-gap" style={ls}>Skill Gap Analysis</Link>
+              <Link to="/career-pathway" style={ls}>Career Pathway</Link>
+              <Link to="/labour-insights" style={ls}>Labour Insights</Link>
             </div>
           </div>
-
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Employers</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Link to="/employer/vacancy-builder" style={linkStyle}>Post a Job</Link>
-              <Link to="/employer/talent-discovery" style={linkStyle}>Find Candidates</Link>
-              <Link to="/employer/labour-market-intelligence" style={linkStyle}>Labour Market</Link>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Intelligence</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Link to="/poc/ai-matching" style={linkStyle}>AI Matching</Link>
-              <Link to="/poc/dashboard" style={linkStyle}>POC Dashboard</Link>
-              <Link to="/about" style={linkStyle}>About</Link>
+            <div style={{ fontSize: "0.6875rem", fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>Intelligence</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link to="/poc/ai-matching" style={ls}>AI Matching</Link>
+              <Link to="/taxonomy" style={ls}>Taxonomy Intelligence</Link>
+              <Link to="/document-intelligence" style={ls}>Document Intelligence</Link>
+              <Link to="/demo" style={ls}>Guided Demo</Link>
             </div>
           </div>
         </div>
-
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 18, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>
-          © 2025 Praxo AI · PERKESO · SOCSO 🇲🇾
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 18, textAlign: "center", fontSize: "0.6875rem", color: "rgba(255,255,255,0.25)" }}>
+          © 2025 Praxo AI · PERKESO Employment Intelligence 🇲🇾
         </div>
       </div>
     </footer>

@@ -96,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",
@@ -124,28 +124,24 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-const PUBLIC_ROUTES = ["/", "/about", "/contact", "/privacy", "/terms", "/events"];
+const AUTH_ONLY_ROUTES = ["/login", "/signup", "/employer/login", "/employer/signup", "/admin/login"];
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { pathname } = useLocation();
-  const isPublic = PUBLIC_ROUTES.includes(pathname) ||
-    pathname.startsWith("/jobs") ||
-    pathname === "/login" || pathname === "/signup" ||
-    pathname === "/employer/login" || pathname === "/employer/signup" ||
-    pathname === "/admin/login";
+  const isAuthPage = AUTH_ONLY_ROUTES.includes(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <AuthProvider>
           <TranslationSyncer />
-          {!isPublic && <SiteHeader />}
-          <div id="app-root" className={isPublic ? "" : "app-content"}>
+          {!isAuthPage && <SiteHeader />}
+          <div id="app-root" className={isAuthPage ? "" : "app-content"}>
             <Outlet />
           </div>
           <Toaster />
-          {!isPublic && <Chatbot />}
+          {!isAuthPage && <Chatbot />}
         </AuthProvider>
       </LanguageProvider>
     </QueryClientProvider>

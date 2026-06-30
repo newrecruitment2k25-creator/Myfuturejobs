@@ -1,6 +1,6 @@
 import React from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { PublicNav, PublicFooter } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import {
   MapPin, DollarSign, GraduationCap, Briefcase, Search, SlidersHorizontal,
@@ -1640,7 +1640,7 @@ function JobsPage() {
         onSuccess={(key) => setApplied((prev) => ({ ...prev, [key]: "applied" }))}
       />
     </div>
-    <PublicFooter />
+    <SiteFooter />
     </>
   );
 }
