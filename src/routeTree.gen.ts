@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TaxonomyRouteImport } from './routes/taxonomy'
 import { Route as SkillsPassportRouteImport } from './routes/skills-passport'
+import { Route as SkillGapRouteImport } from './routes/skill-gap'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResumeBuilderRouteImport } from './routes/resume-builder'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as RecommendedJobsRouteImport } from './routes/recommended-jobs'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MyCvRouteImport } from './routes/my-cv'
 import { Route as LoginRouteImport } from './routes/login'
@@ -99,6 +101,11 @@ const SkillsPassportRoute = SkillsPassportRouteImport.update({
   path: '/skills-passport',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SkillGapRoute = SkillGapRouteImport.update({
+  id: '/skill-gap',
+  path: '/skill-gap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -112,6 +119,11 @@ const ResumeBuilderRoute = ResumeBuilderRouteImport.update({
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendedJobsRoute = RecommendedJobsRouteImport.update({
+  id: '/recommended-jobs',
+  path: '/recommended-jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -492,9 +504,11 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
+  '/recommended-jobs': typeof RecommendedJobsRoute
   '/results': typeof ResultsRoute
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
+  '/skill-gap': typeof SkillGapRoute
   '/skills-passport': typeof SkillsPassportRoute
   '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
@@ -567,9 +581,11 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
+  '/recommended-jobs': typeof RecommendedJobsRoute
   '/results': typeof ResultsRoute
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
+  '/skill-gap': typeof SkillGapRoute
   '/skills-passport': typeof SkillsPassportRoute
   '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
@@ -644,9 +660,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
+  '/recommended-jobs': typeof RecommendedJobsRoute
   '/results': typeof ResultsRoute
   '/resume-builder': typeof ResumeBuilderRoute
   '/signup': typeof SignupRoute
+  '/skill-gap': typeof SkillGapRoute
   '/skills-passport': typeof SkillsPassportRoute
   '/taxonomy': typeof TaxonomyRoute
   '/terms': typeof TermsRoute
@@ -722,9 +740,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-cv'
     | '/privacy'
+    | '/recommended-jobs'
     | '/results'
     | '/resume-builder'
     | '/signup'
+    | '/skill-gap'
     | '/skills-passport'
     | '/taxonomy'
     | '/terms'
@@ -797,9 +817,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-cv'
     | '/privacy'
+    | '/recommended-jobs'
     | '/results'
     | '/resume-builder'
     | '/signup'
+    | '/skill-gap'
     | '/skills-passport'
     | '/taxonomy'
     | '/terms'
@@ -873,9 +895,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-cv'
     | '/privacy'
+    | '/recommended-jobs'
     | '/results'
     | '/resume-builder'
     | '/signup'
+    | '/skill-gap'
     | '/skills-passport'
     | '/taxonomy'
     | '/terms'
@@ -950,9 +974,11 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MyCvRoute: typeof MyCvRoute
   PrivacyRoute: typeof PrivacyRoute
+  RecommendedJobsRoute: typeof RecommendedJobsRoute
   ResultsRoute: typeof ResultsRoute
   ResumeBuilderRoute: typeof ResumeBuilderRoute
   SignupRoute: typeof SignupRoute
+  SkillGapRoute: typeof SkillGapRoute
   SkillsPassportRoute: typeof SkillsPassportRoute
   TaxonomyRoute: typeof TaxonomyRoute
   TermsRoute: typeof TermsRoute
@@ -1006,6 +1032,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsPassportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/skill-gap': {
+      id: '/skill-gap'
+      path: '/skill-gap'
+      fullPath: '/skill-gap'
+      preLoaderRoute: typeof SkillGapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -1025,6 +1058,13 @@ declare module '@tanstack/react-router' {
       path: '/results'
       fullPath: '/results'
       preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommended-jobs': {
+      id: '/recommended-jobs'
+      path: '/recommended-jobs'
+      fullPath: '/recommended-jobs'
+      preLoaderRoute: typeof RecommendedJobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -1681,9 +1721,11 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MyCvRoute: MyCvRoute,
   PrivacyRoute: PrivacyRoute,
+  RecommendedJobsRoute: RecommendedJobsRoute,
   ResultsRoute: ResultsRoute,
   ResumeBuilderRoute: ResumeBuilderRoute,
   SignupRoute: SignupRoute,
+  SkillGapRoute: SkillGapRoute,
   SkillsPassportRoute: SkillsPassportRoute,
   TaxonomyRoute: TaxonomyRoute,
   TermsRoute: TermsRoute,
