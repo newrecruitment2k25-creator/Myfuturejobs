@@ -148,9 +148,12 @@ function CreateTemplatePage() {
   return (
     <div style={{ minHeight:'100vh', background:'var(--base)' }}>
       <main style={{ maxWidth:700, margin:'0 auto', padding:'32px 16px' }}>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-primary">Create Interview Template</h1>
-          <p className="mt-1 text-muted-foreground">Define your questions and scoring criteria, then invite candidates.</p>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--line)' }}>
+            Interview Templates
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>Create Interview Template</h1>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Define your questions and scoring criteria, then invite candidates.</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-8">

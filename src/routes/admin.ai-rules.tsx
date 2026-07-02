@@ -162,18 +162,21 @@ function AdminAiRulesPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--base)" }}>
-      <div style={{ background: "var(--brand)", padding: "40px 24px 32px" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.75)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>
-            <Brain size={12} /> Admin · Configurable AI Rules
+      <div style={{ background: "linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)", padding: "40px 24px 32px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", right: -40, top: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
+        <div style={{ position: "absolute", right: 80, bottom: -70, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.03)" }} />
+        <div style={{ maxWidth: 760, margin: "0 auto", position: "relative" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", marginBottom: 8, padding: "3px 10px", borderRadius: 20, background: "rgba(255,255,255,0.08)" }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
+            Admin · Configurable AI Rules
           </div>
-          <h1 style={{ fontSize: "clamp(20px,3vw,30px)", fontWeight: 800, color: "#fff", margin: "0 0 8px" }}>
+          <h1 style={{ fontSize: "clamp(20px,3vw,28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 8px" }}>
             Configurable AI Matching Rules
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", margin: 0 }}>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: 0 }}>
             Adjust scoring weights and thresholds for the Praxo AI matching engine. Changes apply to ranking display immediately.
           </p>
-          <div style={{ marginTop: 10, display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.1)", borderRadius: 8, padding: "5px 12px", fontSize: 11, color: "rgba(255,255,255,0.6)" }}>
+          <div style={{ marginTop: 10, display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "5px 12px", fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
             <Info size={11} /> Configurable AI matching rules (demo) — stored locally, passed into matching requests where supported.
           </div>
         </div>

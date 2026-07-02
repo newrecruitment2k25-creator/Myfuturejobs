@@ -100,19 +100,21 @@ function LabourMarketIntelligencePage() {
       <main style={{ maxWidth:1100, margin:'0 auto', padding:'32px 16px', display:'flex', flexDirection:'column', gap:24 }}>
 
         {/* Page header */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Module 11 · Workforce Intelligence Platform</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">Labour Market Intelligence</h1>
-              <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Module 11 · Workforce Intelligence Platform
+              </div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Labour Market Intelligence</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4, maxWidth: 720 }}>
                 National workforce analytics for employers, government agencies, and workforce development organisations.
                 Aligned with MASCO, PERKESO, and Malaysian labour market frameworks.
               </p>
             </div>
-            <div className="hidden sm:flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-              <Activity className="size-7 text-primary" />
-            </div>
+            <Activity style={{ width: 28, height: 28, color: 'rgba(255,255,255,0.2)', flexShrink: 0 }} />
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1">

@@ -239,7 +239,7 @@ function AdminConsolePage() {
   }
 
   const S = {
-    card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "var(--radius-sm)", padding: "16px 18px" } as React.CSSProperties,
+    card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(10,38,71,0.04)" } as React.CSSProperties,
     heading: { fontSize: 11, fontWeight: 700, color: "var(--ink)", textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 } as React.CSSProperties,
   };
 
@@ -248,34 +248,45 @@ function AdminConsolePage() {
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 16px", display: "flex", flexDirection: "column", gap: 16 }}>
 
         {/* ── Page header ── */}
-        <div style={{ ...S.card, borderRadius: "var(--radius-md)", padding: "20px 24px" }}>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 16, padding: '24px 28px',
+          overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(10,38,71,0.15)',
+        }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap", position: 'relative' }}>
             <div>
-              <p style={{ fontSize: 11, fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Governance Console</p>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--brand)", margin: "2px 0 0", letterSpacing: "-0.03em" }}>Admin Dashboard</h1>
-              <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
-                Logged in as <strong>{guardState.email}</strong>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Governance Console
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: "#fff", margin: "2px 0 0", letterSpacing: "-0.03em" }}>Admin Dashboard</h1>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>
+                Logged in as <strong style={{ color: 'rgba(255,255,255,0.7)' }}>{guardState.email}</strong>
                 {lastRefreshed && <> · Last refreshed {lastRefreshed.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit" })}</>}
               </p>
             </div>
             <button onClick={fetchAll} disabled={statsLoading || trendLoading}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: "var(--radius-xs)", border: "1px solid var(--line)", background: "var(--base)", color: "var(--brand)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+            >
               <RefreshCw style={{ width: 14, height: 14 }} className={(statsLoading || trendLoading) ? "animate-spin" : ""} /> Refresh
             </button>
           </div>
         </div>
 
         {/* ── AI Summary ── */}
-        <div style={{ ...S.card, background: "linear-gradient(135deg, #211F60 0%, #3730a3 100%)", border: "none" }}>
-          <p style={{ ...S.heading, color: "rgba(255,255,255,0.7)" }}><Brain style={{ width: 14, height: 14 }} /> AI System Summary</p>
+        <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', borderRadius: 14, padding: '18px 20px', border: 'none', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}>
+          <p style={{ ...S.heading, color: "rgba(255,255,255,0.6)" }}><Brain style={{ width: 14, height: 14 }} /> AI System Summary</p>
           {aiLines.length === 0 || (aiLines.length === 1 && aiLines[0].includes("Gathering")) ? (
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>Gathering system data…</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>Gathering system data…</p>
           ) : (
-            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
               {aiLines.map((line, i) => (
                 <li key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff", marginTop: 1 }}>{i + 1}</span>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.88)", lineHeight: 1.6, margin: 0 }}>{line}</p>
+                  <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff", marginTop: 1 }}>{i + 1}</span>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.82)", lineHeight: 1.6, margin: 0 }}>{line}</p>
                 </li>
               ))}
             </ul>
@@ -284,10 +295,10 @@ function AdminConsolePage() {
 
         {/* ── Report view toggle ── */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, marginRight: 4 }}>View:</span>
+          <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 700, marginRight: 4 }}>View:</span>
           {(["daily", "monthly", "bimonthly"] as ReportView[]).map(v => (
             <button key={v} onClick={() => setReportView(v)}
-              style={{ padding: "5px 14px", borderRadius: "var(--radius-xs)", border: "1px solid var(--line)", background: reportView === v ? "var(--brand)" : "var(--surface)", color: reportView === v ? "#fff" : "var(--muted)", fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
+              style={{ padding: "6px 16px", borderRadius: 10, border: "1px solid var(--line)", background: reportView === v ? "linear-gradient(135deg, #0A2647 0%, #205295 100%)" : "var(--surface)", color: reportView === v ? "#fff" : "var(--muted)", fontSize: 11, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}>
               {v === "daily" ? "Daily Snapshot" : v === "monthly" ? "Monthly Report" : "Bi-Monthly (Leadership)"}
             </button>
           ))}
@@ -297,17 +308,20 @@ function AdminConsolePage() {
         {reportView === "daily" && (
           <>
             {/* Today's numbers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
               {[
                 { label: "CV Analyses Today",    val: today.analyses,     prev: yest.analyses,     color: "#6366f1" },
                 { label: "Applications Today",   val: today.applications, prev: yest.applications, color: "#0369a1" },
                 { label: "Interviews Today",     val: today.interviews,   prev: yest.interviews,   color: "#d97706" },
                 { label: "Placements Today",     val: today.placements,   prev: yest.placements,   color: "#15803d" },
               ].map(({ label, val, prev, color }) => (
-                <div key={label} style={{ ...S.card, display: "flex", flexDirection: "column", gap: 4 }}>
-                  <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 600 }}>{label}</p>
+                <div key={label} style={{ ...S.card, display: "flex", flexDirection: "column", gap: 6, transition: 'all 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(10,38,71,0.08)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(10,38,71,0.04)'; }}
+                >
+                  <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1 }}>{val}</span>
+                    <span style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1, letterSpacing: '-0.02em' }}>{val}</span>
                     <TrendBadge pct={trendPct(val, prev)} />
                   </div>
                   <p style={{ fontSize: 10, color: "var(--muted)" }}>vs {prev} yesterday</p>
@@ -318,7 +332,7 @@ function AdminConsolePage() {
             {/* 30-day sparklines */}
             {spark30.length > 0 && (
               <div style={S.card}>
-                <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "var(--accent)" }} /> Last 30 Days Activity</p>
+                <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "#f36c21" }} /> Last 30 Days Activity</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
                   {[
                     { label: "CV Analyses",   data: spark30.map(d => d.analyses),     color: "#6366f1" },
@@ -351,7 +365,7 @@ function AdminConsolePage() {
 
             {/* Platform KPIs */}
             <div style={S.card}>
-              <p style={S.heading}><Star style={{ width: 14, height: 14, color: "var(--accent)" }} /> Platform Totals</p>
+              <p style={S.heading}><Star style={{ width: 14, height: 14, color: "#f36c21" }} /> Platform Totals</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 10 }}>
                 {[
                   { label: "Total Candidates",    val: stats?.total_candidates ?? 0 },
@@ -364,9 +378,12 @@ function AdminConsolePage() {
                   { label: "CV Analyses",         val: stats?.analyses ?? 0 },
                   { label: "Placements",          val: stats?.placements ?? 0 },
                 ].map(({ label, val }) => (
-                  <div key={label} style={{ background: "var(--base)", border: "1px solid var(--line)", borderRadius: "var(--radius-xs)", padding: "10px 12px", textAlign: "center" }}>
-                    <p style={{ fontSize: 20, fontWeight: 800, color: "var(--brand)" }}>{statsLoading ? "…" : val.toLocaleString()}</p>
-                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{label}</p>
+                  <div key={label} style={{ background: "var(--base)", border: "1px solid var(--line)", borderRadius: 10, padding: "12px 12px", textAlign: "center", transition: 'all 0.15s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
+                  >
+                    <p style={{ fontSize: 20, fontWeight: 800, color: "#205295", letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val.toLocaleString()}</p>
+                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
                   </div>
                 ))}
               </div>
@@ -378,7 +395,7 @@ function AdminConsolePage() {
         {reportView === "monthly" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div style={S.card}>
-              <p style={S.heading}><Calendar style={{ width: 14, height: 14, color: "var(--accent)" }} /> Monthly Activity — Last 60 Days</p>
+              <p style={S.heading}><Calendar style={{ width: 14, height: 14, color: "#f36c21" }} /> Monthly Activity — Last 60 Days</p>
               {months.length === 0 ? (
                 <p style={{ fontSize: 12, color: "var(--muted)" }}>No data yet.</p>
               ) : (
@@ -401,7 +418,7 @@ function AdminConsolePage() {
             {/* Month-over-month table */}
             {months.length >= 2 && (
               <div style={S.card}>
-                <p style={S.heading}><BookOpen style={{ width: 14, height: 14, color: "var(--accent)" }} /> Month-over-Month Summary</p>
+                <p style={S.heading}><BookOpen style={{ width: 14, height: 14, color: "#f36c21" }} /> Month-over-Month Summary</p>
                 <div style={{ overflowX: "auto" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                     <thead>
@@ -447,33 +464,36 @@ function AdminConsolePage() {
         {reportView === "bimonthly" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {/* Leadership summary header */}
-            <div style={{ ...S.card, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", border: "none" }}>
-              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                MYFutureJobs · Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
-              </p>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "6px 0 10px" }}>Bi-Monthly Performance Overview</h2>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
-                {[
-                  { label: "Total Candidates", val: (stats?.total_candidates ?? 0).toLocaleString(), icon: "👥" },
-                  { label: "Employers Served", val: (stats?.employers ?? 0).toLocaleString(),         icon: "🏢" },
-                  { label: "Job Placements",   val: (stats?.placements ?? 0).toLocaleString(),        icon: "✅" },
-                  { label: "CV Analyses",      val: (stats?.analyses ?? 0).toLocaleString(),          icon: "📄" },
-                ].map(({ label, val, icon }) => (
-                  <div key={label} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "12px 14px", textAlign: "center" }}>
-                    <div style={{ fontSize: 22 }}>{icon}</div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginTop: 4 }}>{statsLoading ? "…" : val}</div>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{label}</div>
-                  </div>
-                ))}
+            <div style={{ background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 14, padding: '20px 24px', border: 'none', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+              <div style={{ position: 'relative' }}>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  MYFutureJobs · Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
+                </p>
+                <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "6px 0 12px" }}>Bi-Monthly Performance Overview</h2>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+                  {[
+                    { label: "Total Candidates", val: (stats?.total_candidates ?? 0).toLocaleString(), icon: "👥" },
+                    { label: "Employers Served", val: (stats?.employers ?? 0).toLocaleString(),         icon: "🏢" },
+                    { label: "Job Placements",   val: (stats?.placements ?? 0).toLocaleString(),        icon: "✅" },
+                    { label: "CV Analyses",      val: (stats?.analyses ?? 0).toLocaleString(),          icon: "📄" },
+                  ].map(({ label, val, icon }) => (
+                    <div key={label} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 16px", textAlign: "center", border: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ fontSize: 22 }}>{icon}</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginTop: 4, letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 2, fontWeight: 500 }}>{label}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* AI Narrative for leadership */}
             <div style={S.card}>
-              <p style={S.heading}><Brain style={{ width: 14, height: 14, color: "var(--accent)" }} /> Executive Summary</p>
+              <p style={S.heading}><Brain style={{ width: 14, height: 14, color: "#f36c21" }} /> Executive Summary</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {aiLines.map((line, i) => (
-                  <div key={i} style={{ display: "flex", gap: 10, padding: "10px 12px", background: "var(--base)", borderRadius: "var(--radius-xs)", borderLeft: "3px solid var(--accent)" }}>
+                  <div key={i} style={{ display: "flex", gap: 10, padding: "12px 14px", background: "var(--base)", borderRadius: 10, borderLeft: "3px solid #f36c21" }}>
                     <p style={{ fontSize: 13, color: "var(--ink)", lineHeight: 1.6, margin: 0 }}>{line}</p>
                   </div>
                 ))}
@@ -482,7 +502,7 @@ function AdminConsolePage() {
 
             {/* Funnel chart */}
             <div style={S.card}>
-              <p style={S.heading}><TrendingUp style={{ width: 14, height: 14, color: "var(--accent)" }} /> Candidate Journey Funnel</p>
+              <p style={S.heading}><TrendingUp style={{ width: 14, height: 14, color: "#f36c21" }} /> Candidate Journey Funnel</p>
               {(() => {
                 const total = stats?.total_candidates ?? 0;
                 const analysed = Math.min(stats?.analyses ?? 0, total);
@@ -521,7 +541,7 @@ function AdminConsolePage() {
             {/* Monthly bar chart for leadership */}
             {months.length > 0 && (
               <div style={S.card}>
-                <p style={S.heading}><BarChart3 style={{ width: 14, height: 14, color: "var(--accent)" }} /> Applications vs Interviews — Monthly</p>
+                <p style={S.heading}><BarChart3 style={{ width: 14, height: 14, color: "#f36c21" }} /> Applications vs Interviews — Monthly</p>
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 100 }}>
                   {months.map((m, i) => {
                     const maxVal = Math.max(...months.map(x => x.applications), 1);
@@ -549,11 +569,11 @@ function AdminConsolePage() {
 
         {/* ── Candidate Engagement (always visible) ── */}
         <div style={S.card}>
-          <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "var(--accent)" }} /> Candidate Engagement Breakdown</p>
+          <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "#f36c21" }} /> Candidate Engagement Breakdown</p>
           {bhvLoading ? (
             <p style={{ fontSize: 12, color: "var(--muted)" }}>Loading…</p>
           ) : bhvStats ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 { label: "Highly Active",  emoji: "🔥", count: bhvStats.highlyActive, color: "#10B981", desc: ">80 applications or >3 interviews" },
                 { label: "Active",         emoji: "✅", count: bhvStats.active,       color: "#6366F1", desc: "31–80 applications" },
@@ -563,7 +583,7 @@ function AdminConsolePage() {
                 const pct = bhvStats.total > 0 ? Math.round((count / bhvStats.total) * 100) : 0;
                 return (
                   <div key={label}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                       <div>
                         <span style={{ fontSize: 12, fontWeight: 700, color }}>{emoji} {label}</span>
                         <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 6 }}>{desc}</span>
@@ -571,20 +591,20 @@ function AdminConsolePage() {
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--ink)" }}>{count.toLocaleString()} <span style={{ color: "var(--muted)", fontWeight: 400 }}>({pct}%)</span></span>
                     </div>
                     <div style={{ height: 8, borderRadius: 999, background: "var(--line)", overflow: "hidden" }}>
-                      <div style={{ height: "100%", borderRadius: 999, background: color, width: `${pct}%`, transition: "width 0.6s" }} />
+                      <div style={{ height: "100%", borderRadius: 999, background: `linear-gradient(90deg, ${color} 0%, ${color}cc 100%)`, width: `${pct}%`, transition: "width 0.6s" }} />
                     </div>
                   </div>
                 );
               })}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, paddingTop: 12, borderTop: "1px solid var(--line)", marginTop: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, paddingTop: 14, borderTop: "1px solid var(--line)", marginTop: 4 }}>
                 {[
                   { label: "Avg Apps / Candidate", val: bhvStats.avgApps },
                   { label: "Attended Interviews",   val: bhvStats.withInterviews.toLocaleString() },
                   { label: "Behaviour Records",     val: bhvStats.total.toLocaleString() },
                 ].map(({ label, val }) => (
-                  <div key={label} style={{ textAlign: "center", background: "var(--base)", borderRadius: "var(--radius-xs)", padding: "10px 6px", border: "1px solid var(--line)" }}>
-                    <p style={{ fontSize: 18, fontWeight: 800, color: "var(--brand)" }}>{val}</p>
-                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{label}</p>
+                  <div key={label} style={{ textAlign: "center", background: "var(--base)", borderRadius: 10, padding: "12px 6px", border: "1px solid var(--line)" }}>
+                    <p style={{ fontSize: 18, fontWeight: 800, color: "#205295", letterSpacing: '-0.02em' }}>{val}</p>
+                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
                   </div>
                 ))}
               </div>
@@ -596,13 +616,15 @@ function AdminConsolePage() {
 
         {/* ── Admin Modules ── */}
         <div style={S.card}>
-          <p style={S.heading}><Settings style={{ width: 14, height: 14, color: "var(--accent)" }} /> Admin Modules</p>
+          <p style={S.heading}><Settings style={{ width: 14, height: 14, color: "#f36c21" }} /> Admin Modules</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
             {NAV_LINKS.map(({ href, icon: Icon, label, desc }) => (
-              <Link key={href} to={href} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "12px 14px", background: "var(--base)", border: "1px solid var(--line)", borderRadius: "var(--radius-xs)", textDecoration: "none", transition: "border-color 0.15s" }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = "var(--brand)")}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--line)")}>
-                <Icon style={{ width: 16, height: 16, color: "var(--accent)", flexShrink: 0, marginTop: 2 }} />
+              <Link key={href} to={href} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: "var(--base)", border: "1px solid var(--line)", borderRadius: 12, textDecoration: "none", transition: "all 0.2s" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(32,82,149,0.3)"; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.transform = 'none'; }}>
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon style={{ width: 16, height: 16, color: "#205295" }} />
+                </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: 0 }}>{label}</p>
                   <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 2, lineHeight: 1.4 }}>{desc}</p>
@@ -614,16 +636,18 @@ function AdminConsolePage() {
         </div>
 
         {/* ── Governance ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
           {[
             { label: "Role-Based Access", val: "Active",  ok: true },
             { label: "Audit Logging",     val: "Enabled", ok: true },
             { label: "PDPA Compliance",   val: "Active",  ok: true },
           ].map(({ label, val, ok }) => (
-            <div key={label} style={{ ...S.card, display: "flex", alignItems: "center", gap: 10 }}>
-              <CheckCircle style={{ width: 16, height: 16, color: ok ? "#15803d" : "#dc2626", flexShrink: 0 }} />
+            <div key={label} style={{ ...S.card, display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: ok ? 'rgba(220,252,231,0.5)' : 'rgba(254,226,226,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <CheckCircle style={{ width: 16, height: 16, color: ok ? "#15803d" : "#dc2626" }} />
+              </div>
               <div>
-                <p style={{ fontSize: 10, color: "var(--muted)" }}>{label}</p>
+                <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 500 }}>{label}</p>
                 <p style={{ fontSize: 13, fontWeight: 700, color: ok ? "#15803d" : "#dc2626" }}>{val}</p>
               </div>
             </div>

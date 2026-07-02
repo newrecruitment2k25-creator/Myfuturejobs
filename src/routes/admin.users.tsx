@@ -136,26 +136,38 @@ function AdminUsersPage() {
           <ArrowLeft className="size-4" /> Back to Admin Console
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Admin - Users</p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-primary">User Administration</h1>
-              <p className="mt-1 text-sm text-muted-foreground">Manage accounts, roles, and access. All changes are audit logged.</p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Admin · Users
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>User Administration</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Manage accounts, roles, and access. All changes are audit logged.</p>
             </div>
-            <Button variant="outline" size="sm" onClick={fetchProfiles} disabled={loading} className="gap-2">
+            <button onClick={fetchProfiles} disabled={loading}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+            >
               <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </Button>
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          {["admin", "employer", "job_seeker"].map(role => (
-            <div key={role} className="rounded-xl border border-border bg-card p-4 text-center shadow-sm">
-              <p className="text-2xl font-extrabold tabular-nums text-primary">
+          {[
+            { role: "admin", color: '#dc2626' },
+            { role: "employer", color: '#f36c21' },
+            { role: "job_seeker", color: '#205295' },
+          ].map(({ role, color }) => (
+            <div key={role} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(10,38,71,0.04)' }}>
+              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>
                 {loading ? "…" : profiles.filter(p => p.role === role).length}
               </p>
-              <p className="text-xs text-muted-foreground mt-0.5">{role}</p>
+              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{role}</p>
             </div>
           ))}
         </div>
@@ -176,10 +188,10 @@ function AdminUsersPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <Users className="size-5 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">Users ({filtered.length})</h2>
+        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(10,38,71,0.04)', padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <Users style={{ width: 18, height: 18, color: '#205295' }} />
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>Users ({filtered.length})</h2>
           </div>
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>

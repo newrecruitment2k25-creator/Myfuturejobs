@@ -76,23 +76,27 @@ function CandidateDetailPage() {
           <ArrowLeft className="size-4" /> Back to Candidates
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start gap-4">
-            <div className="size-14 shrink-0 flex items-center justify-center rounded-2xl bg-primary/10">
-              <User className="size-7 text-primary" />
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 16, position: 'relative' }}>
+            <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <User style={{ width: 24, height: 24, color: 'rgba(255,255,255,0.4)' }} />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Candidate 360 Profile</p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-primary truncate">{detail?.email ?? candidateId}</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Candidate 360 Profile
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{detail?.email ?? candidateId}</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
                 {detail?.profile?.role ?? "job_seeker"} ·
                 Joined {detail?.profile?.created_at ? fmtDate(detail.profile.created_at) : "—"}
               </p>
             </div>
             {latestAnalysis && (
-              <div className="shrink-0 text-right">
-                <p className="text-3xl font-extrabold text-primary tabular-nums">{latestAnalysis.overall_score}</p>
-                <p className="text-xs text-muted-foreground">Employability Score</p>
+              <div style={{ flexShrink: 0, textAlign: 'right' }}>
+                <p style={{ fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums', margin: 0 }}>{latestAnalysis.overall_score}</p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>Employability Score</p>
               </div>
             )}
           </div>

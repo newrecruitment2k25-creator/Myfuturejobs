@@ -171,12 +171,17 @@ function AnalyzePage() {
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-          <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-            Analyze Your CV
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Step 1 — Upload your CV · Step 2 — Tell us your target
-          </p>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--line)' }}>
+              AI Tools · CV Analysis
+            </div>
+            <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>
+              Analyze Your CV
+            </h1>
+            <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
+              Step 1 — Upload your CV · Step 2 — Tell us your target
+            </p>
+          </div>
 
           {/* Upload */}
           <div className="mt-8">

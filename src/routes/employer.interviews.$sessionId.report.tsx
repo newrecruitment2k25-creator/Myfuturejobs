@@ -93,20 +93,24 @@ function InterviewReportPage() {
         </Link>
 
         {/* Report header */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Assessment Report — Employer View</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">{session.role_title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                AI Assessment Report — Employer View
+              </div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>{session.role_title}</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
                 {session.company_type} · {session.industry} · {session.interview_type} Interview · {session.experience_level}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>
                 {new Date(session.created_at).toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
               </p>
             </div>
             {rec && (
-              <span className={`inline-flex rounded-full border px-5 py-2 text-sm font-semibold ${rec.cls}`}>
+              <span style={{ display: 'inline-flex', borderRadius: 999, border: '1px solid', padding: '8px 20px', fontSize: 13, fontWeight: 700, ...{ color: rec.cls.includes('text-') ? undefined : undefined } }} className={rec.cls}>
                 {rec.label}
               </span>
             )}

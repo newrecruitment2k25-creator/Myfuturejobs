@@ -227,22 +227,26 @@ function SkillsPassportPage() {
       <main className="flex-1">
 
         {/* ── Page header ──────────────────────────────────── */}
-        <div className="border-b border-border bg-muted/20 px-4 py-8 sm:px-6">
-          <div className="mx-auto max-w-5xl flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderBottom: '1px solid var(--line)', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', padding: '32px 16px', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Tools · Skills Passport</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">My Skills Passport</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {analysis.industry} · Overall Score: <strong>{analysis.overall}/100</strong> · Generated {new Date(analysis.createdAt).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                AI Tools · Skills Passport
+              </div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>My Skills Passport</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
+                {analysis.industry} · Overall Score: <strong style={{ color: 'rgba(255,255,255,0.7)' }}>{analysis.overall}/100</strong> · Generated {new Date(analysis.createdAt).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleDownload}>
-                <Download className="mr-2 size-4" /> Download PNG
-              </Button>
-              <Button asChild size="sm">
-                <Link to="/analyze"><FileText className="mr-2 size-4" /> Re-analyze CV</Link>
-              </Button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={handleDownload} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
+                <Download style={{ width: 14, height: 14 }} /> Download PNG
+              </button>
+              <Link to="/analyze" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}>
+                <FileText style={{ width: 14, height: 14 }} /> Re-analyze CV
+              </Link>
             </div>
           </div>
         </div>

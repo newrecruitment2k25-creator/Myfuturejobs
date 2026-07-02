@@ -194,12 +194,17 @@ function LinkedInReviewPage() {
           <LinkedInResultsView result={result} meta={resultMeta} />
         ) : (
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-          <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-            LinkedIn Profile Reviewer
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            AI feedback built for Malaysian professionals and fresh graduates
-          </p>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--line)' }}>
+              AI Tools · LinkedIn
+            </div>
+            <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>
+              LinkedIn Profile Reviewer
+            </h1>
+            <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
+              AI feedback built for Malaysian professionals and fresh graduates
+            </p>
+          </div>
 
           {/* How to export */}
           <div className="mt-8 rounded-2xl border border-border bg-secondary/30 p-6">

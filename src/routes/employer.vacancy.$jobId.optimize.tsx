@@ -112,19 +112,23 @@ function VacancyOptimizePage() {
         </Link>
 
         {/* Header */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Vacancy Optimization Intelligence</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">{job.job_title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Vacancy Optimization Intelligence
+              </div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>{job.job_title}</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
                 {job.company_name} · {job.employer_type} · {job.industry} · {job.location}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
-              <div className="text-right">
-                <p className="text-4xl font-extrabold tabular-nums text-primary">{report.vacancyQualityScore}</p>
-                <p className="text-xs text-muted-foreground">/100 Quality Score</p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontSize: 36, fontWeight: 800, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums', margin: 0 }}>{report.vacancyQualityScore}</p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>/100 Quality Score</p>
               </div>
               <div className={`inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 ${readinessCfg.bg}`}>
                 <span className={`size-2 rounded-full ${readinessCfg.dot}`} />

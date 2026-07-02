@@ -127,10 +127,12 @@ function CreateInterviewPage() {
           </Link>
         </div>
 
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Interview Setup</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">Create Interview Session</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Configure the AI interview for your candidate.</p>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--line)' }}>
+            AI Interview Setup
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>Create Interview Session</h1>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Configure the AI interview for your candidate.</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">

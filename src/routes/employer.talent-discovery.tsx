@@ -169,12 +169,17 @@ function TalentDiscoveryPage() {
       <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px', display:'flex', flexDirection:'column', gap:24 }}>
 
         {/* Header */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex items-start gap-3 mb-4">
-            <Sparkles className="size-6 text-primary mt-0.5 shrink-0" />
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16, position: 'relative' }}>
+            <Sparkles style={{ width: 24, height: 24, color: 'rgba(255,255,255,0.3)', marginTop: 2, flexShrink: 0 }} />
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-primary">AI Talent Discovery</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">Describe your ideal candidate in natural language — our AI searches 1,449+ candidate profiles and ranks the best matches.</p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Employer · Talent Discovery
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>AI Talent Discovery</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Describe your ideal candidate in natural language — our AI searches 1,449+ candidate profiles and ranks the best matches.</p>
             </div>
           </div>
 

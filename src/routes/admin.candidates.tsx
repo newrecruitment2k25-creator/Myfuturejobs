@@ -112,33 +112,41 @@ function AdminCandidatesPage() {
           <ArrowLeft className="size-4" /> Back to Admin Console
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Admin - Candidates</p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-primary">Candidate Management</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Admin · Candidates
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Candidate Management</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
                 {loading ? "Loading…" : `${total.toLocaleString()} total candidates`}
-                {!loading && <span className="ml-2 text-xs">({registeredCount} registered · {pocTotal.toLocaleString()} PERKESO)</span>}
+                {!loading && <span style={{ marginLeft: 8, fontSize: 12 }}>({registeredCount} registered · {pocTotal.toLocaleString()} PERKESO)</span>}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={() => fetchCandidates(pocPage, sourceFilter, debouncedSearch)} disabled={loading} className="gap-2">
+            <button onClick={() => fetchCandidates(pocPage, sourceFilter, debouncedSearch)} disabled={loading}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+            >
               <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* KPI row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total", value: total },
-            { label: "Registered", value: registeredCount },
-            { label: "PERKESO", value: pocTotal },
-            { label: "This Page", value: candidates.length },
-          ].map(({ label, value }) => (
-            <div key={label} className="rounded-xl border border-border bg-card p-4 text-center shadow-sm">
-              <p className="text-2xl font-extrabold tabular-nums text-primary">{loading ? "…" : value.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+            { label: "Total", value: total, color: '#205295' },
+            { label: "Registered", value: registeredCount, color: '#15803d' },
+            { label: "PERKESO", value: pocTotal, color: '#f36c21' },
+            { label: "This Page", value: candidates.length, color: '#6d28d9' },
+          ].map(({ label, value, color }) => (
+            <div key={label} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(10,38,71,0.04)' }}>
+              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>{loading ? "…" : value.toLocaleString()}</p>
+              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{label}</p>
             </div>
           ))}
         </div>
@@ -165,10 +173,10 @@ function AdminCandidatesPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-          <div className="flex items-center gap-2 px-5 py-4 border-b border-border">
-            <BarChart3 className="size-4 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">
+        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
+            <BarChart3 style={{ width: 16, height: 16, color: '#205295' }} />
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>
               {loading ? "Loading…" : `Showing ${candidates.length} of ${total.toLocaleString()} candidates`}
             </h2>
           </div>

@@ -77,14 +77,14 @@ function EmployerTemplatesPage() {
   return (
     <div style={{ minHeight:'100vh', background:'var(--base)' }}>
       <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px' }}>
-        <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <header style={{ marginBottom: 32, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-primary">Interview Templates</h1>
-            <p className="mt-1 text-muted-foreground">Create templates and invite candidates to structured interviews.</p>
+            <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>Interview Templates</h1>
+            <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Create templates and invite candidates to structured interviews.</p>
           </div>
           <Link
             to="/employer/interview-templates/create"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}
           >
             <Plus className="size-4" /> Create New Template
           </Link>

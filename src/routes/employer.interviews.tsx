@@ -130,17 +130,23 @@ function EmployerInterviewsPage() {
     <div style={{ minHeight:'100vh', background:'var(--base)' }}>
       <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px' }}>
         {/* Header */}
-        <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Employer Portal</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-primary">AI Interview Templates</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Create templates and invite candidates to complete AI interviews.</p>
-          </div>
-          <Button asChild variant="navy">
-            <Link to="/employer/interview-templates/create">
-              <Plus className="mr-2 size-4" /> Create Template
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden', marginBottom: 32 }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Employer Portal
+              </div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>AI Interview Templates</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Create templates and invite candidates to complete AI interviews.</p>
+            </div>
+            <Link to="/employer/interview-templates/create"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}
+            >
+              <Plus className="size-4" /> Create Template
             </Link>
-          </Button>
+          </div>
         </div>
 
         {/* Templates */}

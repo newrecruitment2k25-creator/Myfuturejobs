@@ -407,54 +407,70 @@ function DashboardPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--base)', display: 'flex', flexDirection: 'column' }}>
-      <main style={{ flex: 1, width: '100%', maxWidth: 1200, margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: 1200, margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
 
         {/* ── 1. Welcome Bar ─────────────────────────────────────────────── */}
         <div style={{
-          background: 'var(--brand)', borderRadius: 'var(--radius-md)', padding: '20px 24px',
+          background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 16, padding: '24px 28px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           flexWrap: 'wrap', gap: 12, overflow: 'hidden', position: 'relative',
+          boxShadow: '0 4px 20px rgba(10,38,71,0.15)',
         }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ position: 'absolute', right: 60, bottom: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
           <div style={{ position: 'relative' }}>
-            <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.6)', marginBottom: 2 }}>{greeting}</p>
-            <h1 style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', margin: 0 }}>
-              {displayName} 👋
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+              Job Seeker Dashboard
+            </div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', margin: 0 }}>
+              {greeting}, {displayName} 👋
             </h1>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{user?.email}</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>{user?.email}</p>
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', position: 'relative' }}>
-            <Link to="/jobs" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:'var(--radius-xs)', background:'rgba(255,255,255,0.12)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+            <Link to="/jobs" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none', transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+            >
               <Search className="size-3.5" /> Browse Jobs
             </Link>
-            <Link to="/my-cv" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:'var(--radius-xs)', background:'rgba(255,255,255,0.12)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+            <Link to="/my-cv" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none', transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+            >
               <FileText className="size-3.5" /> My CV
             </Link>
-            <Link to="/analyze" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:'var(--radius-xs)', background:'var(--accent)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+            <Link to="/analyze" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'linear-gradient(135deg, #f36c21 0%, #e85d10 100%)', color:'#fff', fontSize:13, fontWeight:700, textDecoration:'none', boxShadow: '0 2px 10px rgba(243,108,33,0.3)' }}>
               <FileText className="size-3.5" /> Analyse CV
             </Link>
-            <Link to="/interview/setup" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:'var(--radius-xs)', background:'rgba(255,255,255,0.15)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+            <Link to="/interview/setup" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', fontSize:13, fontWeight:600, textDecoration:'none', transition: 'all 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.22)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.15)'; }}
+            >
               <Video className="size-3.5" /> AI Interview
             </Link>
           </div>
         </div>
 
         {/* ── 2. Stat Cards ──────────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
           {[
-            { label: 'Total Applications', value: totalApps,        iconBg: 'rgba(33,31,96,0.08)',  iconColor: 'var(--brand)', Icon: Briefcase },
+            { label: 'Total Applications', value: totalApps,        iconBg: 'rgba(32,82,149,0.1)',  iconColor: '#205295',      Icon: Briefcase },
             { label: 'Hired / Offered',    value: hiredOffered,     iconBg: '#dcfce7',              iconColor: '#15803d',      Icon: CheckCircle2 },
             { label: 'Pending Interviews', value: pendingInterviews, iconBg: '#fef3c7',              iconColor: '#d97706',      Icon: Video },
-            { label: 'CV Analyses',        value: totalAnalyses,    iconBg: 'rgba(243,108,33,0.1)', iconColor: 'var(--accent)', Icon: FileText },
+            { label: 'CV Analyses',        value: totalAnalyses,    iconBg: 'rgba(243,108,33,0.1)', iconColor: '#f36c21',      Icon: FileText },
           ].map(({ label, value, iconBg, iconColor, Icon }) => (
-            <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon style={{ width: 18, height: 18, color: iconColor }} />
+            <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(10,38,71,0.08)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(10,38,71,0.04)'; }}
+            >
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon style={{ width: 20, height: 20, color: iconColor }} />
               </div>
               <div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{value}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{label}</div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3, fontWeight: 500 }}>{label}</div>
               </div>
             </div>
           ))}
@@ -462,9 +478,9 @@ function DashboardPage() {
 
         {/* ── 2b. POC Profile Card (shown only when poc_candidate_id is linked) ── */}
         {pocProfile && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'rgba(33,31,96,0.08)', fontSize: 11, fontWeight: 800, color: 'var(--brand)' }}>MY</span>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #0A2647 0%, #205295 100%)', fontSize: 12, fontWeight: 800, color: '#fff' }}>MY</span>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>PERKESO Profile — {pocProfile.candidate_id}</div>
                 {pocProfile.preferred_occupation && <div style={{ fontSize: 11, color: 'var(--muted)' }}>{pocProfile.preferred_occupation}</div>}
@@ -480,18 +496,18 @@ function DashboardPage() {
                   { label: 'Sign-ins',     value: pocBehaviour.sign_in_count },
                 ].map(({ label, value }) => (
                   <div key={label} style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent)', lineHeight: 1 }}>{value}</div>
-                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#f36c21', lineHeight: 1 }}>{value}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, fontWeight: 500 }}>{label}</div>
                   </div>
                 ))}
               </div>
             )}
             {pocProfile.skills && (
               <div style={{ flex: 1, minWidth: 200 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', marginBottom: 4 }}>SKILLS FROM PERKESO</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', marginBottom: 6, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Skills from PERKESO</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                   {pocProfile.skills.split(/[,;|]+/).slice(0, 8).map((s: string) => s.trim()).filter(Boolean).map((s: string) => (
-                    <span key={s} style={{ padding: '2px 8px', borderRadius: 20, background: 'rgba(33,31,96,0.07)', fontSize: 11, color: 'var(--brand)', fontWeight: 600 }}>{s}</span>
+                    <span key={s} style={{ padding: '3px 10px', borderRadius: 20, background: 'rgba(32,82,149,0.08)', fontSize: 11, color: '#205295', fontWeight: 600 }}>{s}</span>
                   ))}
                 </div>
               </div>
@@ -500,28 +516,35 @@ function DashboardPage() {
         )}
 
         {/* ── 3. Main 2-column grid ──────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 10, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 12, alignItems: 'start' }}>
 
           {/* Left: Applications with Stepper */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>My Applications</span>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Briefcase style={{ width: 14, height: 14, color: '#205295' }} />
+                </div>
+                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>My Applications</span>
+              </div>
               {applications && applications.length > 5 && (
                 <button
                   onClick={() => setExpanded(expanded === '__all_apps__' ? null : '__all_apps__')}
-                  style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  style={{ fontSize: 12, fontWeight: 600, color: '#f36c21', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                 >
                   {expanded === '__all_apps__' ? 'Show less ↑' : `View all (${applications.length}) →`}
                 </button>
               )}
             </div>
             {applications === null ? (
-              <div style={{ display:'flex', justifyContent:'center', padding:'24px 0' }}><Loader2 className="size-5 animate-spin" style={{ color: 'var(--accent)' }} /></div>
+              <div style={{ display:'flex', justifyContent:'center', padding:'24px 0' }}><Loader2 className="size-5 animate-spin" style={{ color: '#f36c21' }} /></div>
             ) : applications.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                <Briefcase style={{ width: 32, height: 32, color: 'var(--line-strong)', margin: '0 auto 8px' }} />
-                <p style={{ fontSize: 13, color: 'var(--muted)' }}>No applications yet</p>
-                <Link to="/jobs" style={{ display:'inline-block', marginTop:8, fontSize:12, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>Browse Jobs →</Link>
+              <div style={{ textAlign: 'center', padding: '28px 0' }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--base)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                  <Briefcase style={{ width: 24, height: 24, color: 'var(--line-strong)' }} />
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>No applications yet</p>
+                <Link to="/jobs" style={{ display:'inline-block', marginTop:10, fontSize:12, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>Browse Jobs →</Link>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -529,24 +552,27 @@ function DashboardPage() {
                   const initials = (app.company_name ?? 'J').slice(0, 2).toUpperCase();
                   const lastNote = app.status_history?.at(-1)?.notes;
                   return (
-                    <div key={app.id} style={{ borderRadius: 'var(--radius-sm)', border: '1px solid var(--line)', padding: '10px 12px', background: 'var(--base)' }}>
+                    <div key={app.id} style={{ borderRadius: 12, border: '1px solid var(--line)', padding: '12px 14px', background: 'var(--base)', transition: 'all 0.15s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
+                    >
                       {/* Top row: avatar + title + date */}
                       <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
-                        <div style={{ width:32, height:32, borderRadius:8, background:'rgba(33,31,96,0.08)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:11, fontWeight:700, color:'var(--brand)' }}>{initials}</div>
+                        <div style={{ width:34, height:34, borderRadius:10, background:'linear-gradient(135deg, rgba(32,82,149,0.1) 0%, rgba(10,38,71,0.08) 100%)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:11, fontWeight:700, color:'#205295' }}>{initials}</div>
                         <div style={{ minWidth:0, flex:1 }}>
-                          <div style={{ fontSize:12, fontWeight:600, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{app.job_title ?? 'Unknown Job'}</div>
-                          <div style={{ fontSize:10, color:'var(--muted)' }}>{app.company_name ?? ''}{app.location ? ` · ${app.location}` : ''}</div>
+                          <div style={{ fontSize:13, fontWeight:600, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{app.job_title ?? 'Unknown Job'}</div>
+                          <div style={{ fontSize:11, color:'var(--muted)' }}>{app.company_name ?? ''}{app.location ? ` · ${app.location}` : ''}</div>
                         </div>
                         <div style={{ display:'flex', alignItems:'center', gap:6, flexShrink:0 }}>
-                          <span style={{ fontSize:9, color:'var(--muted)', whiteSpace:'nowrap' }}>{formatDate(app.created_at)}</span>
-                          <Link to="/application/$applicationId" params={{ applicationId: app.id }} style={{ fontSize:10, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>View</Link>
+                          <span style={{ fontSize:10, color:'var(--muted)', whiteSpace:'nowrap' }}>{formatDate(app.created_at)}</span>
+                          <Link to="/application/$applicationId" params={{ applicationId: app.id }} style={{ fontSize:11, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>View</Link>
                         </div>
                       </div>
                       {/* Status stepper */}
                       <AppStatusStepper status={app.status as any} />
                       {/* Status note */}
                       {lastNote && (
-                        <div style={{ marginTop:6, fontSize:10, color:'var(--muted)', background:'rgba(33,31,96,0.06)', borderRadius:'var(--radius-xs)', padding:'4px 8px' }}>{lastNote}</div>
+                        <div style={{ marginTop:6, fontSize:10, color:'var(--muted)', background:'rgba(32,82,149,0.05)', borderRadius:6, padding:'4px 8px' }}>{lastNote}</div>
                       )}
                     </div>
                   );
@@ -556,16 +582,21 @@ function DashboardPage() {
           </div>
 
           {/* Right: Interview Invitations + Recent CV Analyses stacked */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
             {/* Interview Invitations */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-                <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>Interview Invitations</span>
-                <Link to="/interview/setup" style={{ fontSize:12, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>New →</Link>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(220,252,231,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Video style={{ width: 14, height: 14, color: '#15803d' }} />
+                  </div>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Interview Invitations</span>
+                </div>
+                <Link to="/interview/setup" style={{ fontSize:12, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>New →</Link>
               </div>
               {invitations === null ? (
-                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color:'var(--accent)' }} /></div>
+                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color: '#f36c21' }} /></div>
               ) : invitations.length === 0 ? (
                 <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'12px 0' }}>No invitations yet</p>
               ) : (
@@ -583,13 +614,13 @@ function DashboardPage() {
                         </div>
                       </div>
                       {inv.practical ? (
-                        <span style={{ fontSize:10, fontWeight:600, color:'var(--accent)', background:'rgba(243,108,33,0.1)', borderRadius:'var(--radius-xs)', padding:'2px 8px', whiteSpace:'nowrap' }}>
+                        <span style={{ fontSize:10, fontWeight:600, color:'#f36c21', background:'rgba(243,108,33,0.1)', borderRadius:6, padding:'3px 10px', whiteSpace:'nowrap' }}>
                           {inv.practical.mode === 'in_person' ? 'In-person' : 'Online'}
                         </span>
                       ) : inv.status === 'completed' ? (
-                        <span style={{ fontSize:10, fontWeight:600, color:'#15803d', background:'#dcfce7', borderRadius:'var(--radius-xs)', padding:'2px 8px', whiteSpace:'nowrap' }}>Done · {inv.overall_score ?? 0}</span>
+                        <span style={{ fontSize:10, fontWeight:600, color:'#15803d', background:'#dcfce7', borderRadius:6, padding:'3px 10px', whiteSpace:'nowrap' }}>Done · {inv.overall_score ?? 0}</span>
                       ) : (
-                        <a href={`/interview-room.html?invitation=${inv.id}`} style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'4px 10px', borderRadius:'var(--radius-xs)', background:'var(--brand)', color:'#fff', fontSize:11, fontWeight:600, textDecoration:'none', whiteSpace:'nowrap' }}>
+                        <a href={`/interview-room.html?invitation=${inv.id}`} style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'5px 12px', borderRadius:8, background:'linear-gradient(135deg, #0A2647 0%, #205295 100%)', color:'#fff', fontSize:11, fontWeight:600, textDecoration:'none', whiteSpace:'nowrap' }}>
                           <Video style={{ width:10, height:10 }} />{inv.status === 'in_progress' ? 'Continue' : 'Start'}
                         </a>
                       )}
@@ -600,13 +631,18 @@ function DashboardPage() {
             </div>
 
             {/* Recent CV Analyses */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-                <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>Recent CV Analyses</span>
-                <Link to="/analyze" style={{ fontSize:12, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>Analyse →</Link>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <FileText style={{ width: 14, height: 14, color: '#f36c21' }} />
+                  </div>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Recent CV Analyses</span>
+                </div>
+                <Link to="/analyze" style={{ fontSize:12, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>Analyse →</Link>
               </div>
               {rows === null ? (
-                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color:'var(--accent)' }} /></div>
+                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color: '#f36c21' }} /></div>
               ) : rows.length === 0 ? (
                 <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'12px 0' }}>No analyses yet</p>
               ) : (
@@ -617,12 +653,12 @@ function DashboardPage() {
                     const scBg   = sc >= 80 ? '#dcfce7' : sc >= 60 ? '#fef3c7' : '#fee2e2';
                     return (
                       <div key={r.id} style={{ display:'flex', alignItems:'center', gap:8 }}>
-                        <div style={{ width:32, height:32, borderRadius:8, background:scBg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:800, color:scColor }}>{sc}</div>
+                        <div style={{ width:34, height:34, borderRadius:10, background:scBg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:800, color:scColor }}>{sc}</div>
                         <div style={{ minWidth:0, flex:1 }}>
                           <div style={{ fontSize:12, fontWeight:600, color:'var(--ink)', textTransform:'capitalize', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{r.industry} · {r.company_type}</div>
                           <div style={{ fontSize:10, color:'var(--muted)' }}>{formatDate(r.created_at)}</div>
                         </div>
-                        <Link to="/results" search={{ id: r.id }} style={{ fontSize:10, fontWeight:600, color:'var(--accent)', textDecoration:'none', whiteSpace:'nowrap' }}>View →</Link>
+                        <Link to="/results" search={{ id: r.id }} style={{ fontSize:10, fontWeight:600, color:'#f36c21', textDecoration:'none', whiteSpace:'nowrap' }}>View →</Link>
                       </div>
                     );
                   })}
@@ -631,13 +667,18 @@ function DashboardPage() {
             </div>
 
             {/* Saved Jobs */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-                <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>Saved Jobs</span>
-                <Link to="/jobs" style={{ fontSize:12, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>Browse →</Link>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Bookmark style={{ width: 14, height: 14, color: '#f36c21' }} />
+                  </div>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Saved Jobs</span>
+                </div>
+                <Link to="/jobs" style={{ fontSize:12, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>Browse →</Link>
               </div>
               {savedJobs === null ? (
-                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color:'var(--accent)' }} /></div>
+                <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color: '#f36c21' }} /></div>
               ) : savedJobs.length === 0 ? (
                 <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'12px 0' }}>No saved jobs yet</p>
               ) : (
@@ -650,14 +691,14 @@ function DashboardPage() {
                       search={job.poc_vacancy_id ? { search: job.job_title ?? '' } : undefined}
                       style={{ display:'flex', alignItems:'center', gap:8, textDecoration:'none' }}
                     >
-                      <div style={{ width:32, height:32, borderRadius:8, background:'rgba(243,108,33,0.1)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                        <Bookmark style={{ width:14, height:14, color:'var(--accent)' }} />
+                      <div style={{ width:32, height:32, borderRadius:10, background:'rgba(243,108,33,0.1)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                        <Bookmark style={{ width:14, height:14, color:'#f36c21' }} />
                       </div>
                       <div style={{ minWidth:0, flex:1 }}>
                         <div style={{ fontSize:12, fontWeight:600, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{job.job_title ?? 'Unknown Job'}</div>
                         <div style={{ fontSize:10, color:'var(--muted)' }}>{job.company_name ?? ''}{job.location ? ` · ${job.location}` : ''}</div>
                       </div>
-                      <ArrowRight style={{ width:12, height:12, color:'var(--accent)', flexShrink:0 }} />
+                      <ArrowRight style={{ width:12, height:12, color:'#f36c21', flexShrink:0 }} />
                     </Link>
                   ))}
                 </div>
@@ -668,39 +709,41 @@ function DashboardPage() {
 
         {/* ── 4. Personalised "For You" section ─────────────────────────── */}
         {true && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '16px 18px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Sparkles style={{ width: 14, height: 14, color: 'var(--accent)' }} />
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '18px 20px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, rgba(243,108,33,0.12) 0%, rgba(243,108,33,0.06) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles style={{ width: 16, height: 16, color: '#f36c21' }} />
                 </div>
                 <div>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Jobs For You</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Jobs For You</span>
                   <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 8 }}>Personalised based on your CV, skills & history</span>
                 </div>
               </div>
-              <Link to="/jobs" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Link to="/jobs" style={{ fontSize: 12, fontWeight: 600, color: '#f36c21', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
                 Browse all <ArrowRight style={{ width: 12, height: 12 }} />
               </Link>
             </div>
 
             {recommendedJobs === null ? (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 12 }}>
                 {[1,2,3].map(i => (
-                  <div key={i} style={{ flex: 1, height: 80, borderRadius: 'var(--radius-sm)', background: 'var(--base)', border: '1px solid var(--line)', animation: 'pulse 1.5s infinite' }} />
+                  <div key={i} style={{ flex: 1, height: 90, borderRadius: 12, background: 'var(--base)', border: '1px solid var(--line)', animation: 'pulse 1.5s infinite' }} />
                 ))}
               </div>
             ) : recommendedJobs.length === 0 ? (
-              <div style={{ padding: '20px', textAlign: 'center', borderRadius: 'var(--radius-sm)', background: 'var(--base)', border: '1px dashed var(--line)' }}>
-                <Brain style={{ width: 28, height: 28, color: 'var(--accent)', margin: '0 auto 10px', opacity: 0.5 }} />
+              <div style={{ padding: '24px', textAlign: 'center', borderRadius: 12, background: 'var(--base)', border: '1px dashed var(--line)' }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(243,108,33,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                  <Brain style={{ width: 24, height: 24, color: '#f36c21', opacity: 0.6 }} />
+                </div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', margin: '0 0 4px' }}>Analyse your CV to get job recommendations</p>
-                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 12px' }}>We'll match jobs from 5,800+ PERKESO vacancies based on your skills and role.</p>
-                <Link to="/analyze" style={{ fontSize: 12, fontWeight: 600, color: '#fff', background: 'var(--accent)', borderRadius: 6, padding: '6px 16px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 14px' }}>We'll match jobs from 5,800+ PERKESO vacancies based on your skills and role.</p>
+                <Link to="/analyze" style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'linear-gradient(135deg, #f36c21 0%, #e85d10 100%)', borderRadius: 8, padding: '8px 18px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, boxShadow: '0 2px 10px rgba(243,108,33,0.25)' }}>
                   <FileText style={{ width: 12, height: 12 }} /> Analyse CV Now
                 </Link>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                 {recommendedJobs.slice(0, 6).map((job) => {
                   const scoreColor = job.score >= 60 ? '#15803d' : job.score >= 35 ? '#d97706' : 'var(--muted)';
                   const scoreBg = job.score >= 60 ? '#dcfce7' : job.score >= 35 ? '#fef3c7' : 'var(--base)';
@@ -709,26 +752,26 @@ function DashboardPage() {
                       key={job.id}
                       to="/jobs"
                       search={{ search: job.job_title ?? '' }}
-                      style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '12px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line)', background: 'var(--base)', textDecoration: 'none', transition: 'border-color 0.15s, background 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(243,108,33,0.04)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.background = 'var(--base)'; }}
+                      style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '14px 16px', borderRadius: 12, border: '1px solid var(--line)', background: 'var(--base)', textDecoration: 'none', transition: 'all 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(243,108,33,0.4)'; e.currentTarget.style.background = 'rgba(243,108,33,0.03)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(10,38,71,0.06)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.background = 'var(--base)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.3, flex: 1 }}>{job.job_title ?? 'Untitled'}</span>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: scoreColor, background: scoreBg, borderRadius: 999, padding: '1px 7px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 3 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.3, flex: 1 }}>{job.job_title ?? 'Untitled'}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: scoreColor, background: scoreBg, borderRadius: 999, padding: '2px 8px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 3 }}>
                           <Brain style={{ width: 8, height: 8 }} />{job.score}%
                         </span>
                       </div>
                       {job.state && (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, color: 'var(--muted)' }}>
-                          <MapPin style={{ width: 9, height: 9 }} />{job.state}
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11, color: 'var(--muted)' }}>
+                          <MapPin style={{ width: 10, height: 10 }} />{job.state}
                         </span>
                       )}
                       {job.salary && (
-                        <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--brand)' }}>{job.salary.startsWith('RM') ? job.salary : `RM ${job.salary}`}</span>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: '#205295' }}>{job.salary.startsWith('RM') ? job.salary : `RM ${job.salary}`}</span>
                       )}
                       {job.matchReason && (
-                        <span style={{ fontSize: 10, color: 'var(--accent)', fontWeight: 500, background: 'rgba(243,108,33,0.08)', borderRadius: 4, padding: '2px 6px' }}>
+                        <span style={{ fontSize: 10, color: '#f36c21', fontWeight: 500, background: 'rgba(243,108,33,0.08)', borderRadius: 6, padding: '3px 8px' }}>
                           {job.matchReason}
                         </span>
                       )}
@@ -739,37 +782,43 @@ function DashboardPage() {
             )}
 
             {/* Insight strip: salary + skill gaps + industry interests */}
-            <div style={{ display: 'flex', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
               {salaryInsight && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(33,31,96,0.05)', borderRadius: 'var(--radius-xs)', padding: '8px 12px', flex: 1, minWidth: 180 }}>
-                  <TrendingUp style={{ width: 13, height: 13, color: 'var(--brand)', flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(32,82,149,0.06)', borderRadius: 10, padding: '10px 14px', flex: 1, minWidth: 180 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <TrendingUp style={{ width: 14, height: 14, color: '#205295' }} />
+                  </div>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Salary Range</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>{salaryInsight.label}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Salary Range</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{salaryInsight.label}</div>
                   </div>
                 </div>
               )}
               {missingSkillsInsight.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, background: '#fef2f2', borderRadius: 'var(--radius-xs)', padding: '8px 12px', flex: 2, minWidth: 200 }}>
-                  <Zap style={{ width: 13, height: 13, color: '#dc2626', flexShrink: 0, marginTop: 1 }} />
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: '#fef2f2', borderRadius: 10, padding: '10px 14px', flex: 2, minWidth: 200 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Zap style={{ width: 14, height: 14, color: '#dc2626' }} />
+                  </div>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Skill Gaps to Close</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 5 }}>Skill Gaps to Close</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                       {missingSkillsInsight.map(sk => (
-                        <span key={sk} style={{ fontSize: 10, fontWeight: 600, color: '#dc2626', background: '#fee2e2', borderRadius: 4, padding: '2px 7px' }}>{sk}</span>
+                        <span key={sk} style={{ fontSize: 10, fontWeight: 600, color: '#dc2626', background: '#fee2e2', borderRadius: 6, padding: '2px 8px' }}>{sk}</span>
                       ))}
                     </div>
                   </div>
                 </div>
               )}
               {topIndustries.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, background: 'rgba(243,108,33,0.06)', borderRadius: 'var(--radius-xs)', padding: '8px 12px', flex: 2, minWidth: 200 }}>
-                  <BarChart2 style={{ width: 13, height: 13, color: 'var(--accent)', flexShrink: 0, marginTop: 1 }} />
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: 'rgba(243,108,33,0.06)', borderRadius: 10, padding: '10px 14px', flex: 2, minWidth: 200 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <BarChart2 style={{ width: 14, height: 14, color: '#f36c21' }} />
+                  </div>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Your Industry Interests</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: '#f36c21', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 5 }}>Your Industry Interests</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                       {topIndustries.map(ind => (
-                        <Link key={ind.name} to="/jobs" search={{ search: ind.name }} style={{ fontSize: 10, fontWeight: 600, color: 'var(--accent)', background: 'rgba(243,108,33,0.12)', borderRadius: 4, padding: '2px 7px', textDecoration: 'none' }}>
+                        <Link key={ind.name} to="/jobs" search={{ search: ind.name }} style={{ fontSize: 10, fontWeight: 600, color: '#f36c21', background: 'rgba(243,108,33,0.12)', borderRadius: 6, padding: '2px 8px', textDecoration: 'none' }}>
                           {ind.name}
                         </Link>
                       ))}
@@ -782,29 +831,34 @@ function DashboardPage() {
         )}
 
         {/* ── 5. Bottom 3-column grid ────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, alignItems: 'start' }}>
 
           {/* Col 1: Application Funnel */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>Application Funnel</span>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <BarChart2 style={{ width: 14, height: 14, color: '#205295' }} />
+                </div>
+                <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Application Funnel</span>
+              </div>
             </div>
             {totalApps === 0 ? (
-              <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'12px 0' }}>Start applying to see your funnel</p>
+              <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'16px 0' }}>Start applying to see your funnel</p>
             ) : (
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {statusFunnelOrder.map(key => {
                   const pill = STATUS_PILL[key];
                   const count = statusCounts[key] ?? 0;
                   const pct = Math.round((count / maxFunnelCount) * 100);
                   return (
                     <div key={key}>
-                      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:3 }}>
+                      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
                         <span style={{ fontSize:11, fontWeight:600, color:'var(--ink)' }}>{pill.label}</span>
-                        <span style={{ fontSize:11, color:'var(--muted)' }}>{count}</span>
+                        <span style={{ fontSize:11, fontWeight: 700, color: pill.color }}>{count}</span>
                       </div>
-                      <div style={{ height:5, borderRadius:999, background:'var(--line)', overflow:'hidden' }}>
-                        <div style={{ height:'100%', borderRadius:999, background:pill.color, width: `${pct}%`, transition:'width 0.4s ease' }} />
+                      <div style={{ height:6, borderRadius:999, background:'var(--line)', overflow:'hidden' }}>
+                        <div style={{ height:'100%', borderRadius:999, background:`linear-gradient(90deg, ${pill.color} 0%, ${pill.color}cc 100%)`, width: `${pct}%`, transition:'width 0.4s ease' }} />
                       </div>
                     </div>
                   );
@@ -814,30 +868,35 @@ function DashboardPage() {
           </div>
 
           {/* Col 2: Interview History */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>Interview History</span>
-              <Link to="/interview/setup" style={{ fontSize:12, fontWeight:600, color:'var(--accent)', textDecoration:'none' }}>New →</Link>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(220,252,231,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Video style={{ width: 14, height: 14, color: '#15803d' }} />
+                </div>
+                <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Interview History</span>
+              </div>
+              <Link to="/interview/setup" style={{ fontSize:12, fontWeight:600, color:'#f36c21', textDecoration:'none' }}>New →</Link>
             </div>
             {interviews === null ? (
-              <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color:'var(--accent)' }} /></div>
+              <div style={{ display:'flex', justifyContent:'center', padding:'16px 0' }}><Loader2 className="size-4 animate-spin" style={{ color: '#f36c21' }} /></div>
             ) : interviews.length === 0 ? (
-              <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'12px 0' }}>No sessions yet</p>
+              <p style={{ fontSize:12, color:'var(--muted)', textAlign:'center', padding:'16px 0' }}>No sessions yet</p>
             ) : (
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {interviews.slice(0,5).map(iv => {
                   const initials = iv.role_title.slice(0,2).toUpperCase();
                   return (
-                    <div key={iv.id} style={{ display:'flex', alignItems:'center', gap:8 }}>
-                      <div style={{ width:30, height:30, borderRadius:8, background:'rgba(33,31,96,0.08)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:10, fontWeight:700, color:'var(--brand)' }}>{initials}</div>
+                    <div key={iv.id} style={{ display:'flex', alignItems:'center', gap:10 }}>
+                      <div style={{ width:32, height:32, borderRadius:10, background:'linear-gradient(135deg, rgba(32,82,149,0.1) 0%, rgba(10,38,71,0.08) 100%)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:10, fontWeight:700, color:'#205295' }}>{initials}</div>
                       <div style={{ minWidth:0, flex:1 }}>
                         <div style={{ fontSize:12, fontWeight:600, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{iv.role_title}</div>
                         <div style={{ fontSize:10, color:'var(--muted)' }}>{iv.interview_type} · {formatDate(iv.created_at)}</div>
                       </div>
                       {iv.status === 'completed' && iv.overall_score !== null ? (
-                        <span style={{ fontSize:11, fontWeight:600, color:'#15803d', background:'#dcfce7', borderRadius:'var(--radius-xs)', padding:'2px 6px', whiteSpace:'nowrap' }}>{iv.overall_score}</span>
+                        <span style={{ fontSize:11, fontWeight:700, color:'#15803d', background:'#dcfce7', borderRadius:6, padding:'2px 8px', whiteSpace:'nowrap' }}>{iv.overall_score}</span>
                       ) : (
-                        <a href={`/interview-room.html?session=${iv.id}`} style={{ fontSize:10, fontWeight:600, color:'var(--accent)', textDecoration:'none', whiteSpace:'nowrap' }}>Continue →</a>
+                        <a href={`/interview-room.html?session=${iv.id}`} style={{ fontSize:10, fontWeight:600, color:'#f36c21', textDecoration:'none', whiteSpace:'nowrap' }}>Continue →</a>
                       )}
                     </div>
                   );
@@ -847,17 +906,22 @@ function DashboardPage() {
           </div>
 
           {/* Col 3: AI Tools 2×3 grid */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <span style={{ fontSize:13, fontWeight:600, color:'var(--ink)' }}>AI Tools</span>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '16px 18px', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles style={{ width: 14, height: 14, color: '#f36c21' }} />
+                </div>
+                <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>AI Tools</span>
+              </div>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
               {AI_TOOLS.map(({ icon: Icon, label, desc, href, bg, color }) => (
-                <Link key={label} to={href as any} style={{ display:'flex', flexDirection:'column', gap:4, padding:'10px 10px', borderRadius:'var(--radius-sm)', background:'var(--base)', border:'1px solid var(--line)', textDecoration:'none', transition:'background 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = bg)}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'var(--base)')}>
-                  <div style={{ width:28, height:28, borderRadius:7, background:bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                    <Icon style={{ width:13, height:13, color }} />
+                <Link key={label} to={href as any} style={{ display:'flex', flexDirection:'column', gap:5, padding:'12px 12px', borderRadius:12, background:'var(--base)', border:'1px solid var(--line)', textDecoration:'none', transition:'all 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${color}40`; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.transform = 'none'; }}>
+                  <div style={{ width:30, height:30, borderRadius:8, background:bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    <Icon style={{ width:14, height:14, color }} />
                   </div>
                   <div style={{ fontSize:11, fontWeight:600, color:'var(--ink)', lineHeight:1.2 }}>{label}</div>
                   <div style={{ fontSize:10, color:'var(--muted)' }}>{desc}</div>

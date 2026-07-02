@@ -104,34 +104,44 @@ function AdminTaxonomyPage() {
           <ArrowLeft className="size-4" /> Back to Admin Console
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Admin Console · Taxonomy</p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-primary">Taxonomy Management</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">MASCO occupation codes, skills taxonomy. All changes are audit-logged.</p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Admin · Taxonomy
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Taxonomy Management</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>MASCO occupation codes, skills taxonomy. All changes are audit-logged.</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={fetchData} disabled={loading} className="gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={fetchData} disabled={loading}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
+              >
                 <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-              </Button>
-              <Button size="sm" onClick={() => setShowAdd(!showAdd)} className="gap-2">
+              </button>
+              <button onClick={() => setShowAdd(!showAdd)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}
+              >
                 <Plus className="size-4" /> Add Occupation
-              </Button>
+              </button>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total Occupations", value: entries.length },
-            { label: "Active", value: activeCount },
-            { label: "Inactive", value: entries.length - activeCount },
-            { label: "Total Skills", value: totalSkills },
-          ].map(({ label, value }) => (
-            <div key={label} className="rounded-xl border border-border bg-card p-4 text-center shadow-sm">
-              <p className="text-2xl font-extrabold tabular-nums text-primary">{loading ? "…" : value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+            { label: "Total Occupations", value: entries.length, color: '#205295' },
+            { label: "Active", value: activeCount, color: '#15803d' },
+            { label: "Inactive", value: entries.length - activeCount, color: '#dc2626' },
+            { label: "Total Skills", value: totalSkills, color: '#f36c21' },
+          ].map(({ label, value, color }) => (
+            <div key={label} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(10,38,71,0.04)' }}>
+              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>{loading ? "…" : value}</p>
+              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{label}</p>
             </div>
           ))}
         </div>
@@ -165,10 +175,10 @@ function AdminTaxonomyPage() {
           <Input className="pl-9 h-9 text-sm" placeholder="Search by code or title…" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <Database className="size-5 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">Occupations ({filtered.length})</h2>
+        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(10,38,71,0.04)', padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <Database style={{ width: 18, height: 18, color: '#205295' }} />
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>Occupations ({filtered.length})</h2>
           </div>
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>

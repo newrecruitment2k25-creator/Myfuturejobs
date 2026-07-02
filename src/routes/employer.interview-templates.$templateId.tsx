@@ -210,16 +210,16 @@ function TemplateDetailPage() {
     <div style={{ minHeight:'100vh', background:'var(--base)' }}>
       <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px' }}>
         {/* Header */}
-        <div className="mb-6">
-          <Link to="/employer/interview-templates" className="text-sm text-muted-foreground hover:text-foreground mb-3 inline-block">← Templates</Link>
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div style={{ marginBottom: 24 }}>
+          <Link to="/employer/interview-templates" style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12, display: 'inline-block', textDecoration: 'none' }}>← Templates</Link>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
             <div>
-              <h1 className="text-2xl font-bold text-primary">{template?.title}</h1>
-              <p className="text-muted-foreground mt-1">{template?.role_title}{template?.company_name ? ` · ${template.company_name}` : ""}</p>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>{template?.title}</h1>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>{template?.role_title}{template?.company_name ? ` · ${template.company_name}` : ""}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary capitalize">{template?.interview_type}</span>
-              {template?.experience_level && <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">{template.experience_level}</span>}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ borderRadius: 999, background: 'rgba(32,82,149,0.1)', padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#205295', textTransform: 'capitalize' }}>{template?.interview_type}</span>
+              {template?.experience_level && <span style={{ borderRadius: 999, background: 'var(--secondary)', padding: '4px 12px', fontSize: 11, fontWeight: 600, color: 'var(--muted)' }}>{template.experience_level}</span>}
             </div>
           </div>
         </div>

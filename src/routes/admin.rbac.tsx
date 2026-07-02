@@ -91,14 +91,18 @@ function AdminRbacPage() {
           <ArrowLeft className="size-4" /> Back to Admin Console
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Admin Console · Access Control</p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-primary">Role-Based Access Control</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">Permission matrix showing feature access per role. Toggle cells to adjust (display only — enforcement is in code).</p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Admin · Access Control
+              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Role-Based Access Control</h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Permission matrix showing feature access per role. Toggle cells to adjust (display only — enforcement is in code).</p>
             </div>
-            <Lock className="size-8 text-primary hidden sm:block" />
+            <Lock style={{ width: 28, height: 28, color: 'rgba(255,255,255,0.2)' }} />
           </div>
         </div>
 
