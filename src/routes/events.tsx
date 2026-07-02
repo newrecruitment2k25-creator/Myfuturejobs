@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, MapPin, Users, Sparkles, Clock, Building2, GraduationCap, Briefcase, Globe, ArrowRight } from "lucide-react";
-import { PublicLayout } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/events")({
   ssr: false,
@@ -132,7 +132,8 @@ const TAG_STYLE: Record<EventTag, React.CSSProperties> = {
 
 function EventsPage() {
   return (
-    <PublicLayout>
+    <>
+    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
 
       {/* ── Hero ──────────────────────────────────────────── */}
       <section style={{ background: "var(--brand)", padding: "56px 24px 48px" }}>
@@ -243,6 +244,8 @@ function EventsPage() {
         </div>
       </section>
 
-    </PublicLayout>
+    </div>
+    <SiteFooter />
+    </>
   );
 }

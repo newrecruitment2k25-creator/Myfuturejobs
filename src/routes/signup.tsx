@@ -4,7 +4,7 @@ import { Loader2, Users, Building2, Zap, Globe, Award } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/lib/language-context";
-import { PublicNav, PublicFooter } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/signup")({
   ssr: false,
@@ -73,16 +73,15 @@ function SignupPage() {
   };
 
   const stats = [
-    { icon: Users,  value: "2M+",   label: "Registered Users" },
-    { icon: Globe,  value: "50K+",  label: "Active Job Listings" },
+    { icon: Users,  value: "1,449",   label: "Registered Candidates" },
+    { icon: Globe,  value: "5,828",  label: "Active Job Listings" },
     { icon: Zap,    value: "85%",   label: "Interview Success Rate" },
     { icon: Award,  value: "#1",    label: "National Employment Portal" },
   ];
 
   return (
     <>
-    <PublicNav />
-    <div style={{ minHeight: 'calc(100vh - 56px)', background: 'var(--base)', display: 'flex' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'var(--base)', display: 'flex' }}>
 
       {/* ── Left info panel (changes per role) ── */}
       <div style={{ flex: '0 0 42%', background: role === 'employer' ? 'var(--accent)' : 'var(--brand)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 48px', transition: 'background 0.3s' }} className="login-panel">
@@ -196,7 +195,7 @@ function SignupPage() {
       </div>
       </div>
     </div>
-    <PublicFooter />
+    <SiteFooter />
     </>
   );
 }

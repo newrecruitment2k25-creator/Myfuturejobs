@@ -33,7 +33,7 @@ export const Route = createFileRoute("/jobs")({
   head: () => ({
     meta: [
       { title: "Jobs in Malaysia — MYFutureJobs" },
-      { name: "description", content: "Browse thousands of jobs from Malaysia's national job portal. Filter by location, salary, education, and more." },
+      { name: "description", content: "Browse active job vacancies from Malaysia's national job portal. Filter by location, salary, education, and more." },
     ],
   }),
 });
@@ -1067,13 +1067,25 @@ function JobsPage() {
       if (!searchText || searchText.trim().length < 2) return [];
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
+      // Parse salary from query if present
+      const salMatch = searchText.match(/\b(\d{4,6})\b/);
+      const salaryMin = salMatch ? parseInt(salMatch[1]) * 0.8 : undefined;
+      const salaryMax = salMatch ? parseInt(salMatch[1]) * 1.2 : undefined;
       const semanticRes = await fetch("/api/interview", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ action: "semantic_search", query: searchText, type: "vacancies", limit: 50 }),
+        body: JSON.stringify({
+          action: "semantic_search",
+          query: searchText,
+          type: "vacancies",
+          limit: 50,
+          location_filters: locs.length > 0 ? locs : undefined,
+          salary_min: salaryMin,
+          salary_max: salaryMax,
+        }),
       });
       if (!semanticRes.ok) {
         console.warn("Semantic search non-OK:", semanticRes.status);
@@ -1081,27 +1093,27 @@ function JobsPage() {
       }
       const semanticData = await semanticRes.json();
       if (!semanticData?.ok || !Array.isArray(semanticData.results)) return [];
-      // Filter semantic results to respect selected location filters
+      // Map results — filters already applied server-side, but double-check location
       const filtered = (semanticData.results as any[]).filter((match: any) => {
         const v = match.vacancy ?? match;
         const job: JobCard = {
           id: String(match.vacancy_id ?? v.id ?? match.id ?? ''),
           source: "poc",
-          job_title: v.job_title ?? v.occupation_name ?? "Untitled",
+          job_title: v.job_title ?? v.occupation_name ?? "Untitled Position",
           company_name: v.occupation_name ?? v.company_name ?? null,
           state: v.state ?? null,
           city: v.city ?? null,
-          salary: v.salary ?? null,
-          salary_min: v.salary_min ?? null,
-          salary_max: v.salary_max ?? null,
+          salary: v.salary ?? "Salary not provided",
+          salary_min: typeof v.salary_min === "number" && !isNaN(v.salary_min) ? v.salary_min : null,
+          salary_max: typeof v.salary_max === "number" && !isNaN(v.salary_max) ? v.salary_max : null,
           education_level: v.education_level ?? null,
-          skills: v.skills ?? null,
+          skills: v.skills ?? [],
           occupation_name: v.occupation_name ?? null,
           created_at: v.created_at ?? null,
           industry: v.industry ?? null,
           job_description: v.job_description ?? null,
           field_of_study: v.field_of_study ?? null,
-          semanticScore: v.semanticScore ?? match.semanticScore ?? null,
+          semanticScore: match.hybridScore ?? match.semanticScore ?? v.semanticScore ?? null,
         };
         return jobMatchesLocation(job, locs);
       });
@@ -1172,12 +1184,14 @@ function JobsPage() {
 
     const pocJobs: JobCard[] = (pocResult.data ?? []).map((v: any) => ({
       id: v.id, source: "poc" as const,
-      job_title: v.job_title ?? v.occupation_name ?? "Untitled",
+      job_title: v.job_title ?? v.occupation_name ?? "Untitled Position",
       company_name: v.occupation_name ?? null,
       state: v.state ?? null, city: v.city ?? null,
-      salary: v.salary ?? null, salary_min: v.salary_min ?? null, salary_max: v.salary_max ?? null,
+      salary: v.salary ?? "Salary not provided",
+      salary_min: typeof v.salary_min === "number" && !isNaN(v.salary_min) ? v.salary_min : null,
+      salary_max: typeof v.salary_max === "number" && !isNaN(v.salary_max) ? v.salary_max : null,
       education_level: v.education_level ?? null,
-      skills: v.skills ?? null, occupation_name: v.occupation_name ?? null,
+      skills: v.skills ?? [], occupation_name: v.occupation_name ?? null,
       created_at: null, industry: null,
       job_description: v.job_description ?? null,
       field_of_study: v.field_of_study ?? null,
@@ -1490,7 +1504,6 @@ function JobsPage() {
 
   return (
     <>
-    <PublicNav />
     <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', background: 'var(--base)' }}>
       {/* NLP Smart Search Bar */}
       <SmartSearchBar

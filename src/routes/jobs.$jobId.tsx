@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PublicNav, PublicFooter } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 import { useEffect, useState } from "react";
 import {
   MapPin, DollarSign, GraduationCap, Briefcase, ArrowLeft,
@@ -226,19 +226,15 @@ function JobDetailPage() {
   const canApply = !authLoading && user && role === "job_seeker";
 
   if (loading) return (
-    <><PublicNav />
     <div style={{ minHeight: '100vh', background: 'var(--base)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Loader2 style={{ width: 28, height: 28, color: 'var(--brand)' }} className="animate-spin" />
-    </div>
-    <PublicFooter /></>);
+    </div>);
 
   if (error || !job) return (
-    <><PublicNav />
     <div style={{ minHeight: '100vh', background: 'var(--base)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
       <p style={{ color: '#dc2626', fontSize: 14 }}>{error ?? "Job not found."}</p>
       <Link to="/jobs" style={{ fontSize: 13, color: 'var(--brand)', textDecoration: 'none' }}>← Back to Jobs</Link>
     </div>
-    <PublicFooter /></>
   );
 
   const title = job.source === "poc" ? (job.data.job_title ?? job.data.occupation_name ?? "Untitled") : job.data.job_title;
@@ -254,7 +250,6 @@ function JobDetailPage() {
 
   return (
     <>
-    <PublicNav />
     <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 0' }}>
         <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
@@ -423,7 +418,7 @@ function JobDetailPage() {
         onSuccess={() => setApplied(true)}
       />
     </div>
-    <PublicFooter />
+    <SiteFooter />
     </>
   );
 }

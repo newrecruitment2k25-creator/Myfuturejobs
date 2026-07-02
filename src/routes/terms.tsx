@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText, ChevronRight, AlertTriangle, Users, Building2, Brain, Ban, BookOpen, AlertCircle, Scale } from "lucide-react";
-import { PublicLayout } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/terms")({
   ssr: false,
@@ -28,7 +28,8 @@ const TERMS_SECTIONS = [
 
 function TermsPage() {
   return (
-    <PublicLayout>
+    <>
+    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
       <div style={{ maxWidth: 980, margin: "0 auto", padding: "48px 24px 0" }}>
 
         {/* Breadcrumb */}
@@ -84,6 +85,8 @@ function TermsPage() {
           </div>
         </div>
       </div>
-    </PublicLayout>
+    </div>
+    <SiteFooter />
+    </>
   );
 }

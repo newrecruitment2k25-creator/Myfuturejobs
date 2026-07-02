@@ -4,6 +4,7 @@ import { callAi, createEmbedding } from "@/lib/ai-gateway";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { insertNotification } from "@/lib/notifications";
 import { expandKeywords } from "@/lib/taxonomy-map";
+import { normaliseBmQuery, fuzzyMatch } from "@/lib/smart-search.functions";
 
 // Build a robust searchable text string for a poc_vacancy row.
 // Falls back to any string/number fields, and finally to a vacancy-id placeholder,
@@ -249,6 +250,12 @@ async function buildSkillGapResult(
 
   const prompt = `You are a Malaysian workforce development advisor for PERKESO/Praxo.
 Analyze the skill gap between this candidate and vacancy. Return ONLY valid JSON.
+
+IMPORTANT GROUNDING RULES:
+- Use ONLY the data provided below. Do NOT invent or fabricate skills, training, or facts.
+- If data is insufficient, set summary to: "Maklumat tidak mencukupi berdasarkan rekod yang diberikan."
+- Every recommendation must reference a specific missing skill from the data.
+- Do not suggest generic training that is not tied to a specific missing skill.
 
 Candidate skills: ${local.matchedSkills.concat(local.transferableSkills).join(", ") || "N/A"}
 Vacancy required skills: ${local.matchedSkills.concat(local.missingSkills).join(", ") || "N/A"}
@@ -868,52 +875,232 @@ Return JSON only, no markdown, no explanation.` },
           });
         }
 
-        // ── Pre-auth: semantic_search action ─────────────────────────────────
+        // ── Pre-auth: semantic_search action (HYBRID: semantic + lexical) ────
         if (rawBody?.action === "semantic_search") {
+          const _searchStart = Date.now();
           try {
-            const { query, type = "vacancies", limit = 20 } = rawBody as { query?: string; type?: string; limit?: number };
+            const { query, type = "vacancies", limit = 20, location_filters, salary_min, salary_max } = rawBody as {
+              query?: string; type?: string; limit?: number;
+              location_filters?: string[]; salary_min?: number; salary_max?: number;
+            };
             if (!query || typeof query !== "string" || query.trim().length < 2) {
-              return json({ ok: true, results: [], warning: "Enter at least 2 characters for semantic AI search." });
+              return json({ ok: true, results: [], warning: "Enter at least 2 characters for semantic AI search.", durationMs: Date.now() - _searchStart });
             }
 
-            const embedding = await createEmbedding(query.trim(), { AI_API_KEY: process.env.AI_API_KEY });
-            if (!embedding) {
-              return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown." });
-            }
+            // BM normalisation: "jurutera perisian" → "software engineer", "gaji lima ribu" → "5000"
+            const normalisedQuery = normaliseBmQuery(query.trim());
+            const searchLimit = Math.min(limit, 50);
 
+            // ── Read dynamic weights from system_config ──────────────────────
+            let semanticWeight = 0.6;
+            let lexicalWeight = 0.4;
             try {
-              // Try to use an existing RPC or table for vector search. If none exists, fall back safely.
-              const rpcAvailable = !!(supabaseAdmin as any).rpc;
-              if (!rpcAvailable) {
-                return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown." });
+              const { data: configRows } = await (supabaseAdmin as any)
+                .from("system_config")
+                .select("key, value")
+                .in("key", ["matching_semantic_weight", "matching_lexical_weight"]);
+              if (configRows && Array.isArray(configRows)) {
+                for (const row of configRows) {
+                  if (row.key === "matching_semantic_weight") {
+                    const v = parseFloat(row.value);
+                    if (!isNaN(v) && v >= 0 && v <= 1) semanticWeight = v;
+                  }
+                  if (row.key === "matching_lexical_weight") {
+                    const v = parseFloat(row.value);
+                    if (!isNaN(v) && v >= 0 && v <= 1) lexicalWeight = v;
+                  }
+                }
               }
-
-              // Attempt vector search via an expected RPC; if it does not exist, catch and fall back.
-              const { data: matches, error: rpcError } = await (supabaseAdmin as any)
-                .rpc("match_vacancies", { query_embedding: embedding, match_limit: Math.min(limit, 50) })
-                .limit(Math.min(limit, 50));
-
-              if (rpcError) {
-                console.warn("[api/interview] semantic_search RPC failed:", rpcError);
-                return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown." });
-              }
-
-              const normalized = Array.isArray(matches)
-                ? matches.map((item: any) => ({
-                    ...item,
-                    id: item.id ?? item.vacancy_id ?? crypto.randomUUID(),
-                    semanticScore: item.similarity ?? item.semantic_score ?? 0,
-                  }))
-                : [];
-
-              return json({ ok: true, results: normalized, warning: null });
-            } catch (dbError) {
-              console.warn("[api/interview] Semantic DB search failed:", dbError);
-              return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown." });
+            } catch (e) {
+              console.warn("[api/interview] system_config weight read failed, using defaults:", e);
             }
+
+            // ── 1. Semantic search via embeddings ────────────────────────────
+            let semanticResults: any[] = [];
+            const embedding = await createEmbedding(normalisedQuery, { AI_API_KEY: process.env.AI_API_KEY });
+            if (embedding) {
+              try {
+                const { data: matches, error: rpcError } = await (supabaseAdmin as any)
+                  .rpc("match_vacancies", { query_embedding: embedding, match_limit: searchLimit })
+                  .limit(searchLimit);
+                if (!rpcError && Array.isArray(matches)) {
+                  semanticResults = matches.map((item: any) => ({
+                    ...item,
+                    id: String(item.id ?? item.vacancy_id ?? crypto.randomUUID()),
+                    semanticScore: item.similarity ?? item.semantic_score ?? 0,
+                  }));
+                }
+              } catch (dbError) {
+                console.warn("[api/interview] Semantic DB search failed:", dbError);
+              }
+            }
+
+            // ── 2. Lexical search via Supabase full-text ─────────────────────
+            let lexicalResults: any[] = [];
+            try {
+              const queryWords = normalisedQuery.toLowerCase().split(/\s+/).filter((w: string) => w.length >= 2);
+              if (queryWords.length > 0) {
+                // Use ilike for keyword matching on job_title, occupation_name, skills
+                let lexQ = (supabaseAdmin as any)
+                  .from("poc_vacancies")
+                  .select("*")
+                  .or(queryWords.map((w: string) => `job_title.ilike.%${w}%,occupation_name.ilike.%${w}%,skills.ilike.%${w}%`).join(","))
+                  .limit(searchLimit);
+                const { data: lexData, error: lexError } = await lexQ;
+                if (!lexError && lexData) {
+                  lexicalResults = lexData.map((item: any) => {
+                    // Lexical score: count matched query words in title+occupation+skills
+                    const text = `${item.job_title ?? ""} ${item.occupation_name ?? ""} ${item.skills ?? ""}`.toLowerCase();
+                    const matchCount = queryWords.filter((w: string) => text.includes(w)).length;
+                    const lexicalScore = queryWords.length > 0 ? matchCount / queryWords.length : 0;
+                    return { ...item, id: String(item.id ?? crypto.randomUUID()), lexicalScore };
+                  });
+                }
+              }
+            } catch (lexError) {
+              console.warn("[api/interview] Lexical search failed:", lexError);
+            }
+
+            // ── 3. Merge semantic + lexical results with weighted fusion ─────
+            const mergedMap = new Map<string, any>();
+            for (const sr of semanticResults) {
+              const id = String(sr.id);
+              mergedMap.set(id, { ...sr, semanticScore: sr.semanticScore ?? 0, lexicalScore: 0 });
+            }
+            for (const lr of lexicalResults) {
+              const id = String(lr.id);
+              const existing = mergedMap.get(id);
+              if (existing) {
+                existing.lexicalScore = lr.lexicalScore ?? 0;
+                // Merge any missing fields from lexical result
+                if (!existing.job_title && lr.job_title) existing.job_title = lr.job_title;
+                if (!existing.occupation_name && lr.occupation_name) existing.occupation_name = lr.occupation_name;
+              } else {
+                mergedMap.set(id, { ...lr, semanticScore: 0, lexicalScore: lr.lexicalScore ?? 0 });
+              }
+            }
+
+            // ── 4. Role-family guardrails ────────────────────────────────────
+            // Determine the role family from the query to filter out wrong families
+            const queryLower = normalisedQuery.toLowerCase();
+            const ROLE_FAMILIES: { patterns: string[]; families: string[] }[] = [
+              { patterns: ["software", "developer", "programmer", "it ", "data analyst", "data scientist", "network", "system", "cloud", "devops", "cyber", "technical support"],
+                families: ["IT", "Software", "Technology", "Data", "Network", "Engineering"] },
+              { patterns: ["accountant", "account", "finance", "audit", "tax"],
+                families: ["Finance", "Accounting", "Audit"] },
+              { patterns: ["nurse", "medical", "health", "pharmacy", "doctor", "hospital"],
+                families: ["Healthcare", "Medical", "Nursing"] },
+              { patterns: ["teacher", "education", "lecturer", "tutor"],
+                families: ["Education", "Teaching"] },
+              { patterns: ["civil engineer", "mechanical", "electrical", "construction", "manufacturing"],
+                families: ["Engineering", "Manufacturing", "Construction"] },
+              { patterns: ["customer service", "customer support", "call centre", "helpdesk"],
+                families: ["Customer Service", "Support"] },
+              { patterns: ["marketing", "sales", "digital marketing", "brand", "social media"],
+                families: ["Marketing", "Sales", "Communications"] },
+              { patterns: ["hr", "human resources", "recruitment", "talent"],
+                families: ["HR", "Human Resources", "Recruitment"] },
+            ];
+            let detectedFamily: string[] | null = null;
+            for (const fam of ROLE_FAMILIES) {
+              if (fam.patterns.some(p => queryLower.includes(p))) {
+                detectedFamily = fam.families;
+                break;
+              }
+            }
+
+            // ── 5. Apply hard filters (location, salary) and role guardrails ─
+            const locFilters = Array.isArray(location_filters) ? location_filters.map((l: string) => l.toLowerCase()) : [];
+            const salMin = typeof salary_min === "number" ? salary_min : 0;
+            const salMax = typeof salary_max === "number" ? salary_max : 0;
+            let filtered = Array.from(mergedMap.values()).filter((item: any) => {
+              const v = item.vacancy ?? item;
+              // Hard location filter
+              if (locFilters.length > 0) {
+                const jobLoc = `${v.state ?? ""} ${v.city ?? ""}`.toLowerCase();
+                if (!locFilters.some(l => jobLoc.includes(l))) return false;
+              }
+              // Hard salary filter
+              if (salMin > 0 || salMax > 0) {
+                const vMin = typeof v.salary_min === "number" ? v.salary_min : 0;
+                const vMax = typeof v.salary_max === "number" ? v.salary_max : 0;
+                if (salMin > 0 && vMax > 0 && vMax < salMin) return false;
+                if (salMax > 0 && vMin > 0 && vMin > salMax) return false;
+              }
+              // Role-family guardrail: if we detected a family, exclude jobs that clearly don't match
+              if (detectedFamily) {
+                const jobText = `${v.job_title ?? ""} ${v.occupation_name ?? ""} ${v.skills ?? ""}`.toLowerCase();
+                const hasMatch = detectedFamily.some(f => jobText.includes(f.toLowerCase())) ||
+                  // Also allow if the job title fuzzy-matches the query
+                  fuzzyMatch(normalisedQuery, v.job_title ?? v.occupation_name ?? "");
+                if (!hasMatch && (item.semanticScore ?? 0) < 0.5) return false;
+              }
+              return true;
+            });
+
+            // ── 6. Compute final hybrid score and sort ───────────────────────
+            const totalWeight = semanticWeight + lexicalWeight || 1;
+            const scored = filtered.map((item: any) => {
+              const semScore = item.semanticScore ?? 0;
+              const lexScore = item.lexicalScore ?? 0;
+              const hybridScore = (semScore * semanticWeight + lexScore * lexicalWeight) / totalWeight;
+              return { ...item, hybridScore, finalScore: hybridScore };
+            }).sort((a, b) => (b.hybridScore ?? 0) - (a.hybridScore ?? 0));
+
+            // ── 7. Null-safe mapping for results ─────────────────────────────
+            const safeResults = scored.map((item: any) => {
+              const v = item.vacancy ?? item;
+              const safeTitle = v.job_title ?? v.occupation_name ?? "Untitled Position";
+              const safeSalary = (v.salary ?? v.salary_min ?? v.salary_max) != null
+                ? (v.salary ?? (v.salary_min && v.salary_max ? `${v.salary_min}-${v.salary_max}` : v.salary_min ?? v.salary_max ?? "Salary not provided"))
+                : "Salary not provided";
+              const safeLocation = [v.state, v.city].filter(Boolean).join(", ") || "Location not provided";
+              const safeSkills = (() => {
+                if (!v.skills) return [];
+                if (Array.isArray(v.skills)) return v.skills;
+                try { return v.skills.split(/[,;|]+/).map((s: string) => s.trim()).filter(Boolean); }
+                catch { return []; }
+              })();
+              // Guard against NaN salary values
+              const safeSalaryMin = typeof v.salary_min === "number" && !isNaN(v.salary_min) ? v.salary_min : null;
+              const safeSalaryMax = typeof v.salary_max === "number" && !isNaN(v.salary_max) ? v.salary_max : null;
+              return {
+                ...item,
+                id: String(item.id ?? v.id ?? crypto.randomUUID()),
+                vacancy_id: String(item.vacancy_id ?? item.id ?? v.id ?? ""),
+                job_title: safeTitle,
+                occupation_name: v.occupation_name ?? null,
+                salary: safeSalary,
+                salary_min: safeSalaryMin,
+                salary_max: safeSalaryMax,
+                state: v.state ?? null,
+                city: v.city ?? null,
+                skills: safeSkills,
+                education_level: v.education_level ?? null,
+                field_of_study: v.field_of_study ?? null,
+                job_description: v.job_description ?? null,
+                semanticScore: item.semanticScore ?? 0,
+                lexicalScore: item.lexicalScore ?? 0,
+                hybridScore: item.hybridScore ?? 0,
+                vacancy: v,
+              };
+            });
+
+            const durationMs = Date.now() - _searchStart;
+            console.log(`[api/interview] semantic_search completed in ${durationMs}ms | semantic:${semanticResults.length} lexical:${lexicalResults.length} final:${safeResults.length}`);
+
+            return json({
+              ok: true,
+              results: safeResults.slice(0, searchLimit),
+              count: safeResults.length,
+              warning: embedding ? null : "Semantic AI search is temporarily unavailable; keyword results are shown.",
+              durationMs,
+              weights: { semantic: semanticWeight, lexical: lexicalWeight },
+            });
           } catch (e) {
+            const durationMs = Date.now() - _searchStart;
             console.warn("[api/interview] semantic_search failed:", e);
-            return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown." });
+            return json({ ok: true, results: [], warning: "Semantic AI search is temporarily unavailable; keyword results are shown.", durationMs });
           }
         }
 
@@ -1445,6 +1632,13 @@ Return ONLY valid JSON:
 
             const prompt = `You are a Malaysian job matching explainer for PERKESO's employer/caseworker portal.
 
+IMPORTANT GROUNDING RULES:
+- Use ONLY the data provided below. Do NOT invent or fabricate skills, experience, or facts.
+- If any field is "N/A" or missing, state "Maklumat tidak mencukupi berdasarkan rekod yang diberikan." for that aspect.
+- Every strength and gap must reference a specific skill or attribute from the provided data.
+- salaryFit, locationFit, experienceFit must be based ONLY on the provided values, not assumptions.
+- If the candidate or vacancy language preference is Bahasa Malaysia or Bilingual, write the summary in Bahasa Malaysia.
+
 Candidate:
 - Role: ${candidate?.preferred_occupation || candidate?.previous_occupation || "N/A"}
 - Skills: ${Array.isArray(candidate?.skills) ? candidate.skills.join(", ") : candidate?.skills || "N/A"}
@@ -1467,7 +1661,7 @@ Missing skills: ${skillGap.missingSkills.join(", ") || "N/A"}
 Match score: ${score ?? "N/A"}
 
 Return ONLY valid JSON:
-{"summary":"short paragraph","strengths":["..."],"gaps":["..."],"skillGap":{"matchedSkills":["..."],"missingSkills":["..."],"recommendedTraining":["..."]},"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100}`;
+{"summary":"short paragraph","strengths":["..."],"gaps":["..."],"skillGap":{"matchedSkills":["..."],"missingSkills":["..."],"recommendedTraining":["..."]},"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
 
             try {
               const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -1600,7 +1794,14 @@ Return ONLY valid JSON:
             if (AI_API_KEY) {
               try {
                 const prompt = `You are a Malaysian workforce matching advisor for PERKESO/Praxo.
-Summarize this candidate-vacancy match in one short paragraph and list 2-4 strengths, 2-4 gaps, plus salary/location/experience fit and a recommendation.
+Summarize this candidate-vacancy match and provide structured analysis.
+
+IMPORTANT GROUNDING RULES:
+- Use ONLY the data provided below. Do NOT invent or fabricate skills, experience, or facts.
+- If any field is "N/A" or missing, state "Maklumat tidak mencukupi berdasarkan rekod yang diberikan." for that aspect.
+- Every strength and gap must reference a specific skill or attribute from the provided data.
+- salaryFit, locationFit, experienceFit must be based ONLY on the provided values, not assumptions.
+- If language_preference is Bahasa Malaysia or Bilingual, write the summary in Bahasa Malaysia.
 
 Candidate: ${candidate.preferred_occupation || candidate.previous_occupation || "N/A"} | ${candidate.education_level || "N/A"} | ${candidate.preferred_state || "N/A"} | ${candidate.preferred_salary || "N/A"}
 Vacancy: ${vacancy.job_title || vacancy.occupation_name || "N/A"} | ${vacancy.education_level || "N/A"} | ${vacancy.state || "N/A"} | ${vacancy.salary || "N/A"}
@@ -1608,7 +1809,7 @@ Skill match: ${skillGap.score}% | Matched: ${skillGap.matchedSkills.join(", ") |
 Semantic similarity: ${semanticScore ?? "N/A"}
 
 Return ONLY valid JSON:
-{"summary":"...","strengths":["..."],"gaps":["..."],"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100}`;
+{"summary":"...","strengths":["..."],"gaps":["..."],"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
                 const res = await fetch("https://api.openai.com/v1/chat/completions", {
                   method: "POST",
                   headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
@@ -1627,6 +1828,7 @@ Return ONLY valid JSON:
                     explanation.experienceFit = ai.experienceFit || explanation.experienceFit;
                     explanation.recommendation = ai.recommendation || explanation.recommendation;
                     if (typeof ai.confidence === "number") explanation.confidence = ai.confidence;
+                    if (ai.evidence && typeof ai.evidence === "object") (explanation as any).evidence = ai.evidence;
                   } catch {}
                 }
               } catch (e) {
@@ -1659,6 +1861,78 @@ Return ONLY valid JSON:
           } catch (e) {
             console.warn("[api/interview] candidate_match_report failed:", e);
             return json({ ok: false, error: "Match report failed" }, 500);
+          }
+        }
+
+        // ── Pre-auth: case_referral actions (Loss-of-Employment / caseworker demo) ─
+        if (rawBody?.action === "create_case_referral") {
+          try {
+            const { candidate_id, reason, priority, status, recommended_actions, notes } = rawBody as {
+              candidate_id?: string; reason?: string; priority?: string; status?: string;
+              recommended_actions?: string; notes?: string;
+            };
+            if (!candidate_id) return json({ ok: false, error: "candidate_id is required" }, 400);
+            if (!reason) return json({ ok: false, error: "reason is required" }, 400);
+
+            const insertPayload = {
+              candidate_id,
+              reason: reason ?? null,
+              priority: priority ?? "medium",
+              status: status ?? "open",
+              recommended_actions: recommended_actions ?? null,
+              notes: notes ?? null,
+              created_at: new Date().toISOString(),
+            };
+
+            const { data, error: insertError } = await (supabaseAdmin as any)
+              .from("case_referrals")
+              .insert(insertPayload)
+              .select()
+              .single();
+
+            if (insertError) {
+              // Table might not exist — return a graceful response with the payload
+              console.warn("[api/interview] case_referrals insert failed (table may not exist):", insertError);
+              return json({
+                ok: true,
+                referral: { ...insertPayload, id: crypto.randomUUID() },
+                warning: "case_referrals table not found — referral recorded in response only. Run migration to persist.",
+              });
+            }
+
+            return json({ ok: true, referral: data });
+          } catch (e) {
+            console.warn("[api/interview] create_case_referral failed:", e);
+            return json({ ok: false, error: "Failed to create case referral" }, 500);
+          }
+        }
+
+        if (rawBody?.action === "list_case_referrals") {
+          try {
+            const { candidate_id, status, limit = 50 } = rawBody as {
+              candidate_id?: string; status?: string; limit?: number;
+            };
+
+            let query = (supabaseAdmin as any)
+              .from("case_referrals")
+              .select("*")
+              .order("created_at", { ascending: false })
+              .limit(Math.min(limit, 100));
+
+            if (candidate_id) query = query.eq("candidate_id", candidate_id);
+            if (status) query = query.eq("status", status);
+
+            const { data, error: queryError } = await query;
+
+            if (queryError) {
+              console.warn("[api/interview] case_referrals query failed (table may not exist):", queryError);
+              return json({ ok: true, referrals: [], warning: "case_referrals table not found. Run migration to enable." });
+            }
+
+            return json({ ok: true, referrals: data ?? [] });
+          } catch (e) {
+            console.warn("[api/interview] list_case_referrals failed:", e);
+            return json({ ok: false, error: "Failed to list case referrals" }, 500);
           }
         }
 

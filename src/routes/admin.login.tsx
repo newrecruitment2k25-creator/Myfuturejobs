@@ -14,6 +14,6 @@ export const Route = createFileRoute("/admin/login")({
 
 function AdminLoginPage() {
   const navigate = useNavigate();
-  useEffect(() => { void navigate({ to: "/login" }); }, []);
+  useEffect(() => { void navigate({ to: "/login", search: { tab: "admin" } }); }, []);
   return null;
 }

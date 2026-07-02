@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Loader2, Brain, FileText, BarChart2, CheckCircle2, Star, Users, Building2, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,8 +36,8 @@ const PANEL_INFO: Record<Role, { bg: string; eyebrow: string; heading: string; s
     bg: "var(--brand)",
     eyebrow: "PERKESO · SOCSO · MYFutureJobs 🇲🇾",
     heading: "Malaysia's AI-Powered Employment Portal",
-    sub: "Join over 2 million Malaysians using MYFutureJobs to find jobs, build careers, and connect with top employers.",
-    features: ["AI-powered CV analysis & matching", "Smart resume builder for Malaysian market", "Real-time labour market intelligence", "One-click apply to thousands of jobs", "Interview prep with AI simulation"],
+    sub: "Join 1,449 registered candidates using MYFutureJobs to find jobs, build careers, and connect with top employers across 5,828 active vacancies.",
+    features: ["AI-powered CV analysis & matching", "Smart resume builder for Malaysian market", "Real-time labour market intelligence", "One-click apply to active vacancies", "Interview prep with AI simulation"],
     quote: '"MYFutureJobs helped me land a job at a top MNC in just 2 weeks. The AI matching is incredible."',
     author: "— Amir Z., Software Engineer · Kuala Lumpur",
   },
@@ -46,7 +46,7 @@ const PANEL_INFO: Record<Role, { bg: string; eyebrow: string; heading: string; s
     eyebrow: "EMPLOYER PORTAL · MYFutureJobs 🇲🇾",
     heading: "Hire Smarter with AI-Powered Recruitment",
     sub: "Connect with qualified Malaysian candidates faster. Our AI matches your vacancies to the best talent automatically.",
-    features: ["Access Malaysia's largest verified talent pool", "Real-time labour market & salary intelligence", "AI-powered vacancy builder & job description", "Automated AI video interviews & scoring", "Shortlist candidates with one click"],
+    features: ["Access 1,449 verified candidate profiles", "Real-time labour market & salary intelligence", "AI-powered vacancy builder & job description", "Automated AI video interviews & scoring", "Shortlist candidates with one click"],
     quote: '"We filled 3 senior engineering positions in under 10 days using MYFutureJobs AI shortlisting. Game changer."',
     author: "— Faizal R., Head of Talent · TechCorp Malaysia",
   },
@@ -64,11 +64,17 @@ const PANEL_INFO: Record<Role, { bg: string; eyebrow: string; heading: string; s
 function LoginPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const search = useSearch({ strict: false }) as { tab?: string };
   const [role, setRole] = useState<Role>("job_seeker");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Preselect Admin tab if ?tab=admin
+  useEffect(() => {
+    if (search?.tab === "admin") setRole("admin");
+  }, [search?.tab]);
 
   const panel = PANEL_INFO[role];
 

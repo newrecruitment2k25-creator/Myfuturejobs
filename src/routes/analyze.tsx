@@ -71,8 +71,11 @@ function AnalyzePage() {
 
   const handleFile = useCallback(async (f: File) => {
     setExtractError(null);
-    if (f.type !== "application/pdf") {
-      setExtractError("Only PDF files are supported.");
+    const isPdf = f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf");
+    const isDocx = f.name.toLowerCase().endsWith(".docx") || f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const isTxt = f.name.toLowerCase().endsWith(".txt") || f.type === "text/plain";
+    if (!isPdf && !isDocx && !isTxt) {
+      setExtractError("Only PDF, DOCX, or TXT files are supported.");
       return;
     }
     if (f.size > 5 * 1024 * 1024) {
@@ -82,17 +85,37 @@ function AnalyzePage() {
     setFile(f);
     setExtracting(true);
     try {
-      const { extractPdfText } = await import("@/lib/pdf-extract");
-      const text = await extractPdfText(f);
-      if (!text || text.trim().length < 50) {
-        setExtractError("Your PDF appears to be image-based. Please upload a text-based PDF for best results.");
-        setCvText("");
-      } else {
-        setCvText(text);
+      let text = "";
+      if (isPdf) {
+        const { extractPdfText } = await import("@/lib/pdf-extract");
+        text = await extractPdfText(f);
+        if (!text || text.trim().length < 50) {
+          setExtractError("Your PDF appears to be image-based. Please upload a text-based PDF for best results.");
+          setCvText("");
+          return;
+        }
+      } else if (isDocx) {
+        const mammoth = await import("mammoth");
+        const arrayBuffer = await f.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value;
+        if (!text || text.trim().length < 50) {
+          setExtractError("Your DOCX appears to be empty or image-based. Please upload a text-based document.");
+          setCvText("");
+          return;
+        }
+      } else if (isTxt) {
+        text = await f.text();
+        if (!text || text.trim().length < 50) {
+          setExtractError("Your TXT file appears to be empty.");
+          setCvText("");
+          return;
+        }
       }
+      setCvText(text);
     } catch (e) {
       console.error(e);
-      setExtractError("We couldn't read your PDF. Please make sure it's not password protected.");
+      setExtractError("We couldn't read your file. Please make sure it's not password protected or corrupted.");
       setCvText("");
     } finally {
       setExtracting(false);
@@ -175,7 +198,7 @@ function AnalyzePage() {
               <input
                 ref={inputRef}
                 type="file"
-                accept="application/pdf"
+                accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
@@ -185,7 +208,7 @@ function AnalyzePage() {
               {extracting ? (
                 <div className="flex flex-col items-center gap-3 text-muted-foreground">
                   <Loader2 className="size-8 animate-spin text-primary" />
-                  <p>Reading your PDF…</p>
+                  <p>Reading your document…</p>
                 </div>
               ) : file && cvText ? (
                 <div className="flex flex-col items-center gap-2">
@@ -204,7 +227,7 @@ function AnalyzePage() {
                   <p className="text-base font-medium text-foreground">
                     Drag your CV here or click to upload
                   </p>
-                  <p className="text-sm">PDF only, max 5MB</p>
+                  <p className="text-sm">PDF, DOCX, or TXT · max 5MB</p>
                 </div>
               )}
             </div>

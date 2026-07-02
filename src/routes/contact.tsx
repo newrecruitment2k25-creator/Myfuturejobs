@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, Sparkles } from "lucide-react";
-import { PublicLayout } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/contact")({
   ssr: false,
@@ -30,7 +30,8 @@ function ContactPage() {
   };
 
   return (
-    <PublicLayout>
+    <>
+    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "48px 24px 0" }}>
 
         {/* Page header */}
@@ -132,6 +133,8 @@ function ContactPage() {
         </div>
 
       </div>
-    </PublicLayout>
+    </div>
+    <SiteFooter />
+    </>
   );
 }

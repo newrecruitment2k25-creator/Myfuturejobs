@@ -143,7 +143,10 @@ export function normalizeLocation(input: string): string | null {
 }
 
 export function extractLocations(query: string): { cleanQuery: string; locations: string[] } {
-  const lower = " " + query.toLowerCase() + " ";
+  // Normalise BM connectors first so "berhampiran Kuala Lumpur" → " Kuala Lumpur"
+  const bmStripped = " " + query.toLowerCase() + " "
+    .replace(/\b(berhampiran|dekat|sekitar|di)\b/g, " ");
+  const lower = bmStripped;
   const found = new Set<string>();
   let remaining = lower;
   for (const { patterns, canonical } of LOC_MAP) {
@@ -264,17 +267,79 @@ function getSynonymsForRole(role: string): string[] {
   return [];
 }
 
+// ── BM → EN normalisation ─────────────────────────────────────────────────────
+const BM_ROLE_MAP: Record<string, string> = {
+  "jurutera perisian": "software engineer",
+  "pembangun perisian": "software developer",
+  "jurutera rangkaian": "network engineer",
+  "penganalisis data": "data analyst",
+  "akauntan": "accountant",
+  "pembantu akaun": "account assistant",
+  "khidmat pelanggan": "customer service",
+  "sokongan teknikal": "technical support",
+  "jururawat": "nurse",
+  "jurutera awam": "civil engineer",
+  "pembantu tadbir": "administrative assistant",
+  "kerani": "clerk",
+  "juruteknik": "technician",
+  "pemandu": "driver",
+  "tukang masak": "chef",
+  "guru": "teacher",
+  "pengurus": "manager",
+  "eksekutif": "executive",
+  "akauntan profesional": "professional accountant",
+};
+
+const BM_SALARY_MAP: Record<string, string> = {
+  "gaji lima ribu": "5000",
+  "gaji empat ribu": "4000",
+  "gaji enam ribu": "6000",
+  "gaji sepuluh ribu": "10000",
+  "lima ribu": "5000",
+  "empat ribu": "4000",
+  "enam ribu": "6000",
+  "sepuluh ribu": "10000",
+};
+
+const BM_CONNECTOR_WORDS = new Set([
+  "berhampiran", "dekat", "sekitar", "di", "dan", "atau", "untuk",
+  "yang", "dengan", "pada", "ke", "dari", "tentang", "oleh",
+]);
+
+function normaliseBmQuery(query: string): string {
+  let result = " " + query.toLowerCase().trim() + " ";
+  // Apply salary phrase replacements first (longest match first)
+  const salaryEntries = Object.entries(BM_SALARY_MAP).sort((a, b) => b[0].length - a[0].length);
+  for (const [bm, en] of salaryEntries) {
+    result = result.split(bm).join(" " + en + " ");
+  }
+  // Apply role phrase replacements (longest match first)
+  const roleEntries = Object.entries(BM_ROLE_MAP).sort((a, b) => b[0].length - a[0].length);
+  for (const [bm, en] of roleEntries) {
+    result = result.split(bm).join(" " + en + " ");
+  }
+  // Remove connector words
+  result = result.split(/\s+/).filter(w => w && !BM_CONNECTOR_WORDS.has(w)).join(" ");
+  return result.trim();
+}
+
+export { normaliseBmQuery };
+
 // ── Stop words ────────────────────────────────────────────────────────────────
 const STOP_WORDS = new Set([
   "in", "at", "for", "the", "a", "an", "and", "or", "with", "job", "work",
   "role", "looking", "need", "want", "find", "malaysia", "malaysian", "hiring",
   "jobs", "vacancy", "vacancies", "position", "positions", "career", "careers",
   "opportunity", "opportunities", "now", "urgently", "immediately",
+  "berhampiran", "dekat", "sekitar", "di", "dan", "atau", "untuk",
+  "yang", "dengan", "pada", "ke", "dari", "tentang", "oleh",
 ]);
 
 // ── Main parser ───────────────────────────────────────────────────────────────
 export function parseSearchQuery(query: string): ParsedQuery {
-  const spelling = correctSpelling(query.trim());
+  // BM normalisation first (jurutera perisian → software engineer, etc.)
+  const bmNormalised = normaliseBmQuery(query.trim());
+  const spelling = correctSpelling(bmNormalised);
   const original = spelling.corrected;
   const lower = " " + original.toLowerCase() + " ";
   const originalTokens = query.trim().split(/\s+/);

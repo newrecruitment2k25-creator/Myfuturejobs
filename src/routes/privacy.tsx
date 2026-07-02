@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, ChevronRight } from "lucide-react";
-import { PublicLayout } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/privacy")({
   ssr: false,
@@ -27,7 +27,8 @@ const PRIVACY_SECTIONS = [
 
 function PrivacyPage() {
   return (
-    <PublicLayout>
+    <>
+    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
       <div style={{ maxWidth: 980, margin: "0 auto", padding: "48px 24px 0" }}>
 
         {/* Breadcrumb */}
@@ -80,6 +81,8 @@ function PrivacyPage() {
           </div>
         </div>
       </div>
-    </PublicLayout>
+    </div>
+    <SiteFooter />
+    </>
   );
 }

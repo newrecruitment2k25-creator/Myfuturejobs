@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { RotateCcw, Save, Brain, Info } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { RotateCcw, Save, Brain, Info, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/ai-rules")({
   ssr: false,
@@ -17,6 +18,8 @@ type AIRules = {
   weightBehaviour: number;
   minMatchScore: number;
   maxResults: number;
+  semanticWeight: number;
+  lexicalWeight: number;
 };
 
 const DEFAULTS: AIRules = {
@@ -26,6 +29,8 @@ const DEFAULTS: AIRules = {
   weightBehaviour: 10,
   minMatchScore: 30,
   maxResults: 20,
+  semanticWeight: 0.6,
+  lexicalWeight: 0.4,
 };
 
 const STORAGE_KEY = "praxo_ai_rules";
@@ -57,7 +62,7 @@ function SliderRow({
           <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 8 }}>{hint}</span>
         </div>
         <span style={{ fontSize: 18, fontWeight: 800, color: "var(--brand)", minWidth: 48, textAlign: "right" }}>
-          {value}{label.includes("Score") || label.includes("Results") ? "" : "%"}
+          {step < 1 ? value.toFixed(2) : value}{label.includes("Score") || label.includes("Results") ? "" : "%"}
         </span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value}
@@ -75,13 +80,73 @@ function SliderRow({
 function AdminAiRulesPage() {
   const [rules, setRules] = useState<AIRules>(() => loadRules());
   const [saved, setSaved] = useState(false);
+  const [loadingConfig, setLoadingConfig] = useState(true);
+  const [savingConfig, setSavingConfig] = useState(false);
+
+  // Load semantic/lexical weights from system_config via API
+  const loadConfigWeights = useCallback(async () => {
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      const res = await fetch("/api/ops", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ action: "list_config" }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const configs = data.configs ?? [];
+        for (const c of configs) {
+          if (c.key === "matching_semantic_weight") {
+            const v = parseFloat(c.value);
+            if (!isNaN(v)) setRules(r => ({ ...r, semanticWeight: v }));
+          }
+          if (c.key === "matching_lexical_weight") {
+            const v = parseFloat(c.value);
+            if (!isNaN(v)) setRules(r => ({ ...r, lexicalWeight: v }));
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load system_config weights:", e);
+    } finally {
+      setLoadingConfig(false);
+    }
+  }, []);
+
+  useEffect(() => { void loadConfigWeights(); }, [loadConfigWeights]);
 
   const totalWeight = rules.weightSemantic + rules.weightSkillOverlap + rules.weightTaxonomy + rules.weightBehaviour;
 
   const set = (key: keyof AIRules) => (v: number) => setRules(r => ({ ...r, [key]: v }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     saveRules(rules);
+    // Also save semantic/lexical weights to system_config
+    setSavingConfig(true);
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      await Promise.all([
+        fetch("/api/ops", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          body: JSON.stringify({ action: "update_config", key: "matching_semantic_weight", value: rules.semanticWeight }),
+        }),
+        fetch("/api/ops", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          body: JSON.stringify({ action: "update_config", key: "matching_lexical_weight", value: rules.lexicalWeight }),
+        }),
+      ]);
+    } catch (e) {
+      console.warn("Failed to save system_config weights:", e);
+    } finally {
+      setSavingConfig(false);
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -170,12 +235,32 @@ function AdminAiRulesPage() {
           <SliderRow label="Max Results" hint="Maximum candidates returned per query" value={rules.maxResults} min={5} max={100} step={5} onChange={set("maxResults")} />
         </div>
 
+        {/* Hybrid Search Weights (system_config) */}
+        <div style={cardStyle}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: "var(--ink)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.07em" }}>
+            Hybrid Search Weights <span style={{ fontSize: 11, fontWeight: 500, color: "var(--muted)", textTransform: "none", letterSpacing: 0 }}>(stored in system_config, affects live search)</span>
+          </div>
+          {loadingConfig ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: 13, padding: "12px 0" }}>
+              <Loader2 size={16} className="animate-spin" /> Loading from system_config…
+            </div>
+          ) : (
+            <>
+              <SliderRow label="Semantic Weight" hint="Vector embedding similarity weight (0.0–1.0)" value={rules.semanticWeight} min={0} max={1} step={0.05} onChange={set("semanticWeight")} />
+              <SliderRow label="Lexical Weight" hint="Keyword/full-text match weight (0.0–1.0)" value={rules.lexicalWeight} min={0} max={1} step={0.05} onChange={set("lexicalWeight")} />
+              <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
+                Final score = (semantic × {rules.semanticWeight} + lexical × {rules.lexicalWeight}) ÷ {(rules.semanticWeight + rules.lexicalWeight).toFixed(2)}
+              </div>
+            </>
+          )}
+        </div>
+
         {/* Actions */}
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={handleSave}
             style={{ display: "inline-flex", alignItems: "center", gap: 7, background: saved ? "#15803d" : "var(--brand)", color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }}>
             <Save size={15} />
-            {saved ? "Saved ✓" : "Save Rules"}
+            {saved ? "Saved ✓" : savingConfig ? "Saving…" : "Save Rules"}
           </button>
           <button onClick={handleReset}
             style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#fff", color: "var(--ink)", border: "1px solid var(--line)", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, Zap, BarChart2, Users, Brain, Building2, ArrowRight } from "lucide-react";
-import { PublicLayout } from "@/components/public-layout";
+import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/about")({
   ssr: false,
@@ -15,7 +15,8 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <PublicLayout>
+    <>
+    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
       <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 0" }}>
 
         {/* Header */}
@@ -124,6 +125,8 @@ function AboutPage() {
         </div>
 
       </main>
-    </PublicLayout>
+    </div>
+    <SiteFooter />
+    </>
   );
 }
