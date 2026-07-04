@@ -12,7 +12,7 @@ export const Route = createFileRoute("/document-intelligence")({
   component: DocumentIntelligencePage,
   head: () => ({
     meta: [
-      { title: "Document Intelligence — Praxo AI · PERKESO" },
+      { title: "Document Intelligence — MYFutureJobs · PERKESO" },
       { name: "description", content: "Parse resumes and vacancy documents — extract skills, occupation, salary, taxonomy mapping, then run AI matching." },
     ],
   }),

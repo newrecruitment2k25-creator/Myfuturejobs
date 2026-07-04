@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, MapPin, Users, Sparkles, Clock, Building2, GraduationCap, Briefcase, Globe, ArrowRight } from "lucide-react";
 import { SiteFooter } from "@/components/site-header";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/events")({
   ssr: false,
@@ -131,6 +132,7 @@ const TAG_STYLE: Record<EventTag, React.CSSProperties> = {
 };
 
 function EventsPage() {
+  const { t } = useLanguage();
   return (
     <>
     <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
@@ -139,16 +141,16 @@ function EventsPage() {
       <section style={{ background: "var(--brand)", padding: "56px 24px 48px" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.8)", marginBottom: 20, letterSpacing: "0.05em" }}>
-            🇲🇾 NATIONAL TALENT HUB
+            🇲🇾 {t("eventsEyebrow")}
           </div>
           <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.2, margin: "0 0 16px" }}>
-            Career Fairs & Hiring Events
+            {t("eventsTitle")}
           </h1>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", maxWidth: 540, margin: "0 auto 28px", lineHeight: 1.65 }}>
-            Connect with top-tier employers, participate in nationwide career roadshows, and secure your next role through MYFutureJobs's exclusive AI-matched hiring events.
+            {t("eventsSub")}
           </p>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "var(--radius-sm)", padding: "8px 16px", fontSize: 13, color: "rgba(255,255,255,0.85)" }}>
-            <Calendar size={14} /> {EVENTS.length} Upcoming Events
+            <Calendar size={14} /> {EVENTS.length} {t("eventsUpcoming")}
           </div>
         </div>
       </section>
@@ -158,7 +160,7 @@ function EventsPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
           <div style={{ flex: 1, minWidth: 200, display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid var(--line)", borderRadius: "var(--radius-sm)", padding: "8px 14px" }}>
             <Calendar size={14} style={{ color: "var(--muted)" }} />
-            <input type="text" placeholder="Search events..." style={{ border: "none", outline: "none", fontSize: 13, color: "var(--ink)", background: "transparent", flex: 1 }} />
+            <input type="text" placeholder={t("eventsSearchPlaceholder")} style={{ border: "none", outline: "none", fontSize: 13, color: "var(--ink)", background: "transparent", flex: 1 }} />
           </div>
           {["Event Type", "Location", "Month"].map(f => (
             <select key={f} style={{ padding: "8px 14px", border: "1px solid var(--line)", borderRadius: "var(--radius-sm)", fontSize: 13, color: "var(--muted)", background: "#fff", outline: "none" }}>
@@ -217,7 +219,7 @@ function EventsPage() {
                   <p style={{ fontSize: 12, color: "var(--muted)", display: "flex", alignItems: "center", gap: 4 }}><MapPin size={11} />{event.location}</p>
                   <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.6, flex: 1, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{event.description}</p>
                   <button disabled style={{ marginTop: 8, padding: "9px 0", background: "var(--brand)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: 600, cursor: "not-allowed", opacity: 0.7 }}>
-                    Register (Coming Soon)
+                    {t("eventsRegister")}
                   </button>
                 </div>
               </div>
@@ -229,16 +231,16 @@ function EventsPage() {
       {/* ── Host CTA ──────────────────────────────────────── */}
       <section style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px" }}>
         <div style={{ background: "var(--brand)", borderRadius: "var(--radius-xl)", padding: "48px 40px", textAlign: "center" }}>
-          <h2 style={{ fontSize: 26, fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.02em" }}>Want to host a career event?</h2>
+          <h2 style={{ fontSize: 26, fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.02em" }}>{t("eventsHostTitle")}</h2>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", margin: "0 0 28px", maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
-            Join forces with MYFutureJobs and PERKESO to bring the best talent to your organization. We provide the platform, AI matching, and logistical support for national-scale success.
+            {t("eventsHostSub")}
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <Link to="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 24px", background: "var(--accent)", color: "#fff", borderRadius: "var(--radius-sm)", fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
-              Contact Event Team <ArrowRight size={14} />
+              {t("eventsHostContact")} <ArrowRight size={14} />
             </Link>
             <Link to="/about" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 24px", background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "var(--radius-sm)", fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
-              Download Partner Guide
+              {t("eventsHostGuide")}
             </Link>
           </div>
         </div>

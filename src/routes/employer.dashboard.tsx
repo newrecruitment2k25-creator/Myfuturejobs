@@ -321,15 +321,9 @@ function EmployerDashboardPage() {
                 Employer Portal
               </div>
               <h1 style={{ marginTop: 4, fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>My Dashboard</h1>
-              <p style={{ marginTop: 4, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Manage vacancies, candidates, and AI interviews.</p>
+              <p style={{ marginTop: 4, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Manage vacancies, candidates, and applications.</p>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, position: 'relative' }}>
-              <Link to="/employer/interviews" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-              >
-                <Video className="size-4" /> AI Interviews
-              </Link>
               <Link to="/employer/labour-market-intelligence" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
@@ -543,17 +537,7 @@ function EmployerDashboardPage() {
                 <button onClick={() => setInterviewPanel(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}><X className="size-5" /></button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 16 }}>
-                <button onClick={() => setInterviewMode('ai')}
-                  style={{ padding: 18, borderRadius: 14, border: interviewMode === 'ai' ? '2px solid #205295' : '1px solid var(--line)', background: interviewMode === 'ai' ? 'rgba(32,82,149,0.05)' : 'var(--base)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Video className="size-5" style={{ color: '#205295' }} />
-                    </div>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Send AI Interview</span>
-                  </div>
-                  <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>Pick one of your saved AI/video interview templates and invite the candidate to complete it.</p>
-                </button>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, marginBottom: 16 }}>
                 <button onClick={() => setInterviewMode('practical')}
                   style={{ padding: 18, borderRadius: 14, border: interviewMode === 'practical' ? '2px solid #f36c21' : '1px solid var(--line)', background: interviewMode === 'practical' ? 'rgba(243,108,33,0.05)' : 'var(--base)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
@@ -565,26 +549,6 @@ function EmployerDashboardPage() {
                   <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>Set a real-world date, time, location or meeting link, and mode (in-person or online).</p>
                 </button>
               </div>
-
-              {interviewMode === 'ai' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink)' }}>Select Interview Template</label>
-                  <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                    <SelectTrigger style={{ width: '100%', maxWidth: 400, height: 42, fontSize: 13 }}>
-                      <SelectValue placeholder={interviewTemplates.length === 0 ? 'No templates yet — create one in AI Interviews' : 'Choose a template'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {interviewTemplates.map((t) => (
-                        <SelectItem key={t.id} value={t.id}>{t.title}{t.role_title ? ` · ${t.role_title}` : ''}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <button onClick={() => void submitAiInterview()} disabled={!selectedTemplate || sendingInterview}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #0A2647 0%, #205295 100%)', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', width: 'fit-content', opacity: (!selectedTemplate || sendingInterview) ? 0.6 : 1 }}>
-                    {sendingInterview ? <><Loader2 className="size-4 animate-spin" /> Sending…</> : <><Send className="size-4" /> Send Invitation</>}
-                  </button>
-                </div>
-              )}
 
               {interviewMode === 'practical' && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>

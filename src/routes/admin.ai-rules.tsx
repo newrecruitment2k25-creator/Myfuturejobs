@@ -7,7 +7,7 @@ export const Route = createFileRoute("/admin/ai-rules")({
   ssr: false,
   component: AdminAiRulesPage,
   head: () => ({
-    meta: [{ title: "AI Rules — Admin · Praxo AI" }],
+    meta: [{ title: "AI Rules — Admin · MYFutureJobs" }],
   }),
 });
 
@@ -174,7 +174,7 @@ function AdminAiRulesPage() {
             Configurable AI Matching Rules
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: 0 }}>
-            Adjust scoring weights and thresholds for the Praxo AI matching engine. Changes apply to ranking display immediately.
+            Adjust scoring weights and thresholds for the MYFutureJobs matching engine. Changes apply to ranking display immediately.
           </p>
           <div style={{ marginTop: 10, display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "5px 12px", fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
             <Info size={11} /> Configurable AI matching rules (demo) — stored locally, passed into matching requests where supported.

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { callAi, createEmbedding } from "@/lib/ai-gateway";
+import { callAi, createEmbedding, AI_MODELS } from "@/lib/ai-gateway";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { insertNotification } from "@/lib/notifications";
 import { expandKeywords } from "@/lib/taxonomy-map";
@@ -267,18 +267,12 @@ Return JSON:
 {"recommendedTraining":["..."],"summary":"...","nextSteps":["..."]}`;
 
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 500,
-      }),
+    const result = await callAi({
+      model: AI_MODELS.GROQ_LLAMA_33_70B,
+      messages: [{ role: "user", content: prompt }],
+      timeoutMs: 30000,
     });
-    if (!res.ok) return fallback;
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content || "{}";
+    const text = result.text || "{}";
     try {
       const ai = JSON.parse(text.replace(/```json|```/g, "").trim());
       return {
@@ -538,7 +532,7 @@ export const Route = createFileRoute("/api/interview")({
           }
 
           // ── Step 2: Call AI engine with real data context ────────────────
-          const systemPrompt = `You are the Praxo AI Assistant — the intelligent career engine powering PERKESO's AI employment intelligence platform. You are NOT GPT, NOT ChatGPT, NOT made by OpenAI. You are Praxo AI, built to serve Malaysian jobseekers and employers.
+          const systemPrompt = `You are the MYFutureJobs Assistant — the intelligent career engine powering PERKESO's AI employment intelligence platform. You are NOT GPT, NOT ChatGPT, NOT made by OpenAI. You are MYFutureJobs, built to serve Malaysian jobseekers and employers.
 
 You have access to REAL, LIVE platform data. Use it to answer accurately.
 ${dbContext}
@@ -551,8 +545,8 @@ PLATFORM FEATURES you can guide users to:
 - /employer/dashboard — Employer tools (post jobs, find candidates)
 
 RULES:
-- NEVER say "GPT", "ChatGPT", "OpenAI", or mention any external AI provider. You are Praxo AI.
-- If asked "what AI are you?" or "who made you?", say: "I'm the Praxo AI Assistant — PERKESO's AI Employment Intelligence engine, built to help Malaysian jobseekers and employers."
+- NEVER say "GPT", "ChatGPT", "OpenAI", or mention any external AI provider. You are MYFutureJobs.
+- If asked "what AI are you?" or "who made you?", say: "I'm the MYFutureJobs Assistant — PERKESO's AI Employment Intelligence engine, built to help Malaysian jobseekers and employers."
 - Always use the LIVE DATA above to give specific numbers, not estimates
 - If user asks about job counts, salaries, or locations, give exact numbers from the data
 - If the specific query results show matching jobs, mention the count and sample titles
@@ -566,13 +560,12 @@ RULES:
             { role: "user", content: message },
           ];
           try {
-            const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
-              body: JSON.stringify({ model: "gpt-4o-mini", messages, max_tokens: 500 }),
+            const aiResult = await callAi({
+              model: AI_MODELS.GROQ_LLAMA_33_70B,
+              messages: messages as any,
+              timeoutMs: 30000,
             });
-            const aiData = await aiRes.json() as any;
-            const reply = aiData.choices?.[0]?.message?.content || "Sorry, I could not process that. Please try again.";
+            const reply = aiResult.text || "Sorry, I could not process that. Please try again.";
             return json({ reply });
           } catch (e) {
             console.error("[api/interview] chat error:", e);
@@ -616,7 +609,7 @@ RULES:
           let parsed: { skills?: string[]; state?: string; education_level?: string; experience?: string; min_salary?: number; max_salary?: number; job_title?: string } = {};
           try {
             const parseResult = await callAi({
-              model: "gpt-5.4-mini",
+              model: AI_MODELS.GROQ_LLAMA_33_70B,
               messages: [
                 { role: "system", content: `You are a talent search query parser for a Malaysian job portal.
 Parse the employer's search query and extract structured filters.
@@ -1349,25 +1342,12 @@ Return ONLY valid JSON:
 {"summary":"short paragraph","strengths":["..."],"gaps":["..."],"recommendation":"strong_match/good_match/potential_match/weak_match"}`;
 
             try {
-              const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "user", content: prompt }], max_tokens: 500 }),
+              const aiResult = await callAi({
+                model: AI_MODELS.GROQ_LLAMA_33_70B,
+                messages: [{ role: "user", content: prompt }],
+                timeoutMs: 30000,
               });
-              if (!aiRes.ok) {
-                console.warn("[api/interview] explain_match OpenAI failed:", aiRes.status);
-                return json({
-                  ok: true,
-                  explanation: {
-                    summary: "Semantic AI match explanation is temporarily unavailable.",
-                    strengths: [],
-                    gaps: [],
-                    recommendation: "Review job details and candidate skills manually.",
-                  },
-                });
-              }
-              const aiData = await aiRes.json();
-              const text = aiData.choices?.[0]?.message?.content || "{}";
+              const text = aiResult.text || "{}";
               try {
                 const explanation = JSON.parse(text.replace(/```json|```/g, "").trim());
                 return json({ ok: true, explanation });
@@ -1664,21 +1644,12 @@ Return ONLY valid JSON:
 {"summary":"short paragraph","strengths":["..."],"gaps":["..."],"skillGap":{"matchedSkills":["..."],"missingSkills":["..."],"recommendedTraining":["..."]},"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
 
             try {
-              const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  model: "gpt-4o-mini",
-                  messages: [{ role: "user", content: prompt }],
-                  max_tokens: 700,
-                }),
+              const aiResult = await callAi({
+                model: AI_MODELS.GROQ_LLAMA_33_70B,
+                messages: [{ role: "user", content: prompt }],
+                timeoutMs: 30000,
               });
-              if (!aiRes.ok) {
-                console.warn("[api/interview] explain_candidate_match OpenAI failed:", aiRes.status);
-                return json({ ok: true, explanation: fallback });
-              }
-              const aiData = await aiRes.json();
-              const text = aiData.choices?.[0]?.message?.content || "{}";
+              const text = aiResult.text || "{}";
               try {
                 const ai = JSON.parse(text.replace(/```json|```/g, "").trim());
                 return json({
@@ -1810,14 +1781,13 @@ Semantic similarity: ${semanticScore ?? "N/A"}
 
 Return ONLY valid JSON:
 {"summary":"...","strengths":["..."],"gaps":["..."],"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
-                const res = await fetch("https://api.openai.com/v1/chat/completions", {
-                  method: "POST",
-                  headers: { Authorization: `Bearer ${AI_API_KEY}`, "Content-Type": "application/json" },
-                  body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "user", content: prompt }], max_tokens: 700 }),
+                const aiResult = await callAi({
+                  model: AI_MODELS.GROQ_LLAMA_33_70B,
+                  messages: [{ role: "user", content: prompt }],
+                  timeoutMs: 30000,
                 });
-                if (res.ok) {
-                  const data = await res.json();
-                  const text = data.choices?.[0]?.message?.content || "{}";
+                if (aiResult.text) {
+                  const text = aiResult.text;
                   try {
                     const ai = JSON.parse(text.replace(/```json|```/g, "").trim());
                     explanation.summary = ai.summary || explanation.summary;

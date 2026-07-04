@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Brain, Briefcase, Users, Search, Sparkles, Loader2, ArrowRight,
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/poc/ai-matching")({
   component: PocAiMatchingPage,
   head: () => ({
     meta: [
-      { title: "AI Matching Demo  Praxo AI" },
+      { title: "AI Matching Demo  MYFutureJobs" },
       { name: "description", content: "Semantic candidate matching, skill gap analysis, and explainable AI recommendation demo for PERKESO." },
     ],
   }),

@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ArrowLeft, Users, Search, SlidersHorizontal, BarChart2,
   ChevronRight, TrendingUp, Brain,
-  ClipboardList, Video, ChevronDown, History, Sparkles, X,
+  ClipboardList, Video, ChevronDown, History, Sparkles, X, Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,12 @@ import { listJobApplications, updateApplicationStatus, type AppApplication, type
 import { toast } from "sonner";
 import {
   buildVacancyIntelligence,
+  buildIntelligenceFromPoc,
   getMatchStatusConfig,
   getShortlistConfig,
   type CandidateMatch,
   type VacancyIntelligence,
+  type PocCandidate,
 } from "@/lib/candidate-matching";
 import { classifyOccupation, type OccupationProfile } from "@/lib/masco-intelligence";
 
@@ -163,6 +165,7 @@ function CandidateMatchingPage() {
   const navigate = useNavigate();
 
   const [intelligence, setIntelligence] = useState<VacancyIntelligence | null>(null);
+  const [pocIntelligence, setPocIntelligence] = useState<VacancyIntelligence | null>(null);
   const [occupationProfile, setOccupationProfile] = useState<OccupationProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -259,6 +262,16 @@ function CandidateMatchingPage() {
     void fetchApplications();
   }, [authLoading, user, jobId, navigate, fetchApplications, fetchPocMatches]);
 
+  // Build intelligence from POC matches when they arrive
+  useEffect(() => {
+    if (pocMatches.length > 0 && intelligence) {
+      const pocIntel = buildIntelligenceFromPoc(intelligence.vacancy, pocMatches as PocCandidate[]);
+      setPocIntelligence(pocIntel);
+    } else {
+      setPocIntelligence(null);
+    }
+  }, [pocMatches, intelligence]);
+
   const handleStatusChange = async (appId: string, newStatus: AppStatus) => {
     setUpdatingId(appId);
     try {
@@ -282,9 +295,14 @@ function CandidateMatchingPage() {
     });
   };
 
+  // Use POC intelligence if session-based intelligence has no candidates
+  const effectiveIntelligence = (intelligence && intelligence.totalApplicants > 0)
+    ? intelligence
+    : (pocIntelligence ?? intelligence);
+
   const filtered = useMemo(() => {
-    if (!intelligence) return [];
-    return intelligence.rankedCandidates.filter((c) => {
+    if (!effectiveIntelligence) return [];
+    return effectiveIntelligence.rankedCandidates.filter((c) => {
       const matchesFilter = filter === "All" || c.matchStatus === filter;
       const matchesSearch =
         !search ||
@@ -292,7 +310,7 @@ function CandidateMatchingPage() {
         c.targetRole.toLowerCase().includes(search.toLowerCase());
       return matchesFilter && matchesSearch;
     });
-  }, [intelligence, filter, search]);
+  }, [effectiveIntelligence, filter, search]);
 
   if (isChildRoute) return <Outlet />;
 
@@ -316,7 +334,7 @@ function CandidateMatchingPage() {
     );
   }
 
-  const { vacancy } = intelligence;
+  const { vacancy } = effectiveIntelligence ?? intelligence;
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--base)' }}>
@@ -349,10 +367,10 @@ function CandidateMatchingPage() {
           {/* Quick stats */}
           <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { label: "Total Candidates", value: intelligence.totalApplicants },
-              { label: "Matched", value: intelligence.matchedCandidates },
-              { label: "Avg Match Score", value: `${intelligence.averageMatchScore}%` },
-              { label: "Interview Completion", value: `${intelligence.interviewCompletionRate}%` },
+              { label: "Total Candidates", value: (effectiveIntelligence ?? intelligence).totalApplicants },
+              { label: "Matched", value: (effectiveIntelligence ?? intelligence).matchedCandidates },
+              { label: "Avg Match Score", value: `${(effectiveIntelligence ?? intelligence).averageMatchScore}%` },
+              { label: "Interview Completion", value: `${(effectiveIntelligence ?? intelligence).interviewCompletionRate}%` },
             ].map(({ label, value }) => (
               <div key={label} className="rounded-xl bg-secondary/40 px-4 py-3 text-center">
                 <p className="text-xl font-bold text-primary">{value}</p>
@@ -459,17 +477,24 @@ function CandidateMatchingPage() {
         </div>
 
         {/* Candidate grid */}
-        {intelligence.totalApplicants === 0 ? (
+        {(effectiveIntelligence ?? intelligence).totalApplicants === 0 ? (
+          pocLoading ? (
+            <div className="rounded-2xl border border-dashed border-border bg-card p-14 text-center">
+              <div className="mx-auto size-8 animate-spin rounded-full border-2 border-primary border-t-transparent mb-4" />
+              <p className="text-sm text-muted-foreground">Searching PERKESO database for matching candidates…</p>
+            </div>
+          ) : (
           <div className="rounded-2xl border border-dashed border-border bg-card p-14 text-center">
             <Users className="mx-auto size-10 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold text-foreground mb-2">No Candidates Yet</h3>
             <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-              Candidates who complete an AI interview will appear here ranked by their match score for this vacancy.
+              Candidates who apply to this vacancy will appear here ranked by their match score.
             </p>
             <Button asChild variant="navy">
-              <Link to="/employer/interviews/create">Create AI Interview</Link>
+              <Link to="/employer/talent-discovery">Find Talent</Link>
             </Button>
           </div>
+          )
         ) : filtered.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
             <p className="text-sm text-muted-foreground">No candidates match the current filter.</p>
@@ -513,7 +538,7 @@ function CandidateMatchingPage() {
               }`}
             >
               <Brain className="size-4" />
-              AI Matched ({intelligence?.totalApplicants ?? "…"})
+              AI Matched ({(effectiveIntelligence ?? intelligence)?.totalApplicants ?? "…"})
             </button>
             <button
               onClick={() => setActiveTab("poc")}

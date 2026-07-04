@@ -58,7 +58,7 @@ export async function chatWithAssistant({
   try {
     // Try GPT-5.4-mini first for fast, cost-effective chat responses
     const result = await callAi({
-      model: AI_MODELS.GPT5_4_MINI,
+      model: AI_MODELS.GROQ_LLAMA_33_70B,
       messages,
       timeoutMs: 30000, // 30s for chat responses
     });

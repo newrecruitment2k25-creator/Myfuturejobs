@@ -8,7 +8,7 @@ export const Route = createFileRoute("/labour-insights")({
   component: LabourInsightsPage,
   head: () => ({
     meta: [
-      { title: "Labour Market Insights — Praxo AI · PERKESO" },
+      { title: "Labour Market Insights — MYFutureJobs · PERKESO" },
       { name: "description", content: "Real-time labour market intelligence from POC dataset: 5,828 vacancies, 1,449 candidates, occupation demand, salary ranges, skill trends." },
     ],
   }),

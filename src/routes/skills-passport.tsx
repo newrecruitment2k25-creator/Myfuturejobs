@@ -1,11 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer,
-} from "recharts";
-import {
-  FileText, Download, Loader2, Sparkles, ArrowRight,
+  FileText, Download, Loader2, Sparkles, ArrowRight, ArrowUpRight,
   CheckCircle2, AlertCircle, Circle, TrendingUp, BookOpen,
+  Award, Zap, Target, Briefcase, GraduationCap, Star,
+  BarChart3, Rocket, Lightbulb, Trophy, Medal, Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -214,137 +213,287 @@ function SkillsPassportPage() {
     );
   }
 
-  const skills   = parseSkills(analysis.result);
-  const radar    = parseRadar(analysis.result, analysis.overall);
+  const skills    = parseSkills(analysis.result);
+  const radar     = parseRadar(analysis.result, analysis.overall);
   const readiness = parseReadiness(analysis.result, analysis.overall);
-  const gaps     = parseGaps(analysis.result);
-  const strong   = skills.filter((s) => s.level === "strong");
-  const moderate = skills.filter((s) => s.level === "moderate");
-  const improve  = skills.filter((s) => s.level === "needs_improvement");
+  const gaps      = parseGaps(analysis.result);
+  const strong    = skills.filter((s) => s.level === "strong");
+  const moderate  = skills.filter((s) => s.level === "moderate");
+  const improve   = skills.filter((s) => s.level === "needs_improvement");
+
+  const scoreColor = analysis.overall >= 75 ? '#10b981' : analysis.overall >= 50 ? '#f59e0b' : '#ef4444';
+  const scoreLabel = analysis.overall >= 75 ? 'Highly Employable' : analysis.overall >= 50 ? 'Developing' : 'Needs Focus';
+  const topReadiness = [...readiness].sort((a, b) => b.score - a.score)[0];
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col" style={{ background: '#f8fafc' }}>
       <main className="flex-1">
 
-        {/* ── Page header ──────────────────────────────────── */}
-        <div style={{ borderBottom: '1px solid var(--line)', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', padding: '32px 16px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                AI Tools · Skills Passport
+        {/* ── Hero header with score ring ─────────────────── */}
+        <div style={{
+          background: 'linear-gradient(135deg, #0A2647 0%, #144272 50%, #1e40af 100%)',
+          padding: '40px 16px 500px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', right: -60, top: -60, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
+          <div style={{ position: 'absolute', left: -30, bottom: -30, width: 140, height: 140, borderRadius: '50%', background: 'rgba(243,108,33,0.08)' }} />
+          <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 8, padding: '4px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
+                  <Sparkles style={{ width: 10, height: 10 }} /> AI Tools · Skills Passport
+                </div>
+                <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>My Skills Passport</h1>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
+                  {analysis.industry} · Generated {new Date(analysis.createdAt).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}
+                </p>
               </div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>My Skills Passport</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
-                {analysis.industry} · Overall Score: <strong style={{ color: 'rgba(255,255,255,0.7)' }}>{analysis.overall}/100</strong> · Generated {new Date(analysis.createdAt).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={handleDownload} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
-                <Download style={{ width: 14, height: 14 }} /> Download PNG
-              </button>
-              <Link to="/analyze" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}>
-                <FileText style={{ width: 14, height: 14 }} /> Re-analyze CV
-              </Link>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={handleDownload} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
+                  <Download style={{ width: 14, height: 14 }} /> Download PNG
+                </button>
+                <Link to="/analyze" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 12px rgba(243,108,33,0.3)' }}>
+                  <FileText style={{ width: 14, height: 14 }} /> Re-analyze CV
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* ── Passport card (printable) ─────────────────────── */}
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8 space-y-6">
-          <div ref={passportRef} className="space-y-6">
+        {/* ── Main content ─────────────────────────────────── */}
+        <div className="mx-auto max-w-5xl px-4 sm:px-6" style={{ marginTop: 0 }}>
+          <div ref={passportRef} className="space-y-5">
 
-            {/* Passport ID card */}
-            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 p-6 text-white">
-              <div className="flex flex-wrap items-start justify-between gap-4">
+            {/* ── Score Hero Card ────────────────────────────── */}
+            <div style={{
+              background: '#fff', borderRadius: 20, padding: 28,
+              boxShadow: '0 4px 24px rgba(10,38,71,0.08)',
+              border: '1px solid #e2e8f0',
+              display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 24,
+            }}>
+              {/* Score ring — fixed size, never shrinks */}
+              <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0, flexBasis: 120 }}>
+                <svg width="120" height="120" viewBox="0 0 120 120" style={{ display: 'block' }}>
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" strokeWidth="10" />
+                  <circle
+                    cx="60" cy="60" r="52" fill="none" stroke={scoreColor} strokeWidth="10"
+                    strokeLinecap="round"
+                    strokeDasharray={`${(analysis.overall / 100) * 327} 327`}
+                    transform="rotate(-90 60 60)"
+                  />
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                  <span style={{ fontSize: 36, fontWeight: 800, color: '#0A2647', lineHeight: 1 }}>{analysis.overall}</span>
+                  <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>out of 100</span>
+                </div>
+              </div>
+
+              {/* Score details — takes remaining space, min 240px so heading never overlaps circle */}
+              <div style={{ flex: '1 1 240px', minWidth: 240, paddingLeft: 4 }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 20, background: `${scoreColor}15`, marginBottom: 8 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: scoreColor }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: scoreColor }}>{scoreLabel}</span>
+                </div>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0A2647', margin: '0 0 4px' }}>Employability Score</h2>
+                <p style={{ fontSize: 13, color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  Based on your CV analysis in the <strong style={{ color: '#0A2647' }}>{analysis.industry}</strong> sector.
+                  {topReadiness && <> Best fit: <strong style={{ color: '#0A2647' }}>{topReadiness.label}</strong> ({topReadiness.score}%).</>}
+                </p>
+              </div>
+
+              {/* Quick stats — fixed column, wraps below on small screens */}
+              <div style={{ display: 'flex', gap: 16, flexShrink: 0, flexBasis: 'auto', marginLeft: 'auto' }}>
+                <div style={{ textAlign: 'center', width: 56 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 12, background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
+                    <CheckCircle2 style={{ width: 22, height: 22, color: '#10b981' }} />
+                  </div>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{strong.length}</p>
+                  <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>Strong</p>
+                </div>
+                <div style={{ textAlign: 'center', width: 56 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
+                    <AlertCircle style={{ width: 22, height: 22, color: '#f59e0b' }} />
+                  </div>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{moderate.length}</p>
+                  <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>Moderate</p>
+                </div>
+                <div style={{ textAlign: 'center', width: 56 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
+                    <Target style={{ width: 22, height: 22, color: '#ef4444' }} />
+                  </div>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{improve.length + gaps.length}</p>
+                  <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>To Develop</p>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Industry Readiness Cards ───────────────────── */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+              {readiness.map((r, i) => {
+                const icons = [Briefcase, Zap, Rocket];
+                const Icon = icons[i] || Briefcase;
+                const colors = ['#3b82f6', '#8b5cf6', '#10b981'];
+                const c = colors[i] || '#3b82f6';
+                return (
+                  <div key={r.label} style={{
+                    background: '#fff', borderRadius: 16, padding: 18,
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.2s',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                      <div style={{ width: 38, height: 38, borderRadius: 10, background: `${c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon style={{ width: 18, height: 18, color: c }} />
+                      </div>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>{r.label}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
+                      <span style={{ fontSize: 28, fontWeight: 800, color: '#0A2647', lineHeight: 1 }}>{r.score}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#94a3b8', marginBottom: 2 }}>%</span>
+                    </div>
+                    <div style={{ height: 6, borderRadius: 3, background: '#f1f5f9', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', borderRadius: 3, background: c, width: `${r.score}%`, transition: 'width 0.6s' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* ── Skills Radar (custom bars) + Skill Breakdown ── */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }} className="skills-radar-grid">
+              {/* Skill category bars */}
+              <div style={{ background: '#fff', borderRadius: 16, padding: 20, border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <BarChart3 style={{ width: 16, height: 16, color: '#205295' }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skill Categories</h3>
+                </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-blue-300 font-semibold mb-1">MYFutureJobs · Malaysia Employment Portal 🇲🇾</p>
-                  <h2 className="text-xl font-extrabold">Skills Passport</h2>
-                  <p className="text-sm text-blue-200 mt-0.5">{user.email}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-5xl font-black tabular-nums text-white">{analysis.overall}</p>
-                  <p className="text-xs text-blue-300">/100 Employability Score</p>
+                  {radar.map((cat) => (
+                    <div key={cat.category} style={{ marginBottom: 14 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#475569' }}>{cat.category}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#0A2647' }}>{cat.score}</span>
+                      </div>
+                      <div style={{ height: 8, borderRadius: 4, background: '#f1f5f9', overflow: 'hidden' }}>
+                        <div style={{
+                          height: '100%', borderRadius: 4,
+                          background: cat.score >= 75 ? 'linear-gradient(90deg, #10b981, #34d399)' : cat.score >= 50 ? 'linear-gradient(90deg, #f59e0b, #fbbf24)' : 'linear-gradient(90deg, #ef4444, #f87171)',
+                          width: `${cat.score}%`, transition: 'width 0.6s',
+                        }} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="mt-5 flex flex-wrap gap-4">
-                {readiness.map((r) => (
-                  <div key={r.label} className="flex-1 min-w-[140px]">
-                    <p className="text-xs text-blue-300 mb-1.5">{r.label}</p>
-                    <div className="h-2 rounded-full bg-white/10">
-                      <div className={`h-2 rounded-full ${r.color}`} style={{ width: `${r.score}%` }} />
+
+              {/* Skill level distribution */}
+              <div style={{ background: '#fff', borderRadius: 16, padding: 20, border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <Award style={{ width: 16, height: 16, color: '#f36c21' }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skill Levels</h3>
+                </div>
+                {[
+                  { label: 'Strong Skills', count: strong.length, items: strong, color: '#10b981', bg: '#ecfdf5', icon: Trophy },
+                  { label: 'Moderate Skills', count: moderate.length, items: moderate, color: '#f59e0b', bg: '#fffbeb', icon: Medal },
+                  { label: 'Needs Development', count: improve.length, items: improve, color: '#64748b', bg: '#f8fafc', icon: Flame },
+                ].map((g) => (
+                  <div key={g.label} style={{ marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: 8, background: g.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <g.icon style={{ width: 14, height: 14, color: g.color }} />
+                      </div>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>{g.label}</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: g.color, marginLeft: 'auto' }}>{g.count}</span>
                     </div>
-                    <p className="text-xs text-white font-semibold mt-1">{r.score}%</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      {g.items.slice(0, 6).map((s) => (
+                        <span key={s.name} style={{
+                          fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
+                          background: g.bg, color: g.color, textTransform: 'capitalize',
+                        }}>
+                          {s.name}
+                        </span>
+                      ))}
+                      {g.items.length > 6 && (
+                        <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', color: '#94a3b8' }}>
+                          +{g.items.length - 6} more
+                        </span>
+                      )}
+                      {g.items.length === 0 && (
+                        <span style={{ fontSize: 10, color: '#cbd5e1' }}>None identified</span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* 2-col: Radar + Industry Readiness */}
-            <div className="grid gap-6 md:grid-cols-2">
-
-              {/* Radar chart */}
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                <h3 className="text-sm font-semibold text-foreground mb-4">Skills Radar</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <RadarChart data={radar} margin={{ top: 0, right: 20, bottom: 0, left: 20 }}>
-                    <PolarGrid stroke="hsl(var(--border))" />
-                    <PolarAngleAxis
-                      dataKey="category"
-                      tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                    />
-                    <Radar
-                      dataKey="score"
-                      stroke="hsl(var(--primary))"
-                      fill="hsl(var(--primary))"
-                      fillOpacity={0.2}
-                      strokeWidth={2}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Industry Readiness */}
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-5">
-                <h3 className="text-sm font-semibold text-foreground">Industry Readiness</h3>
-                {readiness.map((r) => (
-                  <div key={r.label}>
-                    <div className="flex justify-between mb-1.5 text-xs">
-                      <span className="text-muted-foreground">{r.label}</span>
-                      <span className="font-semibold text-foreground">{r.score}%</span>
-                    </div>
-                    <div className="h-2.5 rounded-full bg-secondary">
-                      <div className={`h-2.5 rounded-full ${r.color} transition-all`} style={{ width: `${r.score}%` }} />
-                    </div>
+            {/* ── Passport ID Card ────────────────────────────── */}
+            <div style={{
+              background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #1e3a5f 100%)',
+              borderRadius: 16, padding: 22, color: '#fff',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', right: -20, top: -20, width: 100, height: 100, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
+                <div>
+                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', margin: '0 0 4px' }}>MYFutureJobs · Malaysia Employment Portal 🇲🇾</p>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Skills Passport ID</h3>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{user.email}</p>
+                </div>
+                <div style={{ display: 'flex', gap: 16 }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>{analysis.overall}</p>
+                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Score</p>
                   </div>
-                ))}
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs text-muted-foreground">Based on latest CV analysis · {analysis.industry}</p>
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>{skills.length}</p>
+                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Skills</p>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>{readiness.length}</p>
+                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Sectors</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Skills list */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="text-sm font-semibold text-foreground mb-1">Skills Inventory</h3>
-              <p className="text-xs text-muted-foreground mb-5">{skills.length} skills identified from your CV</p>
+            {/* ── Skills Inventory (full list) ────────────────── */}
+            <div style={{ background: '#fff', borderRadius: 16, padding: 22, border: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Star style={{ width: 16, height: 16, color: '#f36c21' }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skills Inventory</h3>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8' }}>{skills.length} skills identified</span>
+              </div>
 
               {[
-                { title: "Strong Skills", items: strong, level: "strong" as const },
-                { title: "Moderate Skills", items: moderate, level: "moderate" as const },
-                { title: "Needs Development", items: improve, level: "needs_improvement" as const },
+                { title: 'Strong Skills', items: strong, level: 'strong' as const },
+                { title: 'Moderate Skills', items: moderate, level: 'moderate' as const },
+                { title: 'Needs Development', items: improve, level: 'needs_improvement' as const },
               ].filter((g) => g.items.length > 0).map((group) => {
                 const Icon = BADGE_ICON[group.level];
                 return (
-                  <div key={group.title} className="mb-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon className={`size-3.5 ${group.level === "strong" ? "text-emerald-500" : group.level === "moderate" ? "text-amber-500" : "text-muted-foreground"}`} />
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.title}</p>
+                  <div key={group.title} style={{ marginBottom: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                      <Icon style={{ width: 13, height: 13, color: group.level === 'strong' ? '#10b981' : group.level === 'moderate' ? '#f59e0b' : '#94a3b8' }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748b' }}>{group.title}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8' }}>({group.items.length})</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {group.items.map((s) => (
-                        <span key={s.name} className={`rounded-full border px-2.5 py-1 text-xs font-medium capitalize ${BADGE_STYLES[s.level]}`}>
+                        <span key={s.name} style={{
+                          fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20,
+                          textTransform: 'capitalize',
+                          ...(
+                            group.level === 'strong'
+                              ? { background: '#ecfdf5', color: '#059669', border: '1px solid #a7f3d0' }
+                              : group.level === 'moderate'
+                              ? { background: '#fffbeb', color: '#d97706', border: '1px solid #fde68a' }
+                              : { background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }
+                          ),
+                        }}>
                           {s.name}
                         </span>
                       ))}
@@ -352,49 +501,98 @@ function SkillsPassportPage() {
                   </div>
                 );
               })}
+
+              {skills.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                  <Lightbulb style={{ width: 32, height: 32, color: '#cbd5e1', margin: '0 auto 8px' }} />
+                  <p style={{ fontSize: 13, color: '#94a3b8' }}>No skills identified yet. Try re-analyzing your CV.</p>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Skills Gap (outside printable area) */}
+          {/* ── Skills Gap + Training (outside printable) ────── */}
           {gaps.length > 0 && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 dark:bg-amber-950/20 dark:border-amber-900/30">
-              <div className="flex items-start gap-3 mb-4">
-                <TrendingUp className="size-5 text-amber-600 shrink-0 mt-0.5" />
+            <div style={{
+              marginTop: 16, background: '#fff', borderRadius: 16, padding: 22,
+              border: '1px solid #fde68a',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <TrendingUp style={{ width: 20, height: 20, color: '#f59e0b' }} />
+                </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground">Skills to Develop</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Close these gaps to improve your employability score.</p>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: '0 0 2px' }}>Skills to Develop</h3>
+                  <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>Close these gaps to boost your employability score.</p>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 mb-5">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
                 {gaps.map((g) => (
-                  <span key={g} className="rounded-full border border-amber-200 bg-white px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-950/40">
+                  <span key={g} style={{
+                    fontSize: 11, fontWeight: 600, padding: '4px 12px', borderRadius: 20,
+                    background: '#fffbeb', color: '#d97706', border: '1px solid #fde68a',
+                  }}>
                     {g}
                   </span>
                 ))}
               </div>
 
-              <div className="border-t border-amber-200/60 pt-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen className="size-3.5 text-amber-600" />
-                  <p className="text-xs font-semibold text-foreground">Recommended Training</p>
+              <div style={{ borderTop: '1px solid #fde68a', paddingTop: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                  <BookOpen style={{ width: 14, height: 14, color: '#f59e0b' }} />
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#0A2647' }}>Recommended Training</span>
                 </div>
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 8 }}>
                   {TRAINING_LINKS.map((l) => (
                     <a
                       key={l.label}
                       href={l.href}
-                      target={l.external ? "_blank" : undefined}
-                      rel={l.external ? "noopener noreferrer" : undefined}
-                      className="flex items-center justify-between rounded-lg border border-amber-200 bg-white px-3 py-2.5 text-xs font-medium text-foreground hover:border-amber-400 hover:shadow-sm transition-all dark:bg-amber-950/40"
+                      target={l.external ? '_blank' : undefined}
+                      rel={l.external ? 'noopener noreferrer' : undefined}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        borderRadius: 10, border: '1px solid #fde68a', background: '#fffbeb',
+                        padding: '10px 14px', fontSize: 12, fontWeight: 600, color: '#475569',
+                        textDecoration: 'none', transition: 'all 0.15s',
+                      }}
                     >
                       {l.label}
-                      <ArrowRight className="size-3 text-amber-500 shrink-0" />
+                      <ArrowRight style={{ width: 12, height: 12, color: '#f59e0b', flexShrink: 0 }} />
                     </a>
                   ))}
                 </div>
               </div>
             </div>
           )}
+
+          {/* ── Career Suggestions CTA ──────────────────────── */}
+          <div style={{
+            marginTop: 16, marginBottom: 32,
+            background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)',
+            borderRadius: 16, padding: 24, color: '#fff',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <GraduationCap style={{ width: 22, height: 22 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 2px' }}>Boost Your Career</h3>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', margin: 0 }}>Practice AI interviews, explore career pathways, and find jobs matched to your skills.</p>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <Link to="/interview-preparation" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '8px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.15)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
+                AI Interview Prep <ArrowUpRight style={{ width: 12, height: 12 }} />
+              </Link>
+              <Link to="/career-pathway" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '8px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.15)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
+                Career Pathway <ArrowUpRight style={{ width: 12, height: 12 }} />
+              </Link>
+              <Link to="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '8px 16px', borderRadius: 10, background: '#fff', color: '#f36c21', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
+                Browse Jobs <ArrowUpRight style={{ width: 12, height: 12 }} />
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
     </div>

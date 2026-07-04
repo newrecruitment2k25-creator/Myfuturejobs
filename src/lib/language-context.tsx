@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
-import { translations, type Lang, type TranslationKey } from "./translations";
+import { translations, type Lang } from "./translations";
 
 interface LanguageContextValue {
   lang: Lang;
   setLang: (l: Lang) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -25,7 +25,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, l);
   };
 
-  const t = (key: TranslationKey): string => translations[lang][key] as string;
+  const t = (key: string): string => (translations[lang] as Record<string, string>)[key] ?? (translations.en as Record<string, string>)[key] ?? key;
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>

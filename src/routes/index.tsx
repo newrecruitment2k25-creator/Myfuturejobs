@@ -1,74 +1,16 @@
-﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Search, ArrowRight, Brain, GitBranch, BarChart2,
   FileSearch, TrendingUp, Sparkles, Zap, Users, Building2, Shield, CheckCircle2, Play,
 } from "lucide-react";
 import { SiteFooter } from "@/components/site-header";
+import { useLanguage } from "@/lib/language-context";
 
 /*  Static data  */
 const SEARCH_CHIPS = [
   "Software Engineer", "Data Analyst", "HR Executive",
   "Jurutera Awam", "Pembantu Tadbir", "Fresh Graduate IT",
-];
-
-const TRUST_STATS = [
-  { value: "5,828",  label: "Active Vacancies",  sub: "Real employer postings" },
-  { value: "1,449",  label: "Candidate Profiles", sub: "Semantically scored" },
-  { value: "50+",    label: "AI Modules",          sub: "Taxonomy  NLP  Scoring" },
-  { value: "MASCO",  label: "Taxonomy Standard",   sub: "Malaysian classification" },
-];
-
-const CAPABILITIES = [
-  {
-    tag: "Semantic Matching",
-    title: 'AI that understands meaning, not just keywords',
-    body: '"Software Developer" = "Programmer" = "Pembantu IT"  our semantic engine finds matches by meaning, across English and Bahasa Malaysia.',
-    cta: "Try AI Matching",
-    ctaTo: "/poc/ai-matching",
-    accentColor: "#205295",
-    Icon: Zap,
-    flip: false,
-  },
-  {
-    tag: "Skill Intelligence",
-    title: "Skill gap analysis and career pathway engine",
-    body: "Know exactly which skills a candidate is missing. Map progression from Junior  Senior  Lead with salary benchmarks at each step.",
-    cta: "View Skill Gap",
-    ctaTo: "/skill-gap",
-    accentColor: "#0d7c66",
-    Icon: Brain,
-    flip: true,
-  },
-  {
-    tag: "Taxonomy Intelligence",
-    title: "MASCO, MSIC, NOSS, NEC and MQA mapping",
-    body: "Every occupation maps to the official Malaysian taxonomy stack  enabling accurate cross-system reporting and regulatory compliance.",
-    cta: "Explore Taxonomy",
-    ctaTo: "/taxonomy",
-    accentColor: "#b97c0e",
-    Icon: GitBranch,
-    flip: false,
-  },
-  {
-    tag: "Labour Intelligence",
-    title: "Market salary benchmarks and demand signals",
-    body: "Aggregated from 5,828 real vacancies  compare salary ranges, identify in-demand skills, and measure supply-demand gaps for any occupation.",
-    cta: "View Labour Insights",
-    ctaTo: "/labour-insights",
-    accentColor: "#2c74b3",
-    Icon: BarChart2,
-    flip: true,
-  },
-];
-
-const INTEL_MODULES = [
-  { icon: Brain,      label: "Skill Gap Analysis",   desc: "Find missing skills vs target role",  to: "/skill-gap",             accent: "#205295" },
-  { icon: TrendingUp, label: "Career Pathway",        desc: "Junior  Senior  Lead + salary",    to: "/career-pathway",        accent: "#0d7c66" },
-  { icon: FileSearch, label: "Document Intelligence", desc: "Parse resumes and job descriptions", to: "/document-intelligence", accent: "#b97c0e" },
-  { icon: GitBranch,  label: "Taxonomy Intelligence", desc: "MASCO  NOSS  MQA  NEC",          to: "/taxonomy",              accent: "#2c74b3" },
-  { icon: BarChart2,  label: "Labour Insights",       desc: "Market data from 5,828 vacancies",  to: "/labour-insights",       accent: "#6b46c1" },
-  { icon: Sparkles,   label: "Recommended Jobs",      desc: "Personalised AI recommendations",   to: "/recommended-jobs",      accent: "#205295" },
 ];
 
 /*  Route  */
@@ -77,7 +19,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "Praxo AI  PERKESO Employment Intelligence" },
+      { title: "MYFutureJobs  PERKESO Employment Intelligence" },
       { name: "description", content: "Semantic AI job matching, skill gap analysis, and labour market intelligence for Malaysia. A PERKESO initiative." },
     ],
   }),
@@ -85,14 +27,79 @@ export const Route = createFileRoute("/")({
 
 /*  Page  */
 function LandingPage() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   const goSearch = (q: string) => {
-    const t = q.trim();
-    if (!t) return;
-    void navigate({ to: "/jobs", search: { search: t } as any });
+    const t2 = q.trim();
+    if (!t2) return;
+    void navigate({ to: "/jobs", search: { search: t2 } as any });
   };
+
+  const TRUST_STATS = [
+    { value: "5,828",  label: t("landingTrustVacancies"),  sub: t("landingTrustVacanciesSub") },
+    { value: "1,449",  label: t("landingTrustCandidates"), sub: t("landingTrustCandidatesSub") },
+    { value: "50+",    label: t("landingTrustModules"),     sub: t("landingTrustModulesSub") },
+    { value: "MASCO",  label: t("landingTrustTaxonomy"),    sub: t("landingTrustTaxonomySub") },
+  ];
+
+  const CAPABILITIES = [
+    {
+      tag: t("landingCap1Tag"),
+      title: t("landingCap1Title"),
+      body: t("landingCap1Body"),
+      cta: t("landingCap1Cta"),
+      ctaTo: "/poc/ai-matching",
+      accentColor: "#205295",
+      Icon: Zap,
+      flip: false,
+      image: "/landing-ai-matching.png",
+    },
+    {
+      tag: t("landingCap2Tag"),
+      title: t("landingCap2Title"),
+      body: t("landingCap2Body"),
+      cta: t("landingCap2Cta"),
+      ctaTo: "/skill-gap",
+      accentColor: "#0d7c66",
+      Icon: Brain,
+      flip: true,
+      image: "/landing-skill-gap.png",
+    },
+    {
+      tag: t("landingCap3Tag"),
+      title: t("landingCap3Title"),
+      body: t("landingCap3Body"),
+      cta: t("landingCap3Cta"),
+      ctaTo: "/taxonomy",
+      accentColor: "#b97c0e",
+      Icon: GitBranch,
+      flip: false,
+      image: "/landing-taxonomy.png",
+    },
+    {
+      tag: t("landingCap4Tag"),
+      title: t("landingCap4Title"),
+      body: t("landingCap4Body"),
+      cta: t("landingCap4Cta"),
+      ctaTo: "/labour-insights",
+      accentColor: "#2c74b3",
+      Icon: BarChart2,
+      flip: true,
+      image: "/landing-labour-insights.png",
+    },
+  ];
+
+  const INTEL_MODULES = [
+    { icon: Brain,      label: t("landingCap2Tag"),   desc: t("landingCap2Title"),   to: "/skill-gap",             accent: "#205295" },
+    { icon: TrendingUp, label: t("navCareerPathway"),     desc: t("landingIntelCareerDesc"),        to: "/career-pathway",        accent: "#0d7c66" },
+    { icon: FileSearch, label: t("navDocumentIntel"), desc: t("landingIntelDocDesc"), to: "/document-intelligence", accent: "#b97c0e" },
+    { icon: GitBranch,  label: t("landingCap3Tag"),   desc: t("landingCap3Title"),   to: "/taxonomy",              accent: "#2c74b3" },
+    { icon: BarChart2,  label: t("landingCap4Tag"),   desc: t("landingCap4Title"),   to: "/labour-insights",       accent: "#6b46c1" },
+    { icon: Sparkles,   label: t("navRecommendedJobs"),      desc: t("landingIntelRecDesc"),   to: "/recommended-jobs",      accent: "#205295" },
+  ];
+
 
   return (
     <div>
@@ -112,16 +119,16 @@ function LandingPage() {
           {/* eyebrow */}
           <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, padding:"5px 16px", fontSize:"0.6875rem", fontWeight:700, color:"rgba(255,255,255,0.85)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:32 }}>
             <span style={{ width:7, height:7, borderRadius:"50%", background:"#4ade80", display:"inline-block", boxShadow:"0 0 8px rgba(74,222,128,0.5)" }} />
-            PERKESO Employment Intelligence Platform
+            {t("landingEyebrow")}
           </div>
 
           {/* headline */}
           <h1 style={{ fontFamily:"var(--font-heading)", fontSize:"clamp(2rem,4.5vw,3.5rem)", fontWeight:800, lineHeight:1.05, letterSpacing:"-0.035em", color:"#ffffff", margin:"0 0 1.25rem", maxWidth:720 }}>
-            AI-Powered Job Matching<br />
-            <span style={{ background:"linear-gradient(90deg, #7dd3fc 0%, #38bdf8 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>for Malaysia's Workforce</span>
+            {t("landingHeroTitle")}<br />
+            <span style={{ background:"linear-gradient(90deg, #7dd3fc 0%, #38bdf8 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>{t("landingHeroHighlight")}</span>
           </h1>
           <p style={{ fontSize:"1.0625rem", color:"rgba(255,255,255,0.65)", lineHeight:1.7, margin:"0 0 2.5rem", maxWidth:580 }}>
-            Semantic intelligence that understands occupations, skills, and career progression across Bahasa Malaysia and English. Powered by MASCO taxonomy and real employer data.
+            {t("landingHeroSub")}
           </p>
 
           {/* search bar */}
@@ -130,7 +137,7 @@ function LandingPage() {
               <Search size={18} style={{ color:"var(--muted)", flexShrink:0 }} />
               <input
                 type="text"
-                placeholder="Job title, skill, or occupation"
+                placeholder={t("landingSearchPlaceholder")}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && goSearch(query)}
@@ -143,13 +150,13 @@ function LandingPage() {
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; }}
             >
-              Search <ArrowRight size={14} />
+              {t("landingSearchBtn")} <ArrowRight size={14} />
             </button>
           </div>
 
           {/* example chips */}
           <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem", alignItems:"center" }}>
-            <span style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.45)", fontWeight:500 }}>Try:</span>
+            <span style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.45)", fontWeight:500 }}>{t("landingTry")}</span>
             {SEARCH_CHIPS.map(chip => (
               <button key={chip} onClick={() => goSearch(chip)}
                 style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, fontSize:"0.75rem", fontWeight:500, color:"rgba(255,255,255,0.75)", padding:"5px 14px", cursor:"pointer", transition:"all 0.15s" }}
@@ -165,19 +172,19 @@ function LandingPage() {
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
             >
-              <Users size={14} /> Job Seeker
+              <Users size={14} /> {t("landingRoleJobSeeker")}
             </Link>
             <Link to="/signup" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"rgba(255,255,255,0.9)", textDecoration:"none", transition:"all 0.15s" }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
             >
-              <Building2 size={14} /> Employer
+              <Building2 size={14} /> {t("landingRoleEmployer")}
             </Link>
             <Link to="/login?tab=admin" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"rgba(255,255,255,0.9)", textDecoration:"none", transition:"all 0.15s" }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
             >
-              <Shield size={14} /> Admin
+              <Shield size={14} /> {t("landingRoleAdmin")}
             </Link>
           </div>
         </div>
@@ -208,12 +215,12 @@ function LandingPage() {
       <section style={{ background:"var(--base-alt)", padding:"5rem 2rem" }}>
         <div style={{ maxWidth:1280, margin:"0 auto" }}>
           <div style={{ textAlign:"center", marginBottom:"3.5rem" }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--accent-blue)", marginBottom:10, padding:"4px 14px", borderRadius:20, background:"var(--accent-glow)" }}>Platform Capabilities</div>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--accent-blue)", marginBottom:10, padding:"4px 14px", borderRadius:20, background:"var(--accent-glow)" }}>{t("landingCapEyebrow")}</div>
             <h2 style={{ fontFamily:"var(--font-heading)", fontSize:"clamp(1.5rem,3vw,2.25rem)", fontWeight:800, color:"var(--ink)", letterSpacing:"-0.025em", margin:0 }}>
-              Built for government-grade employment intelligence
+              {t("landingCapTitle")}
             </h2>
             <p style={{ fontSize:"0.9375rem", color:"var(--muted)", lineHeight:1.7, margin:"1rem 0 0", maxWidth:560, marginLeft:"auto", marginRight:"auto" }}>
-              From semantic search to career pathway mapping  every module is designed for Malaysia's employment ecosystem.
+              {t("landingCapSub")}
             </p>
           </div>
 
@@ -237,23 +244,35 @@ function LandingPage() {
                 </div>
                 {/* visual side */}
                 <div style={{ order: cap.flip ? 1 : 2 }}>
-                  <div style={{
-                    background:`linear-gradient(135deg, ${cap.accentColor}08 0%, ${cap.accentColor}03 100%)`,
-                    border:`1px solid ${cap.accentColor}20`,
-                    borderRadius:16,
-                    padding:"2.5rem",
-                    display:"flex",
-                    alignItems:"center",
-                    justifyContent:"center",
-                    minHeight:220,
-                    position:"relative",
-                    overflow:"hidden",
-                  }}>
-                    <div style={{ position:"absolute", top:-30, right:-30, width:120, height:120, borderRadius:"50%", background:`${cap.accentColor}08`, pointerEvents:"none" }} />
-                    <div style={{ width:80, height:80, borderRadius:20, background:`${cap.accentColor}12`, display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
-                      <cap.Icon size={40} style={{ color:cap.accentColor }} />
+                  {cap.image ? (
+                    <div style={{
+                      borderRadius:16,
+                      overflow:"hidden",
+                      border:`1px solid ${cap.accentColor}20`,
+                      boxShadow:`0 8px 32px ${cap.accentColor}15`,
+                      position:"relative",
+                    }}>
+                      <img src={cap.image} alt={cap.title} style={{ width:"100%", height:"auto", display:"block" }} />
                     </div>
-                  </div>
+                  ) : (
+                    <div style={{
+                      background:`linear-gradient(135deg, ${cap.accentColor}08 0%, ${cap.accentColor}03 100%)`,
+                      border:`1px solid ${cap.accentColor}20`,
+                      borderRadius:16,
+                      padding:"2.5rem",
+                      display:"flex",
+                      alignItems:"center",
+                      justifyContent:"center",
+                      minHeight:220,
+                      position:"relative",
+                      overflow:"hidden",
+                    }}>
+                      <div style={{ position:"absolute", top:-30, right:-30, width:120, height:120, borderRadius:"50%", background:`${cap.accentColor}08`, pointerEvents:"none" }} />
+                      <div style={{ width:80, height:80, borderRadius:20, background:`${cap.accentColor}12`, display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
+                        <cap.Icon size={40} style={{ color:cap.accentColor }} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -266,9 +285,9 @@ function LandingPage() {
         <div style={{ maxWidth:1280, margin:"0 auto" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"2rem" }}>
             <div>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--accent-blue)", marginBottom:8, padding:"4px 14px", borderRadius:20, background:"var(--accent-glow)" }}>Intelligence Modules</div>
+              <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--accent-blue)", marginBottom:8, padding:"4px 14px", borderRadius:20, background:"var(--accent-glow)" }}>{t("landingIntelEyebrow")}</div>
               <h2 style={{ fontFamily:"var(--font-heading)", fontSize:"1.5rem", fontWeight:800, color:"var(--ink)", margin:0, letterSpacing:"-0.02em" }}>
-                Explore every capability
+                {t("landingIntelTitle")}
               </h2>
             </div>
             <Link to="/poc/ai-matching"
@@ -276,7 +295,7 @@ function LandingPage() {
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor="var(--accent-blue)"; el.style.background="var(--accent-glow)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor="var(--line)"; el.style.background="transparent"; }}
             >
-              View AI Matching <ArrowRight size={13} />
+              {t("landingIntelViewAll")} <ArrowRight size={13} />
             </Link>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px, 1fr))", gap:"1rem" }}>
@@ -301,7 +320,7 @@ function LandingPage() {
                   <div style={{ fontFamily:"var(--font-heading)", fontSize:"0.9375rem", fontWeight:700, color:"var(--ink)", marginBottom:6 }}>{mod.label}</div>
                   <div style={{ fontSize:"0.8125rem", color:"var(--muted)", lineHeight:1.5 }}>{mod.desc}</div>
                   <div style={{ display:"inline-flex", alignItems:"center", gap:4, marginTop:"1rem", fontSize:"0.75rem", fontWeight:600, color:mod.accent }}>
-                    Explore <ArrowRight size={12} />
+                    {t("landingIntelExplore")} <ArrowRight size={12} />
                   </div>
                 </div>
               </Link>
@@ -316,13 +335,13 @@ function LandingPage() {
         <div style={{ position:"absolute", bottom:-60, left:-40, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
         <div style={{ maxWidth:720, margin:"0 auto", textAlign:"center", position:"relative", zIndex:1 }}>
           <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", marginBottom:16, padding:"4px 14px", borderRadius:20, background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.12)" }}>
-            <Play size={11} /> Interactive Demo
+            <Play size={11} /> {t("landingCtaEyebrow")}
           </div>
           <h2 style={{ fontFamily:"var(--font-heading)", fontSize:"clamp(1.5rem,3vw,2.25rem)", fontWeight:800, color:"#fff", letterSpacing:"-0.025em", margin:"0 0 1rem", lineHeight:1.2 }}>
-            Ready to see Praxo AI in action?
+            {t("landingCtaTitle")}
           </h2>
           <p style={{ fontSize:"1rem", color:"rgba(255,255,255,0.65)", margin:"0 0 2rem", lineHeight:1.7, maxWidth:520, marginLeft:"auto", marginRight:"auto" }}>
-            Run the full guided demo  semantic search, AI matching, skill gap analysis, and taxonomy intelligence  all in one flow.
+            {t("landingCtaSub")}
           </p>
           <div style={{ display:"flex", gap:"1rem", justifyContent:"center", flexWrap:"wrap" }}>
             <Link to="/demo"
@@ -330,14 +349,14 @@ function LandingPage() {
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; }}
             >
-              Start Guided Demo <ArrowRight size={14} />
+              {t("landingCtaDemo")} <ArrowRight size={14} />
             </Link>
             <Link to="/jobs"
               style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.1)", color:"#fff", border:"1px solid rgba(255,255,255,0.2)", textDecoration:"none", borderRadius:10, padding:"13px 30px", fontSize:"0.9375rem", fontWeight:600, transition:"all 0.15s" }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
             >
-              Browse Jobs
+              {t("landingCtaBrowse")}
             </Link>
           </div>
         </div>

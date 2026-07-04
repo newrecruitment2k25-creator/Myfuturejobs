@@ -12,7 +12,7 @@ export const Route = createFileRoute("/skill-gap")({
   component: SkillGapPage,
   head: () => ({
     meta: [
-      { title: "Skill Gap Analysis — Praxo AI" },
+      { title: "Skill Gap Analysis — MYFutureJobs" },
       { name: "description", content: "Compare candidate skills to a target vacancy and identify missing skills, transferable competencies, and recommended training." },
     ],
   }),

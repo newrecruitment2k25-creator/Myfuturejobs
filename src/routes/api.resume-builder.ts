@@ -35,7 +35,7 @@ Rules:
 - Return ONLY the summary paragraph, no labels`;
 
           const { text } = await callAi({
-            model: AI_MODELS.GPT5_4_MINI,
+            model: AI_MODELS.GROQ_LLAMA_33_70B,
             messages: [{ role: "user", content: prompt }],
             timeoutMs: 20000,
           });
@@ -57,7 +57,7 @@ Rules:
 - Return ONLY the bullet points, one per line, starting with "•"`;
 
           const { text } = await callAi({
-            model: AI_MODELS.GPT5_4_MINI,
+            model: AI_MODELS.GROQ_LLAMA_33_70B,
             messages: [{ role: "user", content: prompt }],
             timeoutMs: 20000,
           });
@@ -82,7 +82,7 @@ Rules:
 - Return ONLY a comma-separated list of skills, nothing else`;
 
           const { text } = await callAi({
-            model: AI_MODELS.GPT5_4_MINI,
+            model: AI_MODELS.GROQ_LLAMA_33_70B,
             messages: [{ role: "user", content: prompt }],
             timeoutMs: 20000,
           });
@@ -117,7 +117,7 @@ Evaluate and return ONLY this JSON:
 }`;
 
           const { text } = await callAi({
-            model: AI_MODELS.GPT5_4_MINI,
+            model: AI_MODELS.GROQ_LLAMA_33_70B,
             messages: [{ role: "user", content: prompt }],
             timeoutMs: 20000,
           });

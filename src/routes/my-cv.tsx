@@ -254,7 +254,6 @@ function MyCVPage() {
             {/* ── Quick actions ── */}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {[
-                { label: "Interview Prep", href: "/interview/setup", bg: "rgba(33,31,96,0.07)", color: "var(--brand)" },
                 { label: "Build Resume", href: "/resume-builder", bg: "rgba(33,31,96,0.07)", color: "var(--brand)" },
                 { label: "Skills Passport", href: "/skills-passport", bg: "rgba(33,31,96,0.07)", color: "var(--brand)" },
                 { label: "Career Pathway", href: "/career-pathway", bg: "rgba(33,31,96,0.07)", color: "var(--brand)" },

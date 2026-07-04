@@ -10,7 +10,7 @@ export const Route = createFileRoute("/recommended-jobs")({
   component: RecommendedJobsPage,
   head: () => ({
     meta: [
-      { title: "Recommended Jobs — Praxo AI" },
+      { title: "Recommended Jobs — MYFutureJobs" },
       { name: "description", content: "Personalised AI job recommendations matched to your skills and career profile." },
     ],
   }),

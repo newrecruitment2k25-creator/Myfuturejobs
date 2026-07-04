@@ -31,44 +31,47 @@ const ROLE_DEST: Record<Role, string> = {
   admin:      "/admin",
 };
 
-const PANEL_INFO: Record<Role, { bg: string; bgGradient: string; eyebrow: string; heading: string; sub: string; features: string[]; quote: string; author: string; statValue: string; statLabel: string }> = {
-  job_seeker: {
-    bg: "var(--brand)",
-    bgGradient: "linear-gradient(160deg, #0A2647 0%, #144272 60%, #1a4a82 100%)",
-    eyebrow: "PERKESO · SOCSO · MYFutureJobs",
-    heading: "Find Your Next Career Move",
-    sub: "Join 1,449 candidates using AI-powered job matching, CV analysis, and skill gap tools across 5,828 active vacancies.",
-    features: ["AI-powered CV analysis & semantic matching", "Smart resume builder for Malaysian market", "Real-time labour market intelligence", "One-click apply to active vacancies", "Interview prep with AI simulation"],
-    quote: '"MYFutureJobs helped me land a job at a top MNC in just 2 weeks. The AI matching is incredible."',
-    author: "— Amir Z., Software Engineer · Kuala Lumpur",
-    statValue: "5,828",
-    statLabel: "Active Jobs Available",
-  },
-  employer: {
-    bg: "var(--accent)",
-    bgGradient: "linear-gradient(160deg, #144272 0%, #205295 60%, #2C74B3 100%)",
-    eyebrow: "EMPLOYER PORTAL · MYFutureJobs",
-    heading: "Hire Smarter with AI Recruitment",
-    sub: "Connect with qualified Malaysian candidates faster. Our AI matches your vacancies to the best talent automatically.",
-    features: ["Access 1,449 verified candidate profiles", "Real-time labour market & salary intelligence", "AI-powered vacancy builder & job description", "Automated AI video interviews & scoring", "Shortlist candidates with one click"],
-    quote: '"We filled 3 senior engineering positions in under 10 days using MYFutureJobs AI shortlisting. Game changer."',
-    author: "— Faizal R., Head of Talent · TechCorp Malaysia",
-    statValue: "1,449",
-    statLabel: "Candidate Profiles",
-  },
-  admin: {
-    bg: "#17152f",
-    bgGradient: "linear-gradient(160deg, #0d0a23 0%, #1a1535 60%, #252045 100%)",
-    eyebrow: "GOVERNANCE CONSOLE · MYFutureJobs",
-    heading: "Admin & Operations Centre",
-    sub: "Authorised personnel only. Manage users, roles, audit trails, system configuration, and platform governance.",
-    features: ["Full user & role management", "Real-time platform analytics & KPIs", "Comprehensive audit log trail", "System configuration & feature flags", "RBAC & PDPA compliance controls"],
-    quote: '"Restricted access. All login attempts are logged and monitored."',
-    author: "— MYFutureJobs Security Policy",
-    statValue: "SECURE",
-    statLabel: "All Sessions Encrypted",
-  },
-};
+function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradient: string; eyebrow: string; heading: string; sub: string; features: string[]; quote: string; author: string; statValue: string; statLabel: string } {
+  const panels: Record<Role, { bg: string; bgGradient: string; eyebrow: string; heading: string; sub: string; features: string[]; quote: string; author: string; statValue: string; statLabel: string }> = {
+    job_seeker: {
+      bg: "var(--brand)",
+      bgGradient: "linear-gradient(160deg, #0A2647 0%, #144272 60%, #1a4a82 100%)",
+      eyebrow: t("loginSeekerEyebrow"),
+      heading: t("loginSeekerHeading"),
+      sub: t("loginSeekerSub"),
+      features: [t("loginSeekerF1"), t("loginSeekerF2"), t("loginSeekerF3"), t("loginSeekerF4"), t("loginSeekerF5")],
+      quote: t("loginSeekerQuote"),
+      author: t("loginSeekerAuthor"),
+      statValue: t("loginSeekerStatValue"),
+      statLabel: t("loginSeekerStatLabel"),
+    },
+    employer: {
+      bg: "var(--accent)",
+      bgGradient: "linear-gradient(160deg, #144272 0%, #205295 60%, #2C74B3 100%)",
+      eyebrow: t("loginEmployerEyebrow"),
+      heading: t("loginEmployerHeading"),
+      sub: t("loginEmployerSub"),
+      features: [t("loginEmployerF1"), t("loginEmployerF2"), t("loginEmployerF3"), t("loginEmployerF4"), t("loginEmployerF5")],
+      quote: t("loginEmployerQuote"),
+      author: t("loginEmployerAuthor"),
+      statValue: t("loginEmployerStatValue"),
+      statLabel: t("loginEmployerStatLabel"),
+    },
+    admin: {
+      bg: "#17152f",
+      bgGradient: "linear-gradient(160deg, #0d0a23 0%, #1a1535 60%, #252045 100%)",
+      eyebrow: t("loginAdminEyebrow"),
+      heading: t("loginAdminHeading"),
+      sub: t("loginAdminSub"),
+      features: [t("loginAdminF1"), t("loginAdminF2"), t("loginAdminF3"), t("loginAdminF4"), t("loginAdminF5")],
+      quote: t("loginAdminQuote"),
+      author: t("loginAdminAuthor"),
+      statValue: "SECURE",
+      statLabel: t("loginAdminStatLabel"),
+    },
+  };
+  return panels[role];
+}
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -85,20 +88,22 @@ function LoginPage() {
     if (search?.tab === "admin") setRole("admin");
   }, [search?.tab]);
 
-  const panel = PANEL_INFO[role];
+  const panel = getPanelInfo(t, role);
+
+  const roleLabel = role === "job_seeker" ? t("loginRoleJobSeeker") : role === "employer" ? t("loginRoleEmployer") : t("loginRoleAdmin");
 
   const switchRole = (r: Role) => { setRole(r); setError(null); setEmail(""); setPassword(""); };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!email || !password) { setError("Email and password are required."); return; }
+    if (!email || !password) { setError(t("loginErrRequired")); return; }
     setSubmitting(true);
 
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     if (err) {
       setSubmitting(false);
-      setError("Incorrect email or password.");
+      setError(t("loginErrIncorrect"));
       return;
     }
 
@@ -113,13 +118,13 @@ function LoginPage() {
     if (actualRole !== role) {
       await supabase.auth.signOut();
       setSubmitting(false);
-      const label = actualRole === "employer" ? "Employer" : actualRole === "admin" ? "Admin" : "Job Seeker";
-      setError(`These credentials belong to a ${label} account. Please select the correct role tab above.`);
+      const label = actualRole === "employer" ? t("loginRoleEmployer") : actualRole === "admin" ? t("loginRoleAdmin") : t("loginRoleJobSeeker");
+      setError(t("loginErrWrongRole").replace("{role}", label));
       return;
     }
 
     setSubmitting(false);
-    toast.success("Welcome back!");
+    toast.success(t("loginWelcomeBack"));
     void navigate({ to: ROLE_DEST[role] as any });
   };
 
@@ -161,7 +166,7 @@ function LoginPage() {
         </div>
 
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 14 }}>
-          {panel.features.map(text => (
+          {panel.features.map((text: string) => (
             <div key={text} style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <CheckCircle2 size={13} style={{ color: "rgba(255,255,255,0.7)" }} />
@@ -184,15 +189,16 @@ function LoginPage() {
         <div style={{ marginBottom: 28 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent-blue)", marginBottom: 10 }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)", display: "inline-block" }} />
-            Secure Login
+            {t("loginSecureLogin")}
           </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 6px" }}>Welcome back</h1>
-          <p style={{ fontSize: 13, color: "var(--muted)", margin: 0 }}>Select your account type and sign in to continue.</p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 6px" }}>{t("loginWelcome")}</h1>
+          <p style={{ fontSize: 13, color: "var(--muted)", margin: 0 }}>{t("loginSub")}</p>
         </div>
 
         {/* ── Role tabs ── */}
         <div style={{ display: "flex", gap: 4, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: 5, marginBottom: 24, boxShadow: "var(--shadow-card)" }}>
-          {ROLE_TABS.map(({ id, label, icon: Icon }) => {
+          {ROLE_TABS.map(({ id, icon: Icon }) => {
+            const label = id === "job_seeker" ? t("loginRoleJobSeeker") : id === "employer" ? t("loginRoleEmployer") : t("loginRoleAdmin");
             const active = role === id;
             const activeColor = id === "employer" ? "var(--accent-blue)" : id === "admin" ? "#252045" : "var(--brand)";
             return (
@@ -219,17 +225,17 @@ function LoginPage() {
         {/* ── Role badge ── */}
         {role === "admin" && (
           <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 20, padding: "5px 14px", fontSize: 10, fontWeight: 700, color: "#dc2626", marginBottom: 16, width: "fit-content", letterSpacing: "0.03em" }}>
-            <Shield size={11} /> RESTRICTED ACCESS — AUTHORISED PERSONNEL ONLY
+            <Shield size={11} /> {t("loginRestricted")}
           </div>
         )}
 
         <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div>
-            <label htmlFor="login-email" style={labelStyle}>Email Address</label>
+            <label htmlFor="login-email" style={labelStyle}>{t("loginEmail")}</label>
             <input id="login-email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required style={{ ...inputStyle, height: 46, borderRadius: 10 }} />
           </div>
           <div>
-            <label htmlFor="login-password" style={labelStyle}>Password</label>
+            <label htmlFor="login-password" style={labelStyle}>{t("loginPassword")}</label>
             <input id="login-password" type="password" autoComplete="current-password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required style={{ ...inputStyle, height: 46, borderRadius: 10 }} />
           </div>
 
@@ -252,8 +258,8 @@ function LoginPage() {
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; }}
           >
             {submitting
-              ? <><Loader2 className="size-4 animate-spin" /> Signing in…</>
-              : <>Sign In as {ROLE_TABS.find(r => r.id === role)?.label} <ArrowRight size={15} /></>
+              ? <><Loader2 className="size-4 animate-spin" /> {t("loginSigningIn")}</>
+              : <>{t("loginSignInAs")} {roleLabel} <ArrowRight size={15} /></>
             }
           </button>
         </form>
@@ -262,7 +268,7 @@ function LoginPage() {
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
               <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
-              <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 500, letterSpacing: "0.02em" }}>OR CONTINUE WITH</span>
+              <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 500, letterSpacing: "0.02em" }}>{t("loginOrContinue")}</span>
               <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
             </div>
             <div style={{ display: "flex", gap: 8 }}>
@@ -301,7 +307,7 @@ function LoginPage() {
         )}
 
         <p style={{ marginTop: 28, fontSize: 13, color: "var(--muted)", textAlign: "center" }}>
-          No account? <Link to="/signup" style={{ color: "var(--accent-blue)", fontWeight: 700, textDecoration: "none" }}>Create one here</Link>
+          {t("loginNoAccount")} <Link to="/signup" style={{ color: "var(--accent-blue)", fontWeight: 700, textDecoration: "none" }}>{t("loginCreateOne")}</Link>
         </p>
       </div>
       </div>

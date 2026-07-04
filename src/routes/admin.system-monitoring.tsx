@@ -41,7 +41,7 @@ const ACTIVITY_SECTION = [
 ];
 
 const MODULES = [
-  { name: "AI Engine", desc: "Praxo AI Engine", status: "Operational" },
+  { name: "AI Engine", desc: "MYFutureJobs Engine", status: "Operational" },
   { name: "Matching Engine", desc: "Candidate-vacancy scoring", status: "Operational" },
   { name: "Interview Engine", desc: "Simli WebRTC", status: "Operational" },
   { name: "TTS Engine", desc: "AI TTS", status: "Operational" },

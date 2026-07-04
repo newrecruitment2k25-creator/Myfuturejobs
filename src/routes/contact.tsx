@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, Sparkles } from "lucide-react";
 import { SiteFooter } from "@/components/site-header";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/contact")({
   ssr: false,
@@ -21,6 +22,7 @@ const inp: React.CSSProperties = {
 };
 
 function ContactPage() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
 
@@ -36,9 +38,9 @@ function ContactPage() {
 
         {/* Page header */}
         <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: 36, fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.03em", margin: "0 0 10px" }}>Contact Us</h1>
+          <h1 style={{ fontSize: 36, fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.03em", margin: "0 0 10px" }}>{t("contactTitle")}</h1>
           <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.6 }}>
-            We're here to help you navigate your career journey. Drop us a message and our team will get back to you within 24 hours.
+            {t("contactSub")}
           </p>
         </div>
 
@@ -51,38 +53,38 @@ function ContactPage() {
                 <div style={{ width: 52, height: 52, background: "rgba(33,31,96,0.08)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
                   <Send size={22} style={{ color: "var(--brand)" }} />
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>Message Sent!</h3>
-                <p style={{ fontSize: 14, color: "var(--muted)" }}>We'll get back to you within 1–2 business days.</p>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>{t("contactFormSent")}</h3>
+                <p style={{ fontSize: 14, color: "var(--muted)" }}>{t("contactFormSentSub")}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   <div>
-                    <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>Name</label>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>{t("contactFormName")}</label>
                     <input style={inp} type="text" placeholder="John Doe" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                   </div>
                   <div>
-                    <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>Email Address</label>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>{t("contactFormEmail")}</label>
                     <input style={inp} type="email" placeholder="john@example.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>Subject</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>{t("contactFormSubject")}</label>
                   <select style={{ ...inp }} value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}>
-                    <option value="">Select a topic</option>
-                    <option>Job Seeker Support</option>
-                    <option>Employer Enquiry</option>
-                    <option>Technical Issue</option>
-                    <option>Partnership</option>
-                    <option>Other</option>
+                    <option value="">{t("contactSelectTopic")}</option>
+                    <option>{t("contactTopicSeeker")}</option>
+                    <option>{t("contactTopicEmployer")}</option>
+                    <option>{t("contactTopicTechnical")}</option>
+                    <option>{t("contactTopicPartnership")}</option>
+                    <option>{t("contactTopicOther")}</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>Message</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", display: "block", marginBottom: 6 }}>{t("contactFormMessage")}</label>
                   <textarea style={{ ...inp, resize: "vertical" }} rows={5} placeholder="Tell us how we can help you..." value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
                 </div>
                 <button type="submit" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--brand)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
-                  <Send size={15} /> Send Message
+                  <Send size={15} /> {t("contactFormSend")}
                 </button>
               </form>
             )}
@@ -91,9 +93,9 @@ function ContactPage() {
           {/* Info sidebar */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {[
-              { icon: Mail,  label: "EMAIL US",       val: "hello@resumy.gov.my",                 sub: null },
-              { icon: Phone, label: "CALL US",         val: "+60 3-8000 8000",                     sub: null },
-              { icon: MapPin,label: "OFFICE ADDRESS",  val: "Menara PERKESO, 281 Jalan Ampang,",   sub: "50538 Kuala Lumpur, Malaysia" },
+              { icon: Mail,  label: t("contactEmailUs"),       val: "hello@resumy.gov.my",                 sub: null },
+              { icon: Phone, label: t("contactCallUs"),         val: "+60 3-8000 8000",                     sub: null },
+              { icon: MapPin,label: t("contactOfficeAddr"),  val: "Menara PERKESO, 281 Jalan Ampang,",   sub: "50538 Kuala Lumpur, Malaysia" },
             ].map(({ icon: Icon, label, val, sub }) => (
               <div key={label} style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: "var(--radius-lg)", padding: "18px 20px", display: "flex", gap: 14, alignItems: "flex-start" }}>
                 <div style={{ width: 36, height: 36, background: "var(--base)", borderRadius: "var(--radius-xs)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--brand)", flexShrink: 0 }}>
@@ -108,7 +110,7 @@ function ContactPage() {
             ))}
 
             <div style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: "var(--radius-lg)", padding: "18px 20px" }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", marginBottom: 14 }}>Office Hours</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", marginBottom: 14 }}>{t("contactOfficeHours")}</div>
               {[["Monday - Friday", "8:30 AM - 5:30 PM", false], ["Saturday - Sunday", "Closed", true], ["Public Holidays", "Closed", true]].map(([day, time, closed]) => (
                 <div key={day as string} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
                   <span style={{ fontSize: 13, color: "var(--muted)" }}>{day as string}</span>
@@ -119,7 +121,7 @@ function ContactPage() {
 
             <div style={{ background: "rgba(33,31,96,0.04)", border: "1px solid rgba(33,31,96,0.12)", borderRadius: "var(--radius-lg)", padding: "14px 16px", display: "flex", gap: 10, alignItems: "flex-start" }}>
               <Sparkles size={14} style={{ color: "var(--brand)", flexShrink: 0, marginTop: 2 }} />
-              <p style={{ fontSize: 13, color: "var(--brand)", lineHeight: 1.5 }}>AI Support: Our virtual assistant is available 24/7 for immediate platform navigation assistance.</p>
+              <p style={{ fontSize: 13, color: "var(--brand)", lineHeight: 1.5 }}>{t("contactAiSupport")}</p>
             </div>
           </div>
         </div>
@@ -127,8 +129,8 @@ function ContactPage() {
         {/* Map placeholder */}
         <div style={{ marginTop: 48, borderRadius: "var(--radius-xl)", overflow: "hidden", height: 240, background: "var(--line)", position: "relative" }}>
           <div style={{ position: "absolute", bottom: 20, left: 20, background: "#fff", borderRadius: "var(--radius-lg)", padding: "14px 18px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 4 }}>HQ Location</div>
-            <div style={{ fontSize: 12, color: "var(--muted)" }}>Strategically located in the heart of<br />Kuala Lumpur for national accessibility.</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 4 }}>{t("contactHqLocation")}</div>
+            <div style={{ fontSize: 12, color: "var(--muted)" }}>{t("contactHqSub")}</div>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { callAi } from "./ai-gateway";
+import { callAi, AI_MODELS } from "./ai-gateway";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 // ─── Education level ordering for compatibility filtering ─────────────────────
@@ -234,7 +234,7 @@ For each vacancy, provide a precise match assessment using Malaysian job market 
 
       try {
         const result = await callAi({
-          model: "gpt-5.4",
+          model: AI_MODELS.GROQ_LLAMA_33_70B,
           messages: [{ role: "user", content: prompt }],
           tool: MATCH_TOOL,
           busyMessage: "The matching engine is busy. Please try again in a moment.",
@@ -259,7 +259,7 @@ For each vacancy, provide a precise match assessment using Malaysian job market 
             transferable_skills: m.transferable_skills ?? [],
             skill_gaps: m.skill_gaps ?? [],
             taxonomy_relationship: (m.taxonomy_relationship as string) ?? null,
-            model_used: "gpt-5.4",
+            model_used: "llama-3.3-70b-versatile",
           }));
           await supabaseAdmin.from("poc_match_results").upsert(rows, { onConflict: "candidate_id,vacancy_id" }).throwOnError().catch((e: Error) => {
             console.error("[matchCandidateToJobs] cache save failed:", e.message);
@@ -368,7 +368,7 @@ For each candidate, provide a precise match assessment using Malaysian job marke
 
       try {
         const result = await callAi({
-          model: "gpt-5.4",
+          model: AI_MODELS.GROQ_LLAMA_33_70B,
           messages: [{ role: "user", content: prompt }],
           tool: CANDIDATE_MATCH_TOOL,
           busyMessage: "The matching engine is busy. Please try again in a moment.",
@@ -392,7 +392,7 @@ For each candidate, provide a precise match assessment using Malaysian job marke
             transferable_skills: m.transferable_skills ?? [],
             skill_gaps: m.skill_gaps ?? [],
             taxonomy_relationship: (m.taxonomy_relationship as string) ?? null,
-            model_used: "gpt-5.4",
+            model_used: "llama-3.3-70b-versatile",
           }));
           await supabaseAdmin.from("poc_match_results").upsert(rows, { onConflict: "candidate_id,vacancy_id" }).throwOnError().catch((e: Error) => {
             console.error("[matchJobToCandidates] cache save failed:", e.message);
@@ -463,7 +463,7 @@ VACANCY: ${vacancy.id} | ${vacancy.job_title} (${vacancy.occupation_name}) | Edu
 Provide a single, specific match result. Use Malaysian job market context.`;
 
     const result = await callAi({
-      model: "gpt-5.4",
+      model: AI_MODELS.GROQ_LLAMA_33_70B,
       messages: [{ role: "user", content: prompt }],
       tool: {
         ...MATCH_TOOL,

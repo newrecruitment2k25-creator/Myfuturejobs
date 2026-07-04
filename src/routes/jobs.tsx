@@ -1,11 +1,11 @@
 import React from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-header";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import {
   MapPin, DollarSign, GraduationCap, Briefcase, Search, SlidersHorizontal,
   X, Loader2, Building2, Clock, CheckCircle2, Brain, Sparkles, Bookmark, Share2, Factory,
-  Tag, ChevronDown, BarChart2,
+  Tag, ChevronDown, BarChart2, ChevronRight,
 } from "lucide-react";
 import {
   parseSearchQuery as parseQueryNLP, scoreJob, scoreToPercent,
@@ -535,11 +535,11 @@ function CompanyLogo({ name, size = "md" }: { name: string | null; size?: "sm" |
 }
 
 // ── Job Card Component ─────────────────────────────────────────────────────────
-function JobCard({
-  job, isSelected, onSelect, isApplied, isSaved, onToggleSave, score, query,
+function JobCardGrid({
+  job, onSelect, isApplied, isSaved, onToggleSave, score, query,
 }: {
-  job: JobCard; isSelected: boolean; onSelect: () => void;
-  isApplied: boolean; canApply: boolean; onApply: () => void;
+  job: JobCard; onSelect: () => void;
+  isApplied: boolean;
   isSaved: boolean; onToggleSave: () => void;
   score: number | null; query: string;
 }) {
@@ -552,63 +552,72 @@ function JobCard({
   return (
     <div
       style={{
-        position: 'relative', padding: '14px 16px', cursor: 'pointer',
-        borderBottom: '1px solid var(--line)',
-        borderLeft: isSelected ? '3px solid #f36c21' : '3px solid transparent',
-        background: isSelected ? 'rgba(243,108,33,0.04)' : 'var(--surface)',
-        transition: 'all 0.15s',
+        position: 'relative', cursor: 'pointer',
+        background: 'var(--surface)', border: '1px solid var(--line)',
+        borderRadius: 14, padding: 18, transition: 'all 0.2s',
+        display: 'flex', flexDirection: 'column', gap: 10,
       }}
       onClick={onSelect}
-      onMouseEnter={e => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = 'rgba(32,82,149,0.02)'; }}
-      onMouseLeave={e => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = 'var(--surface)'; }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(10,38,71,0.08)'; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
     >
-      <div style={{ display: 'flex', gap: 10 }}>
-        <CompanyLogo name={displayName} size="sm" />
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <CompanyLogo name={displayName} size="md" />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3, margin: 0 }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.35, margin: 0 }}>
               <HighlightText text={job.job_title} query={query} />
             </h3>
             <button onClick={e => { e.stopPropagation(); onToggleSave(); }} title={isSaved ? "Remove from saved" : "Save job"}
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}>
-              <Bookmark style={{ width: 14, height: 14, color: isSaved ? '#f36c21' : isApplied ? '#205295' : 'var(--muted)', fill: isSaved ? '#f36c21' : 'none' }} />
+              <Bookmark style={{ width: 16, height: 16, color: isSaved ? '#f36c21' : 'var(--muted)', fill: isSaved ? '#f36c21' : 'none' }} />
             </button>
           </div>
-          <p style={{ fontSize: 11, fontWeight: 600, color: '#f36c21', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName}</p>
-          {location && (
-            <p style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11, fontWeight: 500, color: 'var(--muted)', marginTop: 3 }}>
-              <MapPin style={{ width: 11, height: 11 }} />{location}
-            </p>
-          )}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
-            {score !== null && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 3,
-                fontSize: 10, fontWeight: 700, color: '#fff',
-                background: matchPillColor!, borderRadius: 999,
-                padding: '2px 7px',
-              }}>
-                <Brain style={{ width: 9, height: 9 }} />{score}%
-              </span>
-            )}
-            {(job.salary || (job.salary_min != null && job.salary_max != null)) && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 3,
-                fontSize: 10, fontWeight: 700, color: '#fff',
-                background: '#f36c21', borderRadius: 999,
-                padding: '2px 7px', marginLeft: 'auto',
-              }}>
-                <DollarSign style={{ width: 9, height: 9 }} />{salaryDisplay(job)}
-              </span>
-            )}
-            <span style={{ fontSize: 10, fontWeight: 500, color: 'var(--muted)' }}>
-              {job.created_at ? timeAgo(job.created_at) : "Today"}
-            </span>
-          </div>
-          {isApplied && (
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#15803d', background: '#dcfce7', borderRadius: 6, padding: '2px 7px', display: 'inline-block', marginTop: 4 }}>Applied ✓</span>
-          )}
+          <p style={{ fontSize: 12, fontWeight: 600, color: '#f36c21', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName}</p>
         </div>
+      </div>
+
+      {location && (
+        <p style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>
+          <MapPin style={{ width: 13, height: 13 }} />{location}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        {score !== null && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 3,
+            fontSize: 11, fontWeight: 700, color: '#fff',
+            background: matchPillColor!, borderRadius: 999,
+            padding: '3px 9px',
+          }}>
+            <Brain style={{ width: 10, height: 10 }} />{score}% match
+          </span>
+        )}
+        {(job.salary || (job.salary_min != null && job.salary_max != null)) && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 3,
+            fontSize: 11, fontWeight: 700, color: '#fff',
+            background: '#f36c21', borderRadius: 999,
+            padding: '3px 9px',
+          }}>
+            <DollarSign style={{ width: 10, height: 10 }} />{salaryDisplay(job)}
+          </span>
+        )}
+        {isApplied && (
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#15803d', background: '#dcfce7', borderRadius: 999, padding: '3px 9px', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+            <CheckCircle2 style={{ width: 11, height: 11 }} /> Applied
+          </span>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2, paddingTop: 8, borderTop: '1px solid var(--line)' }}>
+        <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--muted)' }}>
+          {job.created_at ? timeAgo(job.created_at) : "Today"}
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#205295', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+          View Details <ChevronRight style={{ width: 12, height: 12 }} />
+        </span>
       </div>
     </div>
   );
@@ -631,22 +640,11 @@ function InfoBox({ icon: Icon, label, value }: { icon: React.ElementType; label:
 
 // ── Job Detail Component ───────────────────────────────────────────────────────
 function JobDetail({
-  job, isApplied, canApply, onApply, loading
+  job, isApplied, canApply, onApply, loading, onClose
 }: {
-  job: JobDetail | null; isApplied: boolean; canApply: boolean; onApply: () => void; loading: boolean;
+  job: JobDetail | null; isApplied: boolean; canApply: boolean; onApply: () => void; loading: boolean; onClose?: () => void;
 }) {
-  if (!job) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div style={{ width: 56, height: 56, borderRadius: 14, background: 'var(--base)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-            <Briefcase style={{ width: 24, height: 24, color: 'var(--muted)' }} />
-          </div>
-          <p style={{ fontSize: 14, color: 'var(--muted)', fontWeight: 500 }}>Select a job to view details</p>
-        </div>
-      </div>
-    );
-  }
+  if (!job) return null;
 
   const displayName = job.company_name ?? job.occupation_name ?? "PERKESO Vacancy";
   const location = [job.city, job.state].filter(Boolean).join(", ") || "Malaysia";
@@ -867,7 +865,6 @@ function FilterSidebar({
 function JobsPage() {
   const { user, loading: authLoading } = useAuth();
   const { t } = useLanguage();
-  const navigate = useNavigate();
 
   // Unified search query (raw input, may contain location text)
   const [query, setQuery] = useState("");
@@ -1447,11 +1444,6 @@ function JobsPage() {
 
   const handleJobSelect = (jobId: string) => {
     setSelectedJobId(jobId);
-    
-    // On mobile, navigate to detail page
-    if (window.innerWidth < 768) {
-      void navigate({ to: "/jobs/$jobId", params: { jobId } });
-    }
   };
 
   const handleApply = (job: JobCard) => {
@@ -1555,74 +1547,73 @@ function JobsPage() {
         />
       )}
 
-      {/* Main content — split panel */}
-      <div className="flex-1 flex overflow-hidden" style={{ height: "calc(100vh - 200px)" }}>
-        {/* Left panel — Job list (40%) */}
-        <div className="w-full sm:w-[42%] min-w-0 flex flex-col" style={{ borderRight: '1px solid var(--line)', background: 'var(--surface)' }}>
-          <div className="flex-1 overflow-y-auto">
-            {loading ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 0' }}>
-                <Loader2 className="size-6 animate-spin" style={{ color: '#205295' }} />
+      {/* Main content — grid card layout */}
+      <div className="flex-1" style={{ minHeight: 'calc(100vh - 200px)' }}>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-5">
+          {loading ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 0' }}>
+              <Loader2 className="size-8 animate-spin" style={{ color: '#205295' }} />
+            </div>
+          ) : scoredJobs.length === 0 ? (
+            <div style={{ padding: '32px 20px', textAlign: 'center' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 14, background: 'var(--base)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                <Briefcase style={{ width: 24, height: 24, color: 'var(--muted)' }} />
               </div>
-            ) : scoredJobs.length === 0 ? (
-              <div style={{ padding: '32px 20px', textAlign: 'center' }}>
-                <div style={{ width: 56, height: 56, borderRadius: 14, background: 'var(--base)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                  <Briefcase style={{ width: 24, height: 24, color: 'var(--muted)' }} />
-                </div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>No exact matches for &ldquo;{committedQuery}&rdquo;</h3>
-                {didYouMean ? (
-                  <button
-                    onClick={() => { const q = didYouMean.correctedQuery ?? ""; setQuery(q); handleSearch(q); }}
-                    style={{ fontSize: 13, color: '#6366F1', fontWeight: 600, background: '#EEF2FF', border: '1px solid #C7D2FE', borderRadius: 10, padding: '6px 14px', cursor: 'pointer', marginBottom: 12 }}
-                  >
-                    🔍 Try &ldquo;{didYouMean.correctedQuery}&rdquo; instead
-                  </button>
-                ) : (
-                  <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>Try a different query or browse suggestions below.</p>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
-                  {Object.keys(SYNONYMS).slice(0, 4).map(s => (
-                    <button key={s} onClick={() => { setQuery(s); handleSearch(s); }}
-                      style={{ fontSize: 12, fontWeight: 500, color: '#205295', background: 'rgba(32,82,149,0.06)', border: '1px solid var(--line)', borderRadius: 999, padding: '4px 12px', cursor: 'pointer', transition: 'all 0.15s' }}
-                    >{s}</button>
-                  ))}
-                </div>
-                <a href="/jobs" style={{ fontSize: 12, color: '#f36c21', fontWeight: 600 }}>Browse all 5,828 jobs →</a>
-                {hasFilters && <div style={{ marginTop: 12 }}><button onClick={clearFilters} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>{t("clearFilters")}</button></div>}
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>No exact matches for &ldquo;{committedQuery}&rdquo;</h3>
+              {didYouMean ? (
+                <button
+                  onClick={() => { const q = didYouMean.correctedQuery ?? ""; setQuery(q); handleSearch(q); }}
+                  style={{ fontSize: 13, color: '#6366F1', fontWeight: 600, background: '#EEF2FF', border: '1px solid #C7D2FE', borderRadius: 10, padding: '6px 14px', cursor: 'pointer', marginBottom: 12 }}
+                >
+                  🔍 Try &ldquo;{didYouMean.correctedQuery}&rdquo; instead
+                </button>
+              ) : (
+                <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>Try a different query or browse suggestions below.</p>
+              )}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
+                {Object.keys(SYNONYMS).slice(0, 4).map(s => (
+                  <button key={s} onClick={() => { setQuery(s); handleSearch(s); }}
+                    style={{ fontSize: 12, fontWeight: 500, color: '#205295', background: 'rgba(32,82,149,0.06)', border: '1px solid var(--line)', borderRadius: 999, padding: '4px 12px', cursor: 'pointer', transition: 'all 0.15s' }}
+                  >{s}</button>
+                ))}
               </div>
-            ) : (
-              <div>
-                <div style={{ padding: '8px 16px 4px', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--muted)' }}>
-                    {exactCount || total || scoredJobs.length} job{(exactCount || total || scoredJobs.length) !== 1 ? 's' : ''} found
-                    {hasSearched ? ' (ranked by Semantic AI)' : userVector.hasData ? ' matched for you' : ''}
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {hasSearched && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#205295', background: 'rgba(32,82,149,0.08)', borderRadius: 999, padding: '2px 8px' }}>
-                        <Sparkles style={{ width: 9, height: 9 }} /> Semantic AI ranking active
-                      </span>
-                    )}
-                    {userVector.hasData && !hasSearched && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#f36c21', background: 'rgba(243,108,33,0.1)', borderRadius: 999, padding: '2px 8px' }}>
-                        <Brain style={{ width: 9, height: 9 }} /> Personalised
-                      </span>
-                    )}
-                  </div>
+              <a href="/jobs" style={{ fontSize: 12, color: '#f36c21', fontWeight: 600 }}>Browse all 5,828 jobs →</a>
+              {hasFilters && <div style={{ marginTop: 12 }}><button onClick={clearFilters} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>{t("clearFilters")}</button></div>}
+            </div>
+          ) : (
+            <div>
+              {/* Results header */}
+              <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)' }}>
+                  {exactCount || total || scoredJobs.length} job{(exactCount || total || scoredJobs.length) !== 1 ? 's' : ''} found
+                  {hasSearched ? ' (ranked by Semantic AI)' : userVector.hasData ? ' matched for you' : ''}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {hasSearched && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#205295', background: 'rgba(32,82,149,0.08)', borderRadius: 999, padding: '2px 8px' }}>
+                      <Sparkles style={{ width: 9, height: 9 }} /> Semantic AI ranking active
+                    </span>
+                  )}
+                  {userVector.hasData && !hasSearched && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#f36c21', background: 'rgba(243,108,33,0.1)', borderRadius: 999, padding: '2px 8px' }}>
+                      <Brain style={{ width: 9, height: 9 }} /> Personalised
+                    </span>
+                  )}
                 </div>
+              </div>
+
+              {/* Job cards grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
                 {scoredJobs.map(({ job, pct }) => {
                   const jobKey = job.source === "poc" ? `poc:${job.id}` : `job:${job.id}`;
                   const isAppliedCard = applied[jobKey] === "applied";
                   const isSavedCard = saved.has(jobKey);
                   return (
-                    <JobCard
+                    <JobCardGrid
                       key={jobKey}
                       job={job}
-                      isSelected={selectedJobId === job.id}
                       onSelect={() => handleJobSelect(job.id)}
                       isApplied={isAppliedCard}
-                      canApply={!!canApply}
-                      onApply={() => handleApply(job)}
                       isSaved={isSavedCard}
                       onToggleSave={() => toggleSave(job)}
                       score={pct}
@@ -1630,33 +1621,46 @@ function JobsPage() {
                     />
                   );
                 })}
-                {jobs.length < total && scoredJobs.length >= 50 && (
-                  <div style={{ padding: '12px', textAlign: 'center', borderTop: '1px solid var(--line)' }}>
-                    <button onClick={loadMore} disabled={loadingMore} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 10, padding: '6px 16px', cursor: 'pointer', transition: 'all 0.15s' }}>
-                      {loadingMore && <Loader2 className="size-4 animate-spin" />}
-                      {t("loadMore")}
-                    </button>
-                    <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>Showing top 50 of {total.toLocaleString()}</p>
-                  </div>
-                )}
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Right panel — Job detail (desktop only) */}
-        <div className="hidden sm:flex flex-1 flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto">
+              {/* Load more */}
+              {jobs.length < total && scoredJobs.length >= 50 && (
+                <div style={{ padding: '20px', textAlign: 'center' }}>
+                  <button onClick={loadMore} disabled={loadingMore} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 10, padding: '8px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
+                    {loadingMore && <Loader2 className="size-4 animate-spin" />}
+                    {t("loadMore")}
+                  </button>
+                  <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>Showing top 50 of {total.toLocaleString()}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Job Detail Modal */}
+      <Dialog open={!!selectedJobId} onOpenChange={(open) => { if (!open) { setSelectedJobId(null); setSelectedJobDetail(null); } }}>
+        <DialogContent
+          className="max-w-3xl max-h-[90vh] overflow-y-auto p-0"
+          onInteractOutside={() => { setSelectedJobId(null); setSelectedJobDetail(null); }}
+          onEscapeKeyDown={() => { setSelectedJobId(null); setSelectedJobDetail(null); }}
+        >
+          {loadingDetail ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px' }}>
+              <Loader2 className="size-8 animate-spin" style={{ color: '#205295' }} />
+            </div>
+          ) : selectedJobDetail ? (
             <JobDetail
               job={selectedJobDetail}
               isApplied={isApplied}
               canApply={!!canApply}
               onApply={() => selectedJobDetail && handleApply(selectedJobDetail)}
               loading={loadingDetail}
+              onClose={() => setSelectedJobId(null)}
             />
-          </div>
-        </div>
-      </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
 
       <ApplyModal
         job={applyJob}

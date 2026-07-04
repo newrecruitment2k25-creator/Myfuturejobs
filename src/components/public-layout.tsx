@@ -196,7 +196,7 @@ export function PublicNav() {
 
         {/* Logo */}
         <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-          <img src="/myfuturejobs-logo.png" alt="Praxo AI" style={{ height: 36, width: "auto" }} />
+          <img src="/myfuturejobs-logo.png" alt="MYFutureJobs" style={{ height: 36, width: "auto" }} />
         </Link>
 
         {/* Desktop nav */}
@@ -271,7 +271,7 @@ export function PublicFooter() {
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
           <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
-            © 2025 Praxo AI. A PERKESO Initiative. All rights reserved.
+            © 2025 MYFutureJobs. A PERKESO Initiative. All rights reserved.
           </span>
           <div style={{ display: "flex", gap: 20 }}>
             <Link to="/privacy" style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Privacy</Link>

@@ -361,6 +361,151 @@ export function buildVacancyIntelligence(vacancy: VacancyRequirements): VacancyI
   };
 }
 
+export type PocCandidate = {
+  id: string;
+  candidate_id: string;
+  score: number;
+  matched_skills: string[];
+  missing_skills: string[];
+  education_level: string | null;
+  field_of_study: string | null;
+  preferred_state: string | null;
+  preferred_salary: string | null;
+  preferred_occupation: string | null;
+  previous_occupation: string | null;
+  previous_years_experience: string | null;
+  skills: string | null;
+  applications: number;
+  interviews: number;
+  offers: number;
+};
+
+function experienceFromYears(years: string | null): string {
+  if (!years) return "1–3 years";
+  const n = parseInt(years, 10);
+  if (isNaN(n)) return "1–3 years";
+  if (n === 0) return "Fresh Graduate";
+  if (n <= 3) return "1–3 years";
+  if (n <= 5) return "3–5 years";
+  if (n <= 10) return "5–10 years";
+  return "10+ years";
+}
+
+export function buildIntelligenceFromPoc(
+  vacancy: VacancyRequirements,
+  pocCandidates: PocCandidate[]
+): VacancyIntelligence {
+  const vacancyKeywords = extractSkillKeywords(
+    `${vacancy.jobTitle} ${vacancy.description} ${vacancy.requirements} ${vacancy.industry} ${vacancy.employerType}`
+  );
+
+  const rankedCandidates: CandidateMatch[] = pocCandidates.map((c) => {
+    const score = c.score;
+    const matchedSkills = c.matched_skills ?? [];
+    const missingSkills = c.missing_skills ?? [];
+    const experienceLevel = experienceFromYears(c.previous_years_experience);
+    const targetRole = c.preferred_occupation ?? c.previous_occupation ?? "—";
+    const industry = c.field_of_study ?? vacancy.industry;
+
+    let matchStatus: CandidateMatchStatus;
+    if (score >= 78) matchStatus = "Strong Match";
+    else if (score >= 60) matchStatus = "Recommended";
+    else if (score >= 42) matchStatus = "Potential Match";
+    else matchStatus = "Low Match";
+
+    let shortlistRecommendation: ShortlistRecommendation;
+    let shortlistReasoning: string;
+    if (score >= 78) {
+      shortlistRecommendation = "Shortlist Immediately";
+      shortlistReasoning = `Candidate demonstrates a ${score}% match with vacancy requirements. Immediate shortlisting recommended.`;
+    } else if (score >= 60) {
+      shortlistRecommendation = "Interview Recommended";
+      shortlistReasoning = `Candidate shows a ${score}% role alignment. Proceed to structured interview to validate competencies.`;
+    } else if (score >= 45) {
+      shortlistRecommendation = "Keep in Talent Pool";
+      shortlistReasoning = `Candidate has relevant potential but a ${score}% match falls below the shortlist threshold. Retain in talent pool.`;
+    } else if (score >= 30) {
+      shortlistRecommendation = "Consider for Future Roles";
+      shortlistReasoning = `Candidate is not an immediate fit (${score}%) but may be suitable for related positions after upskilling.`;
+    } else {
+      shortlistRecommendation = "Not Recommended";
+      shortlistReasoning = `Candidate's profile indicates insufficient alignment (${score}%) with this vacancy's requirements.`;
+    }
+
+    const strengths: string[] = [];
+    if (matchedSkills.length >= 4) strengths.push(`Matches ${matchedSkills.length} key requirements`);
+    if (score >= 60) strengths.push("Strong overall alignment");
+    if (c.applications > 20) strengths.push("Active job seeker");
+    if (c.offers > 0) strengths.push("Has received job offers");
+    if (strengths.length === 0) strengths.push("Candidate has relevant background to build upon");
+
+    const gaps: string[] = [];
+    if (missingSkills.length > 3) gaps.push(`Missing: ${missingSkills.slice(0, 3).join(", ")}`);
+    if (c.applications < 5) gaps.push("Low application activity");
+    if (gaps.length === 0) gaps.push("No critical gaps identified");
+
+    return {
+      sessionId: c.id,
+      candidateName: c.candidate_id ?? c.id,
+      candidateEmail: "",
+      targetRole,
+      industry,
+      employerType: vacancy.employerType,
+      experienceLevel,
+      overallMatchScore: score,
+      skillsMatch: clamp((matchedSkills.length / Math.max(vacancyKeywords.length, 1)) * 100),
+      experienceMatch: 50,
+      industryAlignment: clamp(score * 0.8),
+      employabilityScore: clamp(score * 0.7),
+      interviewScore: null,
+      careerReadiness: clamp(score * 0.6),
+      keywordRelevance: clamp(score * 0.5),
+      matchStatus,
+      matchExplanation: `Candidate achieves a ${score}% match. ${matchedSkills.length} skills matched, ${missingSkills.length} gaps identified.`,
+      shortlistRecommendation,
+      shortlistReasoning,
+      matchedSkills,
+      missingSkills,
+      strengths,
+      gaps,
+      futureFit: score >= 60
+        ? `Well-suited for ${vacancy.jobTitle} roles and adjacent positions.`
+        : `Better fit for entry-level or adjacent positions. Consider after upskilling.`,
+      alternativeRoles: [`Junior ${vacancy.jobTitle}`, targetRole],
+      reskillingPotential: score >= 70
+        ? "High reskilling potential with strong foundational capability."
+        : "Moderate reskilling potential with targeted training.",
+      hasInterviewData: false,
+    };
+  });
+
+  rankedCandidates.sort((a, b) => b.overallMatchScore - a.overallMatchScore);
+
+  const matchedCandidates = rankedCandidates.filter((c) => c.overallMatchScore >= 42).length;
+  const avgScore = rankedCandidates.length > 0
+    ? Math.round(rankedCandidates.reduce((s, c) => s + c.overallMatchScore, 0) / rankedCandidates.length)
+    : 0;
+
+  const allMatched = rankedCandidates.flatMap((c) => c.matchedSkills);
+  const allMissing = rankedCandidates.flatMap((c) => c.missingSkills);
+  const countSkill = (arr: string[]) => {
+    const freq: Record<string, number> = {};
+    for (const s of arr) freq[s] = (freq[s] ?? 0) + 1;
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]).map(([s]) => s).slice(0, 6);
+  };
+
+  return {
+    vacancy,
+    totalApplicants: rankedCandidates.length,
+    matchedCandidates,
+    averageMatchScore: avgScore,
+    topSkillsFound: countSkill(allMatched),
+    topSkillsMissing: countSkill(allMissing),
+    interviewCompletionRate: 0,
+    rankedCandidates,
+  };
+}
+
 export function getMatchStatusConfig(status: CandidateMatchStatus) {
   switch (status) {
     case "Strong Match":

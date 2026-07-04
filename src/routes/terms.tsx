@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText, ChevronRight, AlertTriangle, Users, Building2, Brain, Ban, BookOpen, AlertCircle, Scale } from "lucide-react";
 import { SiteFooter } from "@/components/site-header";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/terms")({
   ssr: false,
@@ -27,6 +28,7 @@ const TERMS_SECTIONS = [
 ];
 
 function TermsPage() {
+  const { t } = useLanguage();
   return (
     <>
     <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
@@ -36,20 +38,20 @@ function TermsPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--muted)", marginBottom: 24 }}>
           <Link to="/" style={{ color: "var(--muted)", textDecoration: "none" }}>Home</Link>
           <ChevronRight size={13} />
-          <span style={{ color: "var(--ink)", fontWeight: 500 }}>Terms of Service</span>
+          <span style={{ color: "var(--ink)", fontWeight: 500 }}>{t("termsTitle")}</span>
         </div>
 
         <div style={{ marginBottom: 8 }}>
-          <h1 style={{ fontSize: 36, fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>Terms of Service</h1>
+          <h1 style={{ fontSize: 36, fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>{t("termsTitle")}</h1>
           <div style={{ width: 40, height: 3, background: "var(--accent)", borderRadius: 2, marginBottom: 8 }} />
-          <p style={{ fontSize: 13, color: "var(--muted)" }}>Last updated: June 2026</p>
+          <p style={{ fontSize: 13, color: "var(--muted)" }}>{t("termsUpdated")}</p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 32, alignItems: "start", marginTop: 32 }} className="privacy-grid">
 
           {/* TOC sidebar */}
           <div style={{ position: "sticky", top: 72, background: "#fff", border: "1px solid var(--line)", borderRadius: "var(--radius-lg)", padding: "16px 0" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--muted)", padding: "0 16px 10px" }}>ON THIS PAGE</div>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--muted)", padding: "0 16px 10px" }}>{t("termsOnPage")}</div>
             {TERMS_SECTIONS.map(s => (
               <a key={s.id} href={`#${s.id}`} style={{ display: "block", padding: "7px 16px", fontSize: 13, color: "var(--muted)", textDecoration: "none" }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "var(--brand)"; }}
