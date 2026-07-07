@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getEngagementLevel, behaviourTooltip, type BehaviourData } from "@/lib/behaviour";
+import { OfficerSidebar } from "@/components/officer-sidebar";
 
 export const Route = createFileRoute("/employer/talent-discovery")({
   ssr: false,
@@ -165,21 +166,23 @@ function TalentDiscoveryPage() {
   };
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--base)' }}>
-      <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px', display:'flex', flexDirection:'column', gap:24 }}>
+    <OfficerSidebar>
+      <div style={{ padding: '32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
         {/* Header */}
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16, position: 'relative' }}>
-            <Sparkles style={{ width: 24, height: 24, color: 'rgba(255,255,255,0.3)', marginTop: 2, flexShrink: 0 }} />
+        <div className="card" style={{ padding: '24px 28px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--accent-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Sparkles size={20} style={{ color: 'var(--accent)' }} />
+            </div>
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Employer · Talent Discovery
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--accent-glow)', border: '1px solid var(--line)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }} />
+                AI Candidate Matching
               </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>AI Talent Discovery</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Describe your ideal candidate in natural language — our AI searches 1,449+ candidate profiles and ranks the best matches.</p>
+              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>Talent Discovery</h1>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Describe your ideal candidate in natural language — our AI searches 1,449+ candidate profiles and ranks the best matches.</p>
             </div>
           </div>
 
@@ -426,7 +429,8 @@ function TalentDiscoveryPage() {
           </div>
         )}
 
-      </main>
-    </div>
+      </div>
+      </div>
+    </OfficerSidebar>
   );
 }
