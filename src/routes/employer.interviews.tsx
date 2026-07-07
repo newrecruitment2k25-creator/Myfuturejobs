@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Plus, Copy, Mail, Users, FileText, Clock, CheckCircle, AlertCircle, Eye, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Copy, Mail, Users, FileText, Clock, CheckCircle, AlertCircle, Eye, ToggleLeft, ToggleRight, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { OfficerSidebar } from "@/components/officer-sidebar";
 
 export const Route = createFileRoute("/employer/interviews")({
   ssr: false,
@@ -92,7 +93,7 @@ function EmployerInterviewsPage() {
   }, [authLoading, user]);
 
   const copyShareLink = (templateId: string) => {
-    const url = `https://PerksoPrax AI-new.chjaved649.workers.dev/interview-room.html?template=${templateId}`;
+    const url = `${window.location.origin}/interview-room.html?template=${templateId}`;
     navigator.clipboard.writeText(url);
     toast.success("Share link copied to clipboard");
   };
@@ -100,7 +101,7 @@ function EmployerInterviewsPage() {
   const sendEmailInvite = (template: Template) => {
     const subject = encodeURIComponent(`Interview Invitation - ${template.role_title}`);
     const body = encodeURIComponent(
-      `You have been invited to complete an AI interview for the role of ${template.role_title}.\n\nClick here to start: https://PerksoPrax AI-new.chjaved649.workers.dev/interview-room.html?template=${template.id}`
+      `You have been invited to complete an AI interview for the role of ${template.role_title}.\n\nClick here to start: ${window.location.origin}/interview-room.html?template=${template.id}`
     );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
@@ -127,22 +128,27 @@ function EmployerInterviewsPage() {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--base)' }}>
-      <main style={{ maxWidth:900, margin:'0 auto', padding:'32px 16px' }}>
+    <OfficerSidebar>
+      <div style={{ padding: '32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
         {/* Header */}
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden', marginBottom: 32 }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Employer Portal
+        <div className="card" style={{ padding: '24px 28px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--accent-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Bot size={20} style={{ color: 'var(--accent)' }} />
               </div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>AI Interview Templates</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Create templates and invite candidates to complete AI interviews.</p>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--accent-glow)', border: '1px solid var(--line)' }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }} />
+                  AI Interview
+                </div>
+                <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--ink)', margin: 0 }}>Interview Templates</h1>
+                <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Create templates and invite candidates to complete AI interviews.</p>
+              </div>
             </div>
             <Link to="/employer/interview-templates/create"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'var(--accent)', color: '#0f172a', fontSize: 13, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(6,182,212,0.2)' }}
             >
               <Plus className="size-4" /> Create Template
             </Link>
@@ -244,7 +250,8 @@ function EmployerInterviewsPage() {
             ))}
           </div>
         )}
-      </main>
-    </div>
+      </div>
+      </div>
+    </OfficerSidebar>
   );
 }

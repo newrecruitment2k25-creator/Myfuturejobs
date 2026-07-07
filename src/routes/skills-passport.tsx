@@ -161,7 +161,7 @@ function SkillsPassportPage() {
     );
     const canvas = await html2canvas(passportRef.current, { scale: 2, useCORS: true });
     const link = document.createElement("a");
-    link.download = "PerksoPrax AI-Skills-Passport.png";
+    link.download = "PerksoPrax-AI-Skills-Passport.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
