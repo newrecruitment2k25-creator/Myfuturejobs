@@ -9,8 +9,8 @@ export const Route = createFileRoute("/employer/signup")({
   component: EmployerSignupPage,
   head: () => ({
     meta: [
-      { title: "Employer Sign Up — MYFutureJobs" },
-      { name: "description", content: "Create an employer account on MYFutureJobs to post jobs." },
+      { title: "Employer Sign Up — PerksoPrax AI" },
+      { name: "description", content: "Create an employer account on PerksoPrax AI to post jobs." },
     ],
   }),
 });
@@ -40,7 +40,7 @@ function EmployerSignupPage() {
     if (data.session && data.user) {
       await supabase.from("profiles").upsert({ id: data.user.id, role: "employer" });
       setSubmitting(false);
-      toast.success("Welcome to MYFutureJobs for Employers!");
+      toast.success("Welcome to PerksoPrax AI for Employers!");
       void navigate({ to: "/employer/dashboard" });
     } else {
       // Email confirm may be ON — try immediate sign-in as fallback
@@ -53,7 +53,7 @@ function EmployerSignupPage() {
       }
       await supabase.from("profiles").upsert({ id: signInData.user.id, role: "employer" });
       setSubmitting(false);
-      toast.success("Welcome to MYFutureJobs for Employers!");
+      toast.success("Welcome to PerksoPrax AI for Employers!");
       void navigate({ to: "/employer/dashboard" });
     }
   };

@@ -6,8 +6,8 @@ export const Route = createFileRoute("/employer/login")({
   component: EmployerLoginPage,
   head: () => ({
     meta: [
-      { title: "Employer Log In — MYFutureJobs" },
-      { name: "description", content: "Log in to your MYFutureJobs employer account." },
+      { title: "Employer Log In — PerksoPrax AI" },
+      { name: "description", content: "Log in to your PerksoPrax AI employer account." },
     ],
   }),
 });

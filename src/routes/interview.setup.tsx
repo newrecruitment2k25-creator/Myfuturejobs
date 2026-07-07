@@ -14,7 +14,7 @@ export const Route = createFileRoute("/interview/setup")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Interview Setup — MYFutureJobs" },
+      { title: "Interview Setup — PerksoPrax AI" },
       { name: "description", content: "Set up your AI video interview session." },
     ],
   }),
@@ -94,7 +94,7 @@ function InterviewSetupPage() {
           total_questions: totalQuestions,
         },
       });
-      sessionStorage.setItem(`MYFutureJobs:interview:voice:${session_id}`, voice);
+      sessionStorage.setItem(`PerksoPrax AI:interview:voice:${session_id}`, voice);
       window.location.href = `/interview-room.html?session=${session_id}`;
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to create session. Please try again.");
@@ -117,7 +117,7 @@ function InterviewSetupPage() {
         <div className="mb-8">
           <span className="section-eyebrow text-xs mb-2"><Video className="size-3.5" /> AI Interview</span>
           <h1 className="mt-2 text-3xl font-extrabold" style={{ color: '#211F60', letterSpacing: '-0.04em' }}>AI Video Interview</h1>
-          <p className="mt-1 text-sm font-bold" style={{ color: 'var(--muted-color)' }}>Powered by MYFutureJobs AI Engine · Configure and start your session below.</p>
+          <p className="mt-1 text-sm font-bold" style={{ color: 'var(--muted-color)' }}>Powered by PerksoPrax AI AI Engine · Configure and start your session below.</p>
         </div>
 
         {/* Device check */}

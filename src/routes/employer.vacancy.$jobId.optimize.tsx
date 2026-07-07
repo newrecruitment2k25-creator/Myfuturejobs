@@ -13,7 +13,7 @@ import { getReadinessConfig } from "@/lib/vacancy-optimization";
 export const Route = createFileRoute("/employer/vacancy/$jobId/optimize")({
   ssr: false,
   component: VacancyOptimizePage,
-  head: () => ({ meta: [{ title: "Vacancy Optimization — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Vacancy Optimization — PerksoPrax AI" }] }),
 });
 
 type JobRow = {

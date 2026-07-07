@@ -45,7 +45,7 @@ interface PocMatch {
 export const Route = createFileRoute("/employer/vacancies/$jobId/candidates")({
   ssr: false,
   component: CandidateMatchingPage,
-  head: () => ({ meta: [{ title: "Candidate Matching — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Candidate Matching — PerksoPrax AI" }] }),
 });
 
 type Filter = "All" | "Strong Match" | "Recommended" | "Potential Match" | "Low Match";

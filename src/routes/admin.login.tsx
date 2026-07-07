@@ -6,8 +6,8 @@ export const Route = createFileRoute("/admin/login")({
   component: AdminLoginPage,
   head: () => ({
     meta: [
-      { title: "Admin Login — MYFutureJobs" },
-      { name: "description", content: "Admin portal login for MYFutureJobs governance console." },
+      { title: "Admin Login — PerksoPrax AI" },
+      { name: "description", content: "Admin portal login for PerksoPrax AI governance console." },
     ],
   }),
 });

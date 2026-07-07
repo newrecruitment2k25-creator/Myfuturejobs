@@ -10,7 +10,7 @@ import type { AppStatus } from "@/lib/ops-api";
 export const Route = createFileRoute("/application/$applicationId")({
   ssr: false,
   component: ApplicationDetailPage,
-  head: () => ({ meta: [{ title: "Application Details — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Application Details — PerksoPrax AI" }] }),
 });
 
 type TimelineEvent = {

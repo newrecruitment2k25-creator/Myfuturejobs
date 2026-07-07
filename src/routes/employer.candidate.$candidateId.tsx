@@ -11,7 +11,7 @@ export const Route = createFileRoute("/employer/candidate/$candidateId")({
   ssr: false,
   component: CandidateProfilePage,
   head: () => ({
-    meta: [{ title: "Candidate Profile — MYFutureJobs" }],
+    meta: [{ title: "Candidate Profile — PerksoPrax AI" }],
   }),
 });
 

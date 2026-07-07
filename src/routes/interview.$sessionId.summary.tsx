@@ -11,7 +11,7 @@ export const Route = createFileRoute("/interview/$sessionId/summary")({
   component: InterviewSummaryPage,
   ssr: false,
   head: () => ({
-    meta: [{ title: "Interview Summary — MYFutureJobs" }],
+    meta: [{ title: "Interview Summary — PerksoPrax AI" }],
   }),
 });
 
@@ -106,7 +106,7 @@ function InterviewSummaryPage() {
   const score = session.overall_score ?? 0;
   const rec = summary?.hiring_recommendation ? recColors[summary.hiring_recommendation] : null;
   const tabSwitches = 0; // stored in component state during room; read from sessionStorage if available
-  const tabCount = Number(sessionStorage.getItem(`MYFutureJobs:interview:tabs:${sessionId}`) ?? 0);
+  const tabCount = Number(sessionStorage.getItem(`PerksoPrax AI:interview:tabs:${sessionId}`) ?? 0);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

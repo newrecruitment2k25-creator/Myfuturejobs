@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/system-monitoring")({
   ssr: false,
   component: SystemMonitoringPage,
-  head: () => ({ meta: [{ title: "System Monitoring - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "System Monitoring - PerksoPrax AI Admin" }] }),
 });
 
 const USERS_SECTION = [
@@ -41,7 +41,7 @@ const ACTIVITY_SECTION = [
 ];
 
 const MODULES = [
-  { name: "AI Engine", desc: "MYFutureJobs Engine", status: "Operational" },
+  { name: "AI Engine", desc: "PerksoPrax AI Engine", status: "Operational" },
   { name: "Matching Engine", desc: "Candidate-vacancy scoring", status: "Operational" },
   { name: "Interview Engine", desc: "Simli WebRTC", status: "Operational" },
   { name: "TTS Engine", desc: "AI TTS", status: "Operational" },

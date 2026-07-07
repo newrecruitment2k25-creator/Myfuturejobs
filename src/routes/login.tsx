@@ -11,8 +11,8 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
   head: () => ({
     meta: [
-      { title: "Log In — MYFutureJobs" },
-      { name: "description", content: "Log in to your MYFutureJobs account." },
+      { title: "Log In — PerksoPrax AI" },
+      { name: "description", content: "Log in to your PerksoPrax AI account." },
     ],
   }),
 });
@@ -35,7 +35,7 @@ function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradie
   const panels: Record<Role, { bg: string; bgGradient: string; eyebrow: string; heading: string; sub: string; features: string[]; quote: string; author: string; statValue: string; statLabel: string }> = {
     job_seeker: {
       bg: "var(--brand)",
-      bgGradient: "linear-gradient(160deg, #0A2647 0%, #144272 60%, #1a4a82 100%)",
+      bgGradient: "linear-gradient(160deg, #f0f9ff 0%, #e0f2fe 60%, #f3f4f6 100%)",
       eyebrow: t("loginSeekerEyebrow"),
       heading: t("loginSeekerHeading"),
       sub: t("loginSeekerSub"),
@@ -47,7 +47,7 @@ function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradie
     },
     employer: {
       bg: "var(--accent)",
-      bgGradient: "linear-gradient(160deg, #144272 0%, #205295 60%, #2C74B3 100%)",
+      bgGradient: "linear-gradient(160deg, #ecfeff 0%, #cffafe 60%, #f3f4f6 100%)",
       eyebrow: t("loginEmployerEyebrow"),
       heading: t("loginEmployerHeading"),
       sub: t("loginEmployerSub"),
@@ -59,7 +59,7 @@ function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradie
     },
     admin: {
       bg: "#17152f",
-      bgGradient: "linear-gradient(160deg, #0d0a23 0%, #1a1535 60%, #252045 100%)",
+      bgGradient: "linear-gradient(160deg, #f8fafc 0%, #e2e8f0 60%, #f3f4f6 100%)",
       eyebrow: t("loginAdminEyebrow"),
       heading: t("loginAdminHeading"),
       sub: t("loginAdminSub"),
@@ -152,33 +152,33 @@ function LoginPage() {
         <div style={{ position: "absolute", top: "40%", right: "10%", width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.02)", pointerEvents: "none" }} />
 
         <div style={{ position: "relative", zIndex: 1, marginBottom: 32 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", marginBottom: 16, padding: "4px 12px", borderRadius: 20, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", marginBottom: 16, padding: "4px 12px", borderRadius: 20, background: "var(--accent-glow)", border: "1px solid var(--line)" }}>
             {panel.eyebrow} 🇲🇾
           </div>
-          <h2 style={{ fontSize: 32, fontWeight: 800, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 16px" }}>{panel.heading}</h2>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, margin: 0, maxWidth: 420 }}>{panel.sub}</p>
+          <h2 style={{ fontSize: 32, fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 16px" }}>{panel.heading}</h2>
+          <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.7, margin: 0, maxWidth: 420 }}>{panel.sub}</p>
         </div>
 
         {/* Stat highlight */}
-        <div style={{ position: "relative", zIndex: 1, marginBottom: 32, display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", background: "rgba(255,255,255,0.06)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", maxWidth: "fit-content" }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: "#fff", fontFamily: "var(--font-heading)", letterSpacing: "-0.02em" }}>{panel.statValue}</div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.4 }}>{panel.statLabel}</div>
+        <div style={{ position: "relative", zIndex: 1, marginBottom: 32, display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", background: "var(--surface)", borderRadius: 12, border: "1px solid var(--line)", maxWidth: "fit-content", boxShadow: "var(--shadow-card)" }}>
+          <div style={{ fontSize: 28, fontWeight: 800, color: "var(--accent)", fontFamily: "var(--font-heading)", letterSpacing: "-0.02em" }}>{panel.statValue}</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.4 }}>{panel.statLabel}</div>
         </div>
 
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 14 }}>
           {panel.features.map((text: string) => (
             <div key={text} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <CheckCircle2 size={13} style={{ color: "rgba(255,255,255,0.7)" }} />
+              <div style={{ width: 24, height: 24, borderRadius: 6, background: "var(--accent-glow)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <CheckCircle2 size={13} style={{ color: "var(--accent)" }} />
               </div>
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.4 }}>{text}</span>
+              <span style={{ fontSize: 13, color: "var(--ink)", lineHeight: 1.4 }}>{text}</span>
             </div>
           ))}
         </div>
 
-        <div style={{ position: "relative", zIndex: 1, marginTop: 36, padding: "20px 24px", background: "rgba(255,255,255,0.06)", borderRadius: 14, border: "1px solid rgba(255,255,255,0.1)" }}>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, margin: "0 0 8px", fontStyle: "italic" }}>{panel.quote}</p>
-          <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.4)", margin: 0 }}>{panel.author}</p>
+        <div style={{ position: "relative", zIndex: 1, marginTop: 36, padding: "20px 24px", background: "var(--surface)", borderRadius: 14, border: "1px solid var(--line)", boxShadow: "var(--shadow-card)" }}>
+          <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.6, margin: "0 0 8px", fontStyle: "italic" }}>{panel.quote}</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: "var(--subtle)", margin: 0 }}>{panel.author}</p>
         </div>
       </div>
 

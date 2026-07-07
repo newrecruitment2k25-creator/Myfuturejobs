@@ -20,7 +20,7 @@ export const Route = createFileRoute("/analyze")({
   component: AnalyzePage,
   head: () => ({
     meta: [
-      { title: "Analyze Your CV — MYFutureJobs" },
+      { title: "Analyze Your CV — PerksoPrax AI" },
       { name: "description", content: "Upload your CV and get instant AI feedback tailored to Malaysia's job market." },
     ],
   }),
@@ -145,7 +145,7 @@ function AnalyzePage() {
         },
       });
       sessionStorage.setItem(
-        "MYFutureJobs:lastResult",
+        "PerksoPrax AI:lastResult",
         JSON.stringify({ result, cv_text: cvText, meta: { companyType, industry, experience, language } }),
       );
       void navigate({ to: "/results", search: analysis_id ? { id: analysis_id } : {} });

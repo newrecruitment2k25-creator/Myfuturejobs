@@ -17,7 +17,7 @@ import {
 export const Route = createFileRoute("/employer/vacancies/$jobId/candidates/$candidateId")({
   ssr: false,
   component: CandidateDetailPage,
-  head: () => ({ meta: [{ title: "Candidate Profile — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Candidate Profile — PerksoPrax AI" }] }),
 });
 
 function ScoreBar({ label, value, note }: { label: string; value: number; note?: string }) {

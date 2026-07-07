@@ -8,7 +8,7 @@ export const Route = createFileRoute("/taxonomy")({
   component: TaxonomyPage,
   head: () => ({
     meta: [
-      { title: "Taxonomy Intelligence — MYFutureJobs · PERKESO" },
+      { title: "Taxonomy Intelligence — PerksoPrax AI · PERKESO" },
       { name: "description", content: "Map any occupation or job title to MASCO, MSIC, NEC, NOSS, and MQA Malaysian standards." },
     ],
   }),

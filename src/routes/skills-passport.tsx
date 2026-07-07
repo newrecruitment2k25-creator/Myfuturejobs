@@ -15,7 +15,7 @@ export const Route = createFileRoute("/skills-passport")({
   component: SkillsPassportPage,
   head: () => ({
     meta: [
-      { title: "Skills Passport — MYFutureJobs" },
+      { title: "Skills Passport — PerksoPrax AI" },
       { name: "description", content: "Your portable skills profile, powered by AI analysis." },
     ],
   }),
@@ -118,7 +118,7 @@ const BADGE_ICON: Record<SkillEntry["level"], typeof CheckCircle2> = {
 const TRAINING_LINKS = [
   { label: "HRD Corp Upskilling Programmes", href: "https://www.hrdcorp.gov.my", external: true },
   { label: "MoHR e-Latihan Portal",           href: "https://elatihan.mohr.gov.my", external: true },
-  { label: "MYFutureJobs AI Interview Prep",        href: "/interview-preparation", external: false },
+  { label: "PerksoPrax AI AI Interview Prep",        href: "/interview-preparation", external: false },
   { label: "Browse Jobs by Skill",            href: "/jobs", external: false },
 ];
 
@@ -161,7 +161,7 @@ function SkillsPassportPage() {
     );
     const canvas = await html2canvas(passportRef.current, { scale: 2, useCORS: true });
     const link = document.createElement("a");
-    link.download = "MYFutureJobs-Skills-Passport.png";
+    link.download = "PerksoPrax AI-Skills-Passport.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
@@ -437,7 +437,7 @@ function SkillsPassportPage() {
               <div style={{ position: 'absolute', right: -20, top: -20, width: 100, height: 100, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
                 <div>
-                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', margin: '0 0 4px' }}>MYFutureJobs · Malaysia Employment Portal 🇲🇾</p>
+                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', margin: '0 0 4px' }}>PerksoPrax AI · Malaysia Employment Portal 🇲🇾</p>
                   <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Skills Passport ID</h3>
                   <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{user.email}</p>
                 </div>

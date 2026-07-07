@@ -7,7 +7,7 @@ export const Route = createFileRoute("/demo")({
   component: DemoGuidePage,
   head: () => ({
     meta: [
-      { title: "Demo Guide — MYFutureJobs · PERKESO POC" },
+      { title: "Demo Guide — PerksoPrax AI · PERKESO POC" },
       { name: "description", content: "Guided walkthrough of the PERKESO POC live demonstration — all mandatory items covered." },
     ],
   }),

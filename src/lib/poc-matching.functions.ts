@@ -259,7 +259,7 @@ For each vacancy, provide a precise match assessment using Malaysian job market 
             transferable_skills: m.transferable_skills ?? [],
             skill_gaps: m.skill_gaps ?? [],
             taxonomy_relationship: (m.taxonomy_relationship as string) ?? null,
-            model_used: "llama-3.3-70b-versatile",
+            model_used: "llama-3.1-8b-instant",
           }));
           await supabaseAdmin.from("poc_match_results").upsert(rows, { onConflict: "candidate_id,vacancy_id" }).throwOnError().catch((e: Error) => {
             console.error("[matchCandidateToJobs] cache save failed:", e.message);
@@ -392,7 +392,7 @@ For each candidate, provide a precise match assessment using Malaysian job marke
             transferable_skills: m.transferable_skills ?? [],
             skill_gaps: m.skill_gaps ?? [],
             taxonomy_relationship: (m.taxonomy_relationship as string) ?? null,
-            model_used: "llama-3.3-70b-versatile",
+            model_used: "llama-3.1-8b-instant",
           }));
           await supabaseAdmin.from("poc_match_results").upsert(rows, { onConflict: "candidate_id,vacancy_id" }).throwOnError().catch((e: Error) => {
             console.error("[matchJobToCandidates] cache save failed:", e.message);

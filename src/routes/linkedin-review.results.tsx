@@ -24,7 +24,7 @@ export const Route = createFileRoute("/linkedin-review/results")({
   component: LinkedInResultsPage,
   head: () => ({
     meta: [
-      { title: "Your LinkedIn Review — MYFutureJobs" },
+      { title: "Your LinkedIn Review — PerksoPrax AI" },
       {
         name: "description",
         content: "Your personalized LinkedIn profile analysis for Malaysia's job market.",
@@ -65,7 +65,7 @@ function LinkedInResultsPage() {
           .eq("id", analysisId)
           .single();
         if (error || !row) {
-          const raw = sessionStorage.getItem("MYFutureJobs:lastLinkedIn");
+          const raw = sessionStorage.getItem("PerksoPrax AI:lastLinkedIn");
           if (raw) { try { setData(JSON.parse(raw)); return; } catch { /**/ } }
           void navigate({ to: "/linkedin-review" });
           return;
@@ -81,7 +81,7 @@ function LinkedInResultsPage() {
         });
       })();
     } else {
-      const raw = sessionStorage.getItem("MYFutureJobs:lastLinkedIn");
+      const raw = sessionStorage.getItem("PerksoPrax AI:lastLinkedIn");
       if (!raw) { void navigate({ to: "/linkedin-review" }); return; }
       try { setData(JSON.parse(raw)); } catch { void navigate({ to: "/linkedin-review" }); }
     }
@@ -107,7 +107,7 @@ function LinkedInResultsPage() {
 export function LinkedInResultsView({ result, meta }: Stored) {
   const navigate = useNavigate();
   const shareText = encodeURIComponent(
-    `Just got my LinkedIn profile reviewed for Malaysia's job market with MYFutureJobs 🇲🇾`,
+    `Just got my LinkedIn profile reviewed for Malaysia's job market with PerksoPrax AI 🇲🇾`,
   );
   const shareUrl = encodeURIComponent(
     typeof window !== "undefined" ? window.location.origin : "",
@@ -265,7 +265,7 @@ export function LinkedInResultsView({ result, meta }: Stored) {
               variant="navy" 
               size="xl"
               onClick={() => {
-                sessionStorage.removeItem("MYFutureJobs:lastLinkedIn");
+                sessionStorage.removeItem("PerksoPrax AI:lastLinkedIn");
                 void navigate({ to: "/linkedin-review" });
               }}
             >
@@ -279,7 +279,7 @@ export function LinkedInResultsView({ result, meta }: Stored) {
           {/* Share */}
           <div className="mt-10 rounded-2xl border border-border bg-secondary/40 p-6 text-center">
             <p className="flex items-center justify-center gap-2 text-sm font-medium text-foreground">
-              <Share2 className="size-4" /> Share MYFutureJobs with a friend who needs this
+              <Share2 className="size-4" /> Share PerksoPrax AI with a friend who needs this
             </p>
             <div className="mt-4 flex justify-center gap-3">
               <a

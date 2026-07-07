@@ -9,8 +9,8 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
   head: () => ({
     meta: [
-      { title: "Contact Us — MYFutureJobs" },
-      { name: "description", content: "Get in touch with the MYFutureJobs team for support, partnerships, or enquiries." },
+      { title: "Contact Us — PerksoPrax AI" },
+      { name: "description", content: "Get in touch with the PerksoPrax AI team for support, partnerships, or enquiries." },
     ],
   }),
 });

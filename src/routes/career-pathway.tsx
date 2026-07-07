@@ -14,7 +14,7 @@ export const Route = createFileRoute("/career-pathway")({
   component: CareerPathwayPage,
   head: () => ({
     meta: [
-      { title: "Career Pathway Explorer — MYFutureJobs" },
+      { title: "Career Pathway Explorer — PerksoPrax AI" },
       { name: "description", content: "Visualise your career progression, salary growth, and skills needed at every level." },
     ],
   }),

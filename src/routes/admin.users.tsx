@@ -13,7 +13,7 @@ import { listProfiles, updateUserRole, type ProfileRow } from "@/lib/ops-api";
 export const Route = createFileRoute("/admin/users")({
   ssr: false,
   component: AdminUsersPage,
-  head: () => ({ meta: [{ title: "User Administration - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "User Administration - PerksoPrax AI Admin" }] }),
 });
 
 const ROLE_OPTIONS = ["job_seeker", "employer", "admin"];

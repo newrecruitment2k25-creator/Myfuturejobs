@@ -1,5 +1,5 @@
 // Caseworker Intelligence Engine
-// Powers the PERKESO / MYFutureJobs / Employment Officer dashboard
+// Powers the PERKESO / PerksoPrax AI / Employment Officer dashboard
 // Reuses outputs from employability, interview, matching, MASCO, and labour-market engines
 
 // ─────────────────────────────────────────────

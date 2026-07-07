@@ -19,7 +19,7 @@ export const Route = createFileRoute("/results")({
   component: ResultsPage,
   head: () => ({
     meta: [
-      { title: "Your CV Analysis — MYFutureJobs" },
+      { title: "Your CV Analysis — PerksoPrax AI" },
       { name: "description", content: "Your personalized CV analysis for Malaysia's job market." },
     ],
   }),
@@ -65,7 +65,7 @@ function ResultsPage() {
           .single();
         if (error || !row) {
           // Supabase failed — fall back to sessionStorage
-          const raw = sessionStorage.getItem("MYFutureJobs:lastResult");
+          const raw = sessionStorage.getItem("PerksoPrax AI:lastResult");
           if (raw) { try { setData(JSON.parse(raw)); return; } catch { /**/ } }
           void navigate({ to: "/analyze" });
           return;
@@ -83,7 +83,7 @@ function ResultsPage() {
       })();
     } else {
       // Fallback: sessionStorage (no id param)
-      const raw = sessionStorage.getItem("MYFutureJobs:lastResult");
+      const raw = sessionStorage.getItem("PerksoPrax AI:lastResult");
       if (!raw) { void navigate({ to: "/analyze" }); return; }
       try { setData(JSON.parse(raw)); } catch { void navigate({ to: "/analyze" }); }
     }
@@ -99,7 +99,7 @@ function ResultsPage() {
 
   const { result, meta } = data;
   const shareText = encodeURIComponent(
-    `Just got my CV analyzed for Malaysia's job market with MYFutureJobs 🇲🇾 — built for Malaysia, not translated for it.`,
+    `Just got my CV analyzed for Malaysia's job market with PerksoPrax AI 🇲🇾 — built for Malaysia, not translated for it.`,
   );
   const shareUrl = encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "");
 
@@ -266,7 +266,7 @@ function ResultsPage() {
           {/* Share */}
           <div className="mt-10 rounded-2xl border border-border bg-secondary/40 p-6 text-center">
             <p className="flex items-center justify-center gap-2 text-sm font-medium text-foreground">
-              <Share2 className="size-4" /> Share MYFutureJobs with a friend who needs this
+              <Share2 className="size-4" /> Share PerksoPrax AI with a friend who needs this
             </p>
             <div className="mt-4 flex justify-center gap-3">
               <a

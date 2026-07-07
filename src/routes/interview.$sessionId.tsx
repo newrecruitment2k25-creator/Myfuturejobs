@@ -9,7 +9,7 @@ export const Route = createFileRoute("/interview/$sessionId")({
   ssr: false,
   component: CandidateInterviewRoom,
   head: () => ({
-    meta: [{ title: "AI Interview Room — MYFutureJobs" }],
+    meta: [{ title: "AI Interview Room — PerksoPrax AI" }],
   }),
 });
 

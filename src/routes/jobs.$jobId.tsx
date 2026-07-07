@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/jobs/$jobId")({
   ssr: false,
   component: JobDetailPage,
-  head: () => ({ meta: [{ title: "Job Detail — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Job Detail — PerksoPrax AI" }] }),
 });
 
 type PocVacancy = {

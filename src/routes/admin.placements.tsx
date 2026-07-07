@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/placements")({
   ssr: false,
   component: AdminPlacementsPage,
-  head: () => ({ meta: [{ title: "Placements - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Placements - PerksoPrax AI Admin" }] }),
 });
 
 function statusBadge(s: string) {

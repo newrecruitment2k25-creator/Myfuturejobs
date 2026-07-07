@@ -80,7 +80,7 @@ export type InterviewScores = {
   interviewRoadmap: string[];
 };
 
-const STORAGE_KEY = "MYFutureJobs:interviewSessions";
+const STORAGE_KEY = "PerksoPrax AI:interviewSessions";
 
 export function loadSessions(): InterviewSession[] {
   try {

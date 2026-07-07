@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/candidates")({
   ssr: false,
   component: AdminCandidatesPage,
-  head: () => ({ meta: [{ title: "Candidates - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Candidates - PerksoPrax AI Admin" }] }),
 });
 
 function sourceBadge(source: "registered" | "poc") {

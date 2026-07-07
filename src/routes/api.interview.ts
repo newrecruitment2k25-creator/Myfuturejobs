@@ -248,18 +248,22 @@ async function buildSkillGapResult(
 
   if (!AI_API_KEY) return fallback;
 
-  const prompt = `You are a Malaysian workforce development advisor for PERKESO/Praxo.
+  const prompt = `You are a Malaysian workforce development advisor for PERKESO/PerksoPrax AI.
 Analyze the skill gap between this candidate and vacancy. Return ONLY valid JSON.
 
-IMPORTANT GROUNDING RULES:
-- Use ONLY the data provided below. Do NOT invent or fabricate skills, training, or facts.
-- If data is insufficient, set summary to: "Maklumat tidak mencukupi berdasarkan rekod yang diberikan."
+Tone: Analytical, concise, evidence-based. Use an English scorecard format.
+
+SCORECARD RULES:
+- Use ONLY the data provided below. Do NOT invent skills, training, or facts.
+- Cite specific data: matched skills, missing skills, candidate role, and vacancy title.
+- If data is insufficient, set summary to: "Insufficient information based on the records provided."
 - Every recommendation must reference a specific missing skill from the data.
-- Do not suggest generic training that is not tied to a specific missing skill.
 
 Candidate skills: ${local.matchedSkills.concat(local.transferableSkills).join(", ") || "N/A"}
 Vacancy required skills: ${local.matchedSkills.concat(local.missingSkills).join(", ") || "N/A"}
+Matched skills: ${local.matchedSkills.join(", ") || "N/A"}
 Missing skills: ${local.missingSkills.join(", ") || "N/A"}
+Transferable skills: ${local.transferableSkills.join(", ") || "N/A"}
 Candidate role: ${candidate?.preferred_occupation || candidate?.previous_occupation || "N/A"}
 Vacancy title: ${vacancy?.job_title || vacancy?.occupation_name || "N/A"}
 
@@ -532,7 +536,7 @@ export const Route = createFileRoute("/api/interview")({
           }
 
           // ── Step 2: Call AI engine with real data context ────────────────
-          const systemPrompt = `You are the MYFutureJobs Assistant — the intelligent career engine powering PERKESO's AI employment intelligence platform. You are NOT GPT, NOT ChatGPT, NOT made by OpenAI. You are MYFutureJobs, built to serve Malaysian jobseekers and employers.
+          const systemPrompt = `You are the PerksoPrax AI Assistant — the intelligent career engine powering PERKESO's AI employment intelligence platform. You are NOT GPT, NOT ChatGPT, NOT made by OpenAI. You are PerksoPrax AI, built to serve Malaysian jobseekers and employers.
 
 You have access to REAL, LIVE platform data. Use it to answer accurately.
 ${dbContext}
@@ -545,8 +549,8 @@ PLATFORM FEATURES you can guide users to:
 - /employer/dashboard — Employer tools (post jobs, find candidates)
 
 RULES:
-- NEVER say "GPT", "ChatGPT", "OpenAI", or mention any external AI provider. You are MYFutureJobs.
-- If asked "what AI are you?" or "who made you?", say: "I'm the MYFutureJobs Assistant — PERKESO's AI Employment Intelligence engine, built to help Malaysian jobseekers and employers."
+- NEVER say "GPT", "ChatGPT", "OpenAI", or mention any external AI provider. You are PerksoPrax AI.
+- If asked "what AI are you?" or "who made you?", say: "I'm the PerksoPrax AI Assistant — PERKESO's AI Employment Intelligence engine, built to help Malaysian jobseekers and employers."
 - Always use the LIVE DATA above to give specific numbers, not estimates
 - If user asks about job counts, salaries, or locations, give exact numbers from the data
 - If the specific query results show matching jobs, mention the count and sample titles
@@ -1320,7 +1324,9 @@ Return JSON only, no markdown, no explanation.` },
               });
             }
 
-            const prompt = `You are a Malaysian job matching explainer. Explain why a candidate matches a job vacancy.
+            const prompt = `You are a PERKESO/PerksoPrax AI matching analyst. Explain why a candidate matches a job vacancy.
+
+Tone: Analytical, concise, evidence-based. Use an English scorecard format.
 
 Candidate:
 - Role: ${candidate?.target_role || candidate?.preferred_occupation || "N/A"}
@@ -1339,7 +1345,7 @@ Job:
 Match score: ${score ?? "N/A"}
 
 Return ONLY valid JSON:
-{"summary":"short paragraph","strengths":["..."],"gaps":["..."],"recommendation":"strong_match/good_match/potential_match/weak_match"}`;
+{"summary":"short paragraph citing specific data","strengths":["..."],"gaps":["..."],"recommendation":"strong_match/good_match/potential_match/weak_match"}`;
 
             try {
               const aiResult = await callAi({
@@ -1610,14 +1616,16 @@ Return ONLY valid JSON:
               return json({ ok: true, explanation: fallback });
             }
 
-            const prompt = `You are a Malaysian job matching explainer for PERKESO's employer/caseworker portal.
+            const prompt = `You are a PERKESO/PerksoPrax AI matching analyst for the employer/caseworker portal.
 
-IMPORTANT GROUNDING RULES:
-- Use ONLY the data provided below. Do NOT invent or fabricate skills, experience, or facts.
-- If any field is "N/A" or missing, state "Maklumat tidak mencukupi berdasarkan rekod yang diberikan." for that aspect.
+Tone: Analytical, concise, evidence-based. Use an English scorecard format.
+
+SCORECARD RULES:
+- Use ONLY the data provided below. Do NOT invent skills, experience, or facts.
+- If any field is "N/A" or missing, state "Insufficient information based on the records provided." for that aspect.
 - Every strength and gap must reference a specific skill or attribute from the provided data.
 - salaryFit, locationFit, experienceFit must be based ONLY on the provided values, not assumptions.
-- If the candidate or vacancy language preference is Bahasa Malaysia or Bilingual, write the summary in Bahasa Malaysia.
+- Cite the specific matched and missing skills, locations, and salary figures in the summary.
 
 Candidate:
 - Role: ${candidate?.preferred_occupation || candidate?.previous_occupation || "N/A"}
@@ -1641,7 +1649,7 @@ Missing skills: ${skillGap.missingSkills.join(", ") || "N/A"}
 Match score: ${score ?? "N/A"}
 
 Return ONLY valid JSON:
-{"summary":"short paragraph","strengths":["..."],"gaps":["..."],"skillGap":{"matchedSkills":["..."],"missingSkills":["..."],"recommendedTraining":["..."]},"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
+{"summary":"short paragraph citing specific data","strengths":["..."],"gaps":["..."],"skillGap":{"matchedSkills":["..."],"missingSkills":["..."],"recommendedTraining":["..."]},"salaryFit":"...","locationFit":"...","experienceFit":"...","recommendation":"strong_match/good_match/potential_match/weak_match","confidence":0-100,"evidence":{"matchedSkills":["..."],"missingSkills":["..."],"candidateLocation":"...","vacancyLocation":"..."}}`;
 
             try {
               const aiResult = await callAi({

@@ -44,7 +44,7 @@ export function AiSuggestedFixes({ cvText, priorityImprovements, companyType, in
     if (!fixes) return;
     const date = new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" });
     const body =
-      `MYFutureJobs AI Fixes — ${date}\n\n` +
+      `PerksoPrax AI AI Fixes — ${date}\n\n` +
       fixes
         .map((f, i) => `${i + 1}. ${f.issue_title}\nFixed text: ${f.fix}`)
         .join("\n\n");

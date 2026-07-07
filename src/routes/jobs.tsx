@@ -32,7 +32,7 @@ export const Route = createFileRoute("/jobs")({
   component: JobsPage,
   head: () => ({
     meta: [
-      { title: "Jobs in Malaysia — MYFutureJobs" },
+      { title: "Jobs in Malaysia — PerksoPrax AI" },
       { name: "description", content: "Browse active job vacancies from Malaysia's national job portal. Filter by location, salary, education, and more." },
     ],
   }),
@@ -708,7 +708,7 @@ function JobDetail({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
-        {/* Info boxes — 2×3 grid matching MYFutureJobs */}
+        {/* Info boxes — 2×3 grid matching PerksoPrax AI */}
         <div className="grid grid-cols-2 gap-3">
           <InfoBox icon={Briefcase} label="Contract Type" value={job.source === "employer" ? "Permanent" : "Permanent"} />
           <InfoBox icon={Clock} label="Working Hours" value="Normal Hour" />
@@ -760,16 +760,16 @@ function JobDetail({
             </div>
             {job.source === "poc" ? (
               <p style={{ fontSize: 12, lineHeight: 1.6, color: 'var(--muted)' }}>
-                Employers in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.occupation_name ?? "General"}</span> sector across Malaysia. Registered with PERKESO and actively hiring through MYFutureJobs.
+                Employers in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.occupation_name ?? "General"}</span> sector across Malaysia. Registered with PERKESO and actively hiring through PerksoPrax AI.
               </p>
             ) : (
               <>
                 <p style={{ fontSize: 12, lineHeight: 1.6, color: 'var(--muted)' }}>
-                  {displayName} is a Malaysian employer in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.industry ?? "General"}</span> sector, actively recruiting via MYFutureJobs.
+                  {displayName} is a Malaysian employer in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.industry ?? "General"}</span> sector, actively recruiting via PerksoPrax AI.
                 </p>
                 {job.created_at && (
                   <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-                    Active on MYFutureJobs since {new Date(job.created_at).toLocaleDateString("en-MY", { month: "long", year: "numeric" })}
+                    Active on PerksoPrax AI since {new Date(job.created_at).toLocaleDateString("en-MY", { month: "long", year: "numeric" })}
                   </p>
                 )}
               </>

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
   head: () => ({
     meta: [
-      { title: "Dashboard — MYFutureJobs" },
+      { title: "Dashboard — PerksoPrax AI" },
       { name: "description", content: "Your saved CV analyses." },
     ],
   }),

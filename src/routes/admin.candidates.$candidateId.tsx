@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/candidates/$candidateId")({
   ssr: false,
   component: CandidateDetailPage,
-  head: () => ({ meta: [{ title: "Candidate Profile - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Candidate Profile - PerksoPrax AI Admin" }] }),
 });
 
 type Tab = "overview" | "analyses" | "applications" | "interviews";

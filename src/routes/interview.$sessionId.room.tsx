@@ -21,7 +21,7 @@ export const Route = createFileRoute("/interview/$sessionId/room")({
   component: InterviewRoomPage,
   ssr: false,
   head: () => ({
-    meta: [{ title: "Interview Room — MYFutureJobs" }],
+    meta: [{ title: "Interview Room — PerksoPrax AI" }],
   }),
 });
 
@@ -75,7 +75,7 @@ function InterviewRoomPage() {
 
   // ── Load voice preference ────────────────────────────────────────────────────
   useEffect(() => {
-    const stored = sessionStorage.getItem(`MYFutureJobs:interview:voice:${sessionId}`);
+    const stored = sessionStorage.getItem(`PerksoPrax AI:interview:voice:${sessionId}`);
     if (stored === "nova" || stored === "onyx") voiceRef.current = stored;
   }, [sessionId]);
 
@@ -180,7 +180,7 @@ function InterviewRoomPage() {
       setCurrentQuestion(question);
       setCurrentResponseId(response_id);
       // Get total from session (stored in sessionStorage by setup)
-      const stored = sessionStorage.getItem(`MYFutureJobs:interview:total:${sessionId}`);
+      const stored = sessionStorage.getItem(`PerksoPrax AI:interview:total:${sessionId}`);
       if (stored) setTotalQuestions(Number(stored));
       setPhase("asking");
       setAvatarLoading(true);

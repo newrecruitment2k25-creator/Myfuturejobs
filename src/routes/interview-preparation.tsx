@@ -6,14 +6,14 @@ export const Route = createFileRoute("/interview-preparation")({
   component: InterviewPreparationPage,
   head: () => ({
     meta: [
-      { title: "Interview Preparation — MYFutureJobs" },
+      { title: "Interview Preparation — PerksoPrax AI" },
       { name: "description", content: "Personalized interview questions and preparation strategies for Malaysia's job market." },
     ],
   }),
 });
 
 function InterviewPreparationPage() {
-  const raw = sessionStorage.getItem("MYFutureJobs:lastResult");
+  const raw = sessionStorage.getItem("PerksoPrax AI:lastResult");
 
   if (!raw) {
     return (

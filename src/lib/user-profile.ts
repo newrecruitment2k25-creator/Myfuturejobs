@@ -1,5 +1,5 @@
 /**
- * User Personalization Engine — MYFutureJobs
+ * User Personalization Engine — PerksoPrax AI
  *
  * Builds a rich interest vector from every available signal:
  *  • CV analysis results  (skills, industry, experience level)

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/poc/ai-matching")({
   component: PocAiMatchingPage,
   head: () => ({
     meta: [
-      { title: "AI Matching Demo  MYFutureJobs" },
+      { title: "AI Matching Demo  PerksoPrax AI" },
       { name: "description", content: "Semantic candidate matching, skill gap analysis, and explainable AI recommendation demo for PERKESO." },
     ],
   }),

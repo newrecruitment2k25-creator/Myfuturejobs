@@ -14,7 +14,7 @@ import {
 export const Route = createFileRoute("/employer/vacancies/$jobId/candidates/compare")({
   ssr: false,
   component: CompareCandidatesPage,
-  head: () => ({ meta: [{ title: "Compare Candidates — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Compare Candidates — PerksoPrax AI" }] }),
 });
 
 type CompareRow = { label: string; getValue: (c: CandidateMatch) => string | number };

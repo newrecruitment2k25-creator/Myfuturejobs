@@ -21,13 +21,13 @@ export const Route = createFileRoute("/linkedin-review")({
   component: LinkedInReviewPage,
   head: () => ({
     meta: [
-      { title: "LinkedIn Profile Reviewer — MYFutureJobs" },
+      { title: "LinkedIn Profile Reviewer — PerksoPrax AI" },
       {
         name: "description",
         content:
           "AI LinkedIn profile feedback built for Malaysian professionals and fresh graduates.",
       },
-      { property: "og:title", content: "LinkedIn Profile Reviewer — MYFutureJobs" },
+      { property: "og:title", content: "LinkedIn Profile Reviewer — PerksoPrax AI" },
       {
         property: "og:description",
         content:
@@ -147,7 +147,7 @@ function LinkedInReviewPage() {
       }
       try {
         sessionStorage.setItem(
-          "MYFutureJobs:lastLinkedIn",
+          "PerksoPrax AI:lastLinkedIn",
           JSON.stringify({ result, meta: { experience, industry, goal } }),
         );
       } catch {

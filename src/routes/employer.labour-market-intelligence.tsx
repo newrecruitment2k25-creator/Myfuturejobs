@@ -21,7 +21,7 @@ import {
 export const Route = createFileRoute("/employer/labour-market-intelligence")({
   ssr: false,
   component: LabourMarketIntelligencePage,
-  head: () => ({ meta: [{ title: "Labour Market Intelligence — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Labour Market Intelligence — PerksoPrax AI" }] }),
 });
 
 // ─── Shared UI helpers ────────────────────────
@@ -665,7 +665,7 @@ function LabourMarketIntelligencePage() {
                     The following integrations are planned for future releases:
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {["PERKESO Labour Data", "DOSM Labour Statistics", "HRD Corp Training Data", "MYFutureJobs Vacancy Feed", "National Skills Taxonomy", "MASCO Classifications API"].map(src => (
+                    {["PERKESO Labour Data", "DOSM Labour Statistics", "HRD Corp Training Data", "PerksoPrax AI Vacancy Feed", "National Skills Taxonomy", "MASCO Classifications API"].map(src => (
                       <span key={src} className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground">{src}</span>
                     ))}
                   </div>
@@ -681,7 +681,7 @@ function LabourMarketIntelligencePage() {
           <Button asChild variant="outline">
             <Link to="/employer/dashboard"><ArrowRight className="mr-2 size-4 rotate-180" /> Back to Dashboard</Link>
           </Button>
-          <p className="text-xs text-muted-foreground">MYFutureJobs Workforce Intelligence Platform · Module 11</p>
+          <p className="text-xs text-muted-foreground">PerksoPrax AI Workforce Intelligence Platform · Module 11</p>
         </div>
 
       </main>

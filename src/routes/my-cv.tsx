@@ -10,7 +10,7 @@ export const Route = createFileRoute("/my-cv")({
   component: MyCVPage,
   head: () => ({
     meta: [
-      { title: "My CV — MYFutureJobs" },
+      { title: "My CV — PerksoPrax AI" },
       { name: "description", content: "Your CV profile and latest analysis." },
     ],
   }),

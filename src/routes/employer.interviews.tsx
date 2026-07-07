@@ -11,7 +11,7 @@ export const Route = createFileRoute("/employer/interviews")({
   component: EmployerInterviewsPage,
   head: () => ({
     meta: [
-      { title: "AI Interview Templates — MYFutureJobs Employer" },
+      { title: "AI Interview Templates — PerksoPrax AI Employer" },
       { name: "description", content: "Create and manage AI-powered interview templates for candidates." },
     ],
   }),
@@ -92,7 +92,7 @@ function EmployerInterviewsPage() {
   }, [authLoading, user]);
 
   const copyShareLink = (templateId: string) => {
-    const url = `https://MYFutureJobs-new.chjaved649.workers.dev/interview-room.html?template=${templateId}`;
+    const url = `https://PerksoPrax AI-new.chjaved649.workers.dev/interview-room.html?template=${templateId}`;
     navigator.clipboard.writeText(url);
     toast.success("Share link copied to clipboard");
   };
@@ -100,7 +100,7 @@ function EmployerInterviewsPage() {
   const sendEmailInvite = (template: Template) => {
     const subject = encodeURIComponent(`Interview Invitation - ${template.role_title}`);
     const body = encodeURIComponent(
-      `You have been invited to complete an AI interview for the role of ${template.role_title}.\n\nClick here to start: https://MYFutureJobs-new.chjaved649.workers.dev/interview-room.html?template=${template.id}`
+      `You have been invited to complete an AI interview for the role of ${template.role_title}.\n\nClick here to start: https://PerksoPrax AI-new.chjaved649.workers.dev/interview-room.html?template=${template.id}`
     );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };

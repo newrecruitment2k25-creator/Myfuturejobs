@@ -8,8 +8,8 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
   head: () => ({
     meta: [
-      { title: "About — MYFutureJobs" },
-      { name: "description", content: "Learn about MYFutureJobs, Malaysia's AI-powered national employment portal built on the PERKESO ecosystem." },
+      { title: "About — PerksoPrax AI" },
+      { name: "description", content: "Learn about PerksoPrax AI, Malaysia's AI-powered national employment portal built on the PERKESO ecosystem." },
     ],
   }),
 });

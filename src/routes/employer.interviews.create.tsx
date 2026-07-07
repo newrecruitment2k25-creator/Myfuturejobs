@@ -21,7 +21,7 @@ export const Route = createFileRoute("/employer/interviews/create")({
   ssr: false,
   component: CreateInterviewPage,
   head: () => ({
-    meta: [{ title: "Create AI Interview — MYFutureJobs" }],
+    meta: [{ title: "Create AI Interview — PerksoPrax AI" }],
   }),
 });
 
@@ -50,7 +50,7 @@ function CreateInterviewPage() {
   const [questionFocus, setQuestionFocus] = useState<string[]>(["Technical", "Behavioural"]);
   const [cvSummary, setCvSummary] = useState(() => {
     try {
-      const raw = sessionStorage.getItem("MYFutureJobs:lastResult");
+      const raw = sessionStorage.getItem("PerksoPrax AI:lastResult");
       if (!raw) return "";
       const { result } = JSON.parse(raw);
       const skills = result?.keywords?.present_keywords?.slice(0, 8).join(", ") ?? "";

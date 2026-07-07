@@ -8,7 +8,7 @@ export const Route = createFileRoute("/events")({
   component: EventsPage,
   head: () => ({
     meta: [
-      { title: "Career Fairs & Hiring Events — MYFutureJobs" },
+      { title: "Career Fairs & Hiring Events — PerksoPrax AI" },
       { name: "description", content: "Discover upcoming career fairs, hiring events, and graduate placement programmes across Malaysia." },
     ],
   }),
@@ -47,7 +47,7 @@ const EVENTS: CareerEvent[] = [
   {
     id: "2",
     name: "Tech Hiring Day 2026",
-    organiser: "MDEC & MYFutureJobs",
+    organiser: "MDEC & PerksoPrax AI",
     date: "22 August 2026",
     time: "10:00 AM – 6:00 PM",
     location: "Cyberjaya Innovation Hub, Selangor",

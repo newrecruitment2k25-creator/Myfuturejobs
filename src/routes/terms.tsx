@@ -8,22 +8,22 @@ export const Route = createFileRoute("/terms")({
   component: TermsPage,
   head: () => ({
     meta: [
-      { title: "Terms of Service — MYFutureJobs" },
-      { name: "description", content: "Terms and conditions for using the MYFutureJobs employment platform." },
+      { title: "Terms of Service — PerksoPrax AI" },
+      { name: "description", content: "Terms and conditions for using the PerksoPrax AI employment platform." },
     ],
   }),
 });
 
 const TERMS_SECTIONS = [
-  { id: "acceptance", icon: FileText,      title: "Acceptance of Terms",      body: `By accessing or using the MYFutureJobs platform, a PERKESO initiative, you agree to be bound by these Terms of Service. These terms constitute a legally binding agreement between you and MYFutureJobs. If you do not agree to these terms, you must immediately cease all use of our services.` },
-  { id: "eligibility",icon: Users,         title: "Eligibility",              body: `To use MYFutureJobs, you must be at least 18 years of age. By creating an account, you represent and warrant that:\n• You have the legal capacity to enter into a binding contract.\n• You are a legal resident of Malaysia or have the necessary permits to seek employment within the territory.\n• All information provided during registration is accurate and truthful.` },
-  { id: "account",    icon: AlertCircle,   title: "Account Responsibilities",  body: `You are solely responsible for maintaining the confidentiality of your account credentials. Any activities occurring under your account are your responsibility. You agree to notify MYFutureJobs immediately of any unauthorised access or security breaches.` },
-  { id: "jobseeker",  icon: Users,         title: "Jobseeker Terms",           body: `Jobseekers agree that their profile data, including resumes and skills, will be processed by our AI to facilitate employer matching. You grant MYFutureJobs a license to use it for platform optimisation.\n\n• AI Resume Scoring\n• Skills-based Shortlisting\n• Career Pathway Suggestions` },
+  { id: "acceptance", icon: FileText,      title: "Acceptance of Terms",      body: `By accessing or using the PerksoPrax AI platform, a PERKESO initiative, you agree to be bound by these Terms of Service. These terms constitute a legally binding agreement between you and PerksoPrax AI. If you do not agree to these terms, you must immediately cease all use of our services.` },
+  { id: "eligibility",icon: Users,         title: "Eligibility",              body: `To use PerksoPrax AI, you must be at least 18 years of age. By creating an account, you represent and warrant that:\n• You have the legal capacity to enter into a binding contract.\n• You are a legal resident of Malaysia or have the necessary permits to seek employment within the territory.\n• All information provided during registration is accurate and truthful.` },
+  { id: "account",    icon: AlertCircle,   title: "Account Responsibilities",  body: `You are solely responsible for maintaining the confidentiality of your account credentials. Any activities occurring under your account are your responsibility. You agree to notify PerksoPrax AI immediately of any unauthorised access or security breaches.` },
+  { id: "jobseeker",  icon: Users,         title: "Jobseeker Terms",           body: `Jobseekers agree that their profile data, including resumes and skills, will be processed by our AI to facilitate employer matching. You grant PerksoPrax AI a license to use it for platform optimisation.\n\n• AI Resume Scoring\n• Skills-based Shortlisting\n• Career Pathway Suggestions` },
   { id: "employer",   icon: Building2,     title: "Employer Terms",            body: `Employers must provide accurate job descriptions and comply with the Malaysian Employment Act. Discriminatory practices are strictly prohibited. AI-generated shortlists are suggestions and require human verification.\n\n• Verified Candidate Profiles\n• Position Comparison\n• Verified Candidate Profiles` },
-  { id: "ai",         icon: Brain,         title: "AI Features & Advisory",    body: `MYFutureJobs employs proprietary machine learning algorithms to analyse career trajectories and market trends. While we strive for 100% accuracy, our AI outputs are advisory in nature.\n\nBias Monitoring: We actively monitor algorithms to reduce systemic bias in hiring.` },
-  { id: "prohibited", icon: Ban,           title: "Prohibited Use",            body: `You may not use MYFutureJobs for:\n× Scraping or automated data harvesting\n× Impersonating other individuals\n× Posting fraudulent job listings\n× Transmitting malware or harmful code` },
-  { id: "ip",         icon: BookOpen,      title: "Intellectual Property",     body: `All platform software, design, and AI models are the exclusive property of MYFutureJobs and PERKESO. You are granted a limited, non-transferable license to use the platform for its intended purpose only.` },
-  { id: "liability",  icon: AlertTriangle, title: "Limitation of Liability",   body: `To the maximum extent permitted by Malaysian law, MYFutureJobs shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the platform.` },
+  { id: "ai",         icon: Brain,         title: "AI Features & Advisory",    body: `PerksoPrax AI employs proprietary machine learning algorithms to analyse career trajectories and market trends. While we strive for 100% accuracy, our AI outputs are advisory in nature.\n\nBias Monitoring: We actively monitor algorithms to reduce systemic bias in hiring.` },
+  { id: "prohibited", icon: Ban,           title: "Prohibited Use",            body: `You may not use PerksoPrax AI for:\n× Scraping or automated data harvesting\n× Impersonating other individuals\n× Posting fraudulent job listings\n× Transmitting malware or harmful code` },
+  { id: "ip",         icon: BookOpen,      title: "Intellectual Property",     body: `All platform software, design, and AI models are the exclusive property of PerksoPrax AI and PERKESO. You are granted a limited, non-transferable license to use the platform for its intended purpose only.` },
+  { id: "liability",  icon: AlertTriangle, title: "Limitation of Liability",   body: `To the maximum extent permitted by Malaysian law, PerksoPrax AI shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the platform.` },
   { id: "governing",  icon: Scale,         title: "Governing Law",             body: `These terms are governed by and construed in accordance with the laws of Malaysia. Any disputes shall be subject to the exclusive jurisdiction of the Malaysian courts.` },
 ];
 
@@ -82,7 +82,7 @@ function TermsPage() {
               );
             })}
             <p style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", padding: "8px 0 0" }}>
-              © 2025 MYFutureJobs. A PERKESO Initiative. All rights reserved.
+              © 2025 PerksoPrax AI. A PERKESO Initiative. All rights reserved.
             </p>
           </div>
         </div>

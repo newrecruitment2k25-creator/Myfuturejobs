@@ -14,7 +14,7 @@ import {
 export const Route = createFileRoute("/admin/audit-logs")({
   ssr: false,
   component: AdminAuditLogsPage,
-  head: () => ({ meta: [{ title: "Audit Logs - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Audit Logs - PerksoPrax AI Admin" }] }),
 });
 
 function severityBadge(s: string) {

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/employers")({
   ssr: false,
   component: AdminEmployersPage,
-  head: () => ({ meta: [{ title: "Employers - MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Employers - PerksoPrax AI Admin" }] }),
 });
 
 function fmtDate(d: string) {

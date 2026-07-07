@@ -11,8 +11,8 @@ export const Route = createFileRoute("/signup")({
   component: SignupPage,
   head: () => ({
     meta: [
-      { title: "Sign Up — MYFutureJobs" },
-      { name: "description", content: "Create a free MYFutureJobs account to save your CV analyses." },
+      { title: "Sign Up — PerksoPrax AI" },
+      { name: "description", content: "Create a free PerksoPrax AI account to save your CV analyses." },
     ],
   }),
 });
@@ -44,7 +44,7 @@ function SignupPage() {
     if (data.session && data.user) {
       await supabase.from("profiles").upsert({ id: data.user.id, role });
       setSubmitting(false);
-      toast.success("Welcome to MYFutureJobs!");
+      toast.success("Welcome to PerksoPrax AI!");
       void navigate({ to: dashMap[role] });
     } else {
       // Email confirm may be ON — try immediate sign-in as fallback
@@ -57,7 +57,7 @@ function SignupPage() {
       }
       await supabase.from("profiles").upsert({ id: signInData.user.id, role });
       setSubmitting(false);
-      toast.success("Welcome to MYFutureJobs!");
+      toast.success("Welcome to PerksoPrax AI!");
       void navigate({ to: dashMap[role] });
     }
   };
@@ -95,7 +95,7 @@ function SignupPage() {
 
         <div style={{ position: 'relative', zIndex: 1, marginBottom: 32 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 16, padding: '4px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}>
-            PERKESO · SOCSO · MYFutureJobs 🇲🇾
+            PERKESO · SOCSO · PerksoPrax AI 🇲🇾
           </div>
           <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15, margin: '0 0 16px' }}>
             {role === 'employer' ? 'Start Hiring Smarter Today' : 'Start Your Career Journey Today'}

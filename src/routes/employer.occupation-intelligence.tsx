@@ -13,7 +13,7 @@ import { classifyOccupation, INDUSTRIES, EMPLOYER_TYPES, type OccupationProfile 
 export const Route = createFileRoute("/employer/occupation-intelligence")({
   ssr: false,
   component: OccupationIntelligencePage,
-  head: () => ({ meta: [{ title: "Occupation Intelligence — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Occupation Intelligence — PerksoPrax AI" }] }),
 });
 
 const EXAMPLES = [
@@ -37,7 +37,7 @@ function OccupationIntelligencePage() {
     // Cache in sessionStorage
     try {
       sessionStorage.setItem(
-        "MYFutureJobs:occupationIntelligence",
+        "PerksoPrax AI:occupationIntelligence",
         JSON.stringify({ title, industry, employerType, profile: result, ts: Date.now() })
       );
     } catch {

@@ -10,7 +10,7 @@ import { listTaxonomy, createTaxonomy, toggleTaxonomy, type TaxonomyRow } from "
 export const Route = createFileRoute("/admin/taxonomy")({
   ssr: false,
   component: AdminTaxonomyPage,
-  head: () => ({ meta: [{ title: "Taxonomy Management — MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Taxonomy Management — PerksoPrax AI Admin" }] }),
 });
 
 function AdminTaxonomyPage() {

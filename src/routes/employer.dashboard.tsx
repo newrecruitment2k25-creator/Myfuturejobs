@@ -8,6 +8,7 @@ import { getEmployerApplications, updateApplicationStatus, sendAiInterviewInvita
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { OfficerSidebar } from "@/components/officer-sidebar";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/employer/dashboard")({
   component: EmployerDashboardPage,
   head: () => ({
     meta: [
-      { title: "Employer Dashboard — MYFutureJobs" },
+      { title: "Employer Dashboard — PerksoPrax AI" },
       { name: "description", content: "Post jobs and manage your listings." },
     ],
   }),
@@ -297,46 +298,36 @@ function EmployerDashboardPage() {
 
   if (authLoading || checkingRole) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--base)' }}>
-        <Loader2 className="size-6 animate-spin" style={{ color: 'var(--accent)' }} />
-      </div>
+      <OfficerSidebar>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Loader2 className="size-6 animate-spin" style={{ color: 'var(--accent)' }} />
+        </div>
+      </OfficerSidebar>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--base)' }}>
-      <main>
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 16px' }}>
+    <OfficerSidebar>
+      <div style={{ padding: '32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* ── Welcome Header ── */}
-          <div style={{
-            background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 16, padding: '24px 28px',
-            display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 24,
-            overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(10,38,71,0.15)',
-          }}>
-            <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-            <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
-            <div style={{ position: 'relative' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Employer Portal
+          <div className="card" style={{ padding: '24px 28px', marginBottom: 24, display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'var(--accent-glow)' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }} />
+                Placement Officer Console
               </div>
-              <h1 style={{ marginTop: 4, fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>My Dashboard</h1>
-              <p style={{ marginTop: 4, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Manage vacancies, candidates, and applications.</p>
+              <h1 style={{ marginTop: 4, fontSize: 26, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.03em' }}>My Dashboard</h1>
+              <p style={{ marginTop: 4, fontSize: 13, color: 'var(--muted)' }}>Manage vacancies, candidates, and applications.</p>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, position: 'relative' }}>
-              <Link to="/employer/labour-market-intelligence" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-              >
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
+              <Link to="/employer/labour-market-intelligence" className="btn-ghost" style={{ fontSize: 13, padding: '8px 14px' }}>
                 <BarChart2 className="size-4" /> Labour Market
               </Link>
-              <Link to="/employer/vacancy-builder" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-              >
+              <Link to="/employer/vacancy-builder" className="btn-ghost" style={{ fontSize: 13, padding: '8px 14px' }}>
                 <Sparkles className="size-4" /> Vacancy Builder
               </Link>
-              <button style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #f36c21 0%, #e85d10 100%)', border:'none', borderRadius:10, padding:'8px 16px', cursor:'pointer', boxShadow: '0 2px 10px rgba(243,108,33,0.3)' }} onClick={() => {
+              <button className="btn-primary" style={{ fontSize: 13, padding: '8px 16px' }} onClick={() => {
                 if (showForm) { resetForm(); } else { setShowForm(true); }
               }}>
                 {showForm ? <><X className="size-4" /> Cancel</> : <><Plus className="size-4" /> Post a Job</>}
@@ -643,7 +634,7 @@ function EmployerDashboardPage() {
             )}
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </OfficerSidebar>
   );
 }

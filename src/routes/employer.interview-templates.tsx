@@ -10,7 +10,7 @@ export const Route = createFileRoute("/employer/interview-templates")({
   component: EmployerTemplatesPage,
   head: () => ({
     meta: [
-      { title: "Interview Templates — MYFutureJobs Employer" },
+      { title: "Interview Templates — PerksoPrax AI Employer" },
       { name: "description", content: "Create and manage interview templates for candidates." },
     ],
   }),

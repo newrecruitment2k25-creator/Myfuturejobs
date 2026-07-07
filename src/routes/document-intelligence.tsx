@@ -12,7 +12,7 @@ export const Route = createFileRoute("/document-intelligence")({
   component: DocumentIntelligencePage,
   head: () => ({
     meta: [
-      { title: "Document Intelligence — MYFutureJobs · PERKESO" },
+      { title: "Document Intelligence — PerksoPrax AI · PERKESO" },
       { name: "description", content: "Parse resumes and vacancy documents — extract skills, occupation, salary, taxonomy mapping, then run AI matching." },
     ],
   }),
@@ -51,7 +51,7 @@ async function extractTextFromFile(file: File): Promise<string> {
 
 async function parseDocumentWithAI(text: string, mode: Mode): Promise<Omit<ParseResult, "elapsedMs" | "mascoCode" | "mascoCategory" | "taxonomyRelationship" | "relatedOccupations">> {
   const prompt = mode === "resume"
-    ? `You are a Malaysian PERKESO employment intelligence system parsing a job-seeker resume. Extract structured data.
+    ? `You are a Malaysian Caseworker Intelligence Platform system parsing a job-seeker resume. Extract structured data.
 Resume text:
 """
 ${text.slice(0, 8000)}
@@ -67,7 +67,7 @@ Return ONLY valid JSON (no markdown):
   "education": "highest qualification or null",
   "confidence": 0-100
 }`
-    : `You are a Malaysian PERKESO employment intelligence system parsing a vacancy/job description document. Extract structured data.
+    : `You are a Malaysian Caseworker Intelligence Platform system parsing a vacancy/job description document. Extract structured data.
 Document text:
 """
 ${text.slice(0, 8000)}

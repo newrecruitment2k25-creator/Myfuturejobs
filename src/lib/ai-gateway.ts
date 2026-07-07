@@ -1,4 +1,4 @@
-// Central AI gateway for MYFutureJobs Workforce Intelligence Platform
+// Central AI gateway for PerksoPrax AI Workforce Intelligence Platform
 // Two-tier: Groq Llama 3.3 70B (primary, open-source) + OpenAI GPT-4o-mini (fallback)
 // Supports model fallback, retry logic, structured outputs, and forceOpenAI flag
 
@@ -28,7 +28,7 @@ export type CallAiResult = {
 
 // Model configuration — Groq primary, OpenAI fallback
 export const AI_MODELS = {
-  GROQ_LLAMA_33_70B: "llama-3.3-70b-versatile",   // Primary: Groq Llama 3.3 70B (free, open-source)
+  GROQ_LLAMA_33_70B: "llama-3.1-8b-instant",    // Primary: Groq Llama 3.1 8B (fast, open-source)
   GPT4O_MINI: "gpt-4o-mini",                      // Fallback: OpenAI GPT-4o-mini for tool calls
   GPT4O: "gpt-4o",                                // OpenAI GPT-4o for complex reasoning
   GPT5_5: "gpt-5.5",                              // Heavy analysis (legacy compat)

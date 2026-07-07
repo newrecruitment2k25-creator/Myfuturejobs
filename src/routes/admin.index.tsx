@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/admin/")({
   ssr: false,
   component: AdminConsolePage,
-  head: () => ({ meta: [{ title: "Admin Console - MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Admin Console - PerksoPrax AI" }] }),
 });
 
 const NAV_LINKS = [
@@ -468,7 +468,7 @@ function AdminConsolePage() {
               <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
               <div style={{ position: 'relative' }}>
                 <p style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  MYFutureJobs · Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
+                  PerksoPrax AI · Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
                 </p>
                 <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "6px 0 12px" }}>Bi-Monthly Performance Overview</h2>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>

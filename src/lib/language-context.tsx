@@ -9,7 +9,7 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-const STORAGE_KEY = "MYFutureJobs_lang";
+const STORAGE_KEY = "PerksoPrax AI_lang";
 
 const VALID_LANGS: Lang[] = ["en", "bm", "zh", "ta"];
 

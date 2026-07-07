@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/admin/rbac")({
   ssr: false,
   component: AdminRbacPage,
-  head: () => ({ meta: [{ title: "Role-Based Access Control — MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Role-Based Access Control — PerksoPrax AI Admin" }] }),
 });
 
 type Role = "job_seeker" | "employer" | "admin";

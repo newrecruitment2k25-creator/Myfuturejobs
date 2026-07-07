@@ -10,7 +10,7 @@ import { getEngagementLevel, behaviourTooltip, type BehaviourData } from "@/lib/
 export const Route = createFileRoute("/employer/talent-discovery")({
   ssr: false,
   component: TalentDiscoveryPage,
-  head: () => ({ meta: [{ title: "AI Talent Discovery - MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "AI Talent Discovery - PerksoPrax AI" }] }),
 });
 
 interface CandidateResult {

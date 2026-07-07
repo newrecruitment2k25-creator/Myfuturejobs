@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/resume-builder")({
   ssr: false,
   component: ResumeBuilderPage,
-  head: () => ({ meta: [{ title: "AI Resume Builder — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "AI Resume Builder — PerksoPrax AI" }] }),
 });
 
 // ── Types ─────────────────────────────────────────────────────────────────────

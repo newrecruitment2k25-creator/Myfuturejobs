@@ -16,7 +16,7 @@ import {
 export const Route = createFileRoute("/employer/vacancies/$jobId/intelligence")({
   ssr: false,
   component: VacancyIntelligencePage,
-  head: () => ({ meta: [{ title: "Vacancy Intelligence — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Vacancy Intelligence — PerksoPrax AI" }] }),
 });
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {

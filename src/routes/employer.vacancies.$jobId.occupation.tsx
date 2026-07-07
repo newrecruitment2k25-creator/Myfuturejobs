@@ -10,7 +10,7 @@ import { classifyOccupation, type OccupationProfile } from "@/lib/masco-intellig
 export const Route = createFileRoute("/employer/vacancies/$jobId/occupation")({
   ssr: false,
   component: VacancyOccupationPage,
-  head: () => ({ meta: [{ title: "Occupation Intelligence — MYFutureJobs" }] }),
+  head: () => ({ meta: [{ title: "Occupation Intelligence — PerksoPrax AI" }] }),
 });
 
 type JobRow = {
@@ -39,7 +39,7 @@ function VacancyOccupationPage() {
     if (!user) { void navigate({ to: "/employer/login" }); return; }
 
     // Check sessionStorage cache first
-    const cacheKey = `MYFutureJobs:occupationIntelligence:${jobId}`;
+    const cacheKey = `PerksoPrax AI:occupationIntelligence:${jobId}`;
     try {
       const cached = sessionStorage.getItem(cacheKey);
       if (cached) {

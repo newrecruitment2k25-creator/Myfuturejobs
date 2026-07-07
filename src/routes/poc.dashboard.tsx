@@ -10,7 +10,7 @@ export const Route = createFileRoute("/poc/dashboard")({
   component: PocDashboardPage,
   head: () => ({
     meta: [
-      { title: "PERKESO POC Dashboard — MYFutureJobs" },
+      { title: "PERKESO POC Dashboard — PerksoPrax AI" },
       { name: "description", content: "PERKESO AI Job Matching POC — semantic matching engine demo." },
     ],
   }),
@@ -91,7 +91,7 @@ function PocDashboardPage() {
             AI-Powered Job Matching Engine
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl">
-            Semantic job matching with explainable AI recommendations. Demonstrates PERKESO's next-generation employment facilitation capability — matching 1,449 jobseekers against 5,828 vacancies using skills taxonomy, behavioural signals, and the MYFutureJobs AI reasoning engine.
+            Semantic job matching with explainable AI recommendations. Demonstrates PERKESO's next-generation employment facilitation capability — matching 1,449 jobseekers against 5,828 vacancies using skills taxonomy, behavioural signals, and the PerksoPrax AI AI reasoning engine.
           </p>
         </div>
 

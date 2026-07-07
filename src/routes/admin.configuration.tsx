@@ -10,7 +10,7 @@ import { listConfig, updateConfig, type ConfigRow } from "@/lib/ops-api";
 export const Route = createFileRoute("/admin/configuration")({
   ssr: false,
   component: AdminConfigPage,
-  head: () => ({ meta: [{ title: "Configuration Management — MYFutureJobs Admin" }] }),
+  head: () => ({ meta: [{ title: "Configuration Management — PerksoPrax AI Admin" }] }),
 });
 
 const CATEGORY_LABELS: Record<string, string> = {
