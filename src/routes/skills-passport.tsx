@@ -118,7 +118,6 @@ const BADGE_ICON: Record<SkillEntry["level"], typeof CheckCircle2> = {
 const TRAINING_LINKS = [
   { label: "HRD Corp Upskilling Programmes", href: "https://www.hrdcorp.gov.my", external: true },
   { label: "MoHR e-Latihan Portal",           href: "https://elatihan.mohr.gov.my", external: true },
-  { label: "MYFutureJobs AI Interview Prep",        href: "/interview-preparation", external: false },
   { label: "Browse Jobs by Skill",            href: "/jobs", external: false },
 ];
 
@@ -578,13 +577,10 @@ function SkillsPassportPage() {
               </div>
               <div>
                 <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 2px' }}>Boost Your Career</h3>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', margin: 0 }}>Practice AI interviews, explore career pathways, and find jobs matched to your skills.</p>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', margin: 0 }}>Explore career pathways and find jobs matched to your skills.</p>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <Link to="/interview-preparation" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '8px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.15)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
-                AI Interview Prep <ArrowUpRight style={{ width: 12, height: 12 }} />
-              </Link>
               <Link to="/career-pathway" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '8px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.15)', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
                 Career Pathway <ArrowUpRight style={{ width: 12, height: 12 }} />
               </Link>

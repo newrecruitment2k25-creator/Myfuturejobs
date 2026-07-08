@@ -165,39 +165,6 @@ function ApplicationDetailPage() {
           /* poc_activity_log may not exist or have different schema */
         }
 
-        // Load related interview invitations
-        try {
-          const { data: invs } = await (supabase as any)
-            .from("interview_invitations")
-            .select("id, created_at, status, deadline, template_id, ai_summary, message")
-            .eq("application_id", app.id)
-            .order("created_at", { ascending: false })
-            .limit(20);
-          (invs ?? []).forEach((inv: any) => {
-            const summary = inv.ai_summary as Record<string, any> | null;
-            const isPractical = summary?.type === "practical";
-            if (isPractical) {
-              events.push({
-                id: `${app.id}-inv-${inv.id}`,
-                label: "Practical Interview Scheduled",
-                detail: `${summary.date} at ${summary.time}${summary.location ? ` · ${summary.location}` : ""}${summary.notes ? ` · ${summary.notes}` : ""}`.trim(),
-                date: inv.created_at,
-                icon: "activity",
-              });
-            } else if (inv.template_id) {
-              events.push({
-                id: `${app.id}-inv-${inv.id}`,
-                label: "AI Interview Invitation Sent",
-                detail: inv.message ?? "Complete the structured AI interview before the deadline.",
-                date: inv.created_at,
-                icon: "activity",
-              });
-            }
-          });
-        } catch {
-          /* interview_invitations may not exist or have different schema */
-        }
-
         events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         setTimeline(events);
       } catch (e: any) {

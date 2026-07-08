@@ -29,7 +29,7 @@ const LINKEDIN_TIPS = [
   "LinkedIn profiles with photos get 21x more views",
   "Recruiters search by skills — list at least 10",
   "Your About section should tell your story, not just list job titles",
-  "Malaysian recruiters check LinkedIn before every interview",
+  "Malaysian recruiters check LinkedIn before every screening",
   "Recommendations from colleagues boost credibility significantly",
   "A custom LinkedIn URL looks more professional",
   "MNCs in Malaysia search for English keywords",

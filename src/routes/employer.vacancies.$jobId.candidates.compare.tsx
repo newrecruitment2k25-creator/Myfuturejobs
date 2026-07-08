@@ -24,7 +24,6 @@ const ROWS: CompareRow[] = [
   { label: "Skills Match", getValue: (c) => `${c.skillsMatch}%` },
   { label: "Industry Alignment", getValue: (c) => `${c.industryAlignment}%` },
   { label: "Employability Score", getValue: (c) => `${c.employabilityScore}%` },
-  { label: "Interview Score", getValue: (c) => c.interviewScore !== null ? `${c.interviewScore}/100` : "—" },
   { label: "Career Readiness", getValue: (c) => `${c.careerReadiness}%` },
   { label: "Experience Level", getValue: (c) => c.experienceLevel },
   { label: "Target Role", getValue: (c) => c.targetRole },
@@ -230,13 +229,6 @@ function CompareCandidatesPage() {
                     Full Profile
                   </Link>
                 </Button>
-                {c.hasInterviewData && (
-                  <Button asChild size="sm" variant="outline">
-                    <Link to="/employer/interviews/$sessionId/report" params={{ sessionId: c.sessionId }}>
-                      Interview Report
-                    </Link>
-                  </Button>
-                )}
               </div>
             </div>
           ))}

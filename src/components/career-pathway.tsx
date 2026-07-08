@@ -151,7 +151,7 @@ function generateActionPlan(priorityImprovements: string[], targetEmployer: stri
   return {
     week1: "Fix CV structure and add target keywords for " + targetEmployer.toLowerCase() + " roles",
     week2: "Add role-specific evidence, projects, or certifications relevant to target industry",
-    week3_4: "Apply to aligned entry-level roles and prepare interview answers for " + targetEmployer.toLowerCase() + " positions"
+    week3_4: "Apply to aligned entry-level roles and prepare screening responses for " + targetEmployer.toLowerCase() + " positions"
   };
 }
 

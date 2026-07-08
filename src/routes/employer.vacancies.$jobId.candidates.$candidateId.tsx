@@ -175,11 +175,6 @@ function CandidateDetailPage() {
             <ScoreBar label="Keyword Relevance" value={candidate.keywordRelevance} note="CV and role keyword overlap" />
             <ScoreBar label="Experience Match" value={candidate.experienceMatch} note="Experience level vs role expectations" />
             <ScoreBar label="Employability Score" value={candidate.employabilityScore} note="Derived from competency assessment" />
-            <ScoreBar
-              label="Interview Score"
-              value={candidate.interviewScore ?? 0}
-              note={candidate.interviewScore === null ? "No interview assessment completed" : "AI interview assessment result"}
-            />
             <ScoreBar label="Career Readiness" value={candidate.careerReadiness} note="Deployment readiness estimate" />
           </div>
         </SectionCard>
@@ -273,16 +268,6 @@ function CandidateDetailPage() {
         <div className="flex flex-wrap gap-3 justify-end pb-4">
           <Button asChild variant="outline">
             <Link to="/employer/vacancies/$jobId/candidates" params={{ jobId }}>Back to Candidates</Link>
-          </Button>
-          {candidate.hasInterviewData && (
-            <Button asChild variant="outline">
-              <Link to="/employer/interviews/$sessionId/report" params={{ sessionId: candidateId }}>
-                Full Interview Report
-              </Link>
-            </Button>
-          )}
-          <Button asChild variant="navy">
-            <Link to="/employer/interviews/create">New Interview</Link>
           </Button>
         </div>
 

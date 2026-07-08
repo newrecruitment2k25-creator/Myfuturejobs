@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { BarChart3, ArrowLeft, Search, Shield, Loader2, RefreshCw, Users, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { BarChart3, Search, Shield, Loader2, Users, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOpsGuard } from "@/lib/use-ops-guard";
 import { listCandidates, type UnifiedCandidateRow } from "@/lib/ops-api";
 import { toast } from "sonner";
+import { AdminPageHeader, AdminSectionCard, AdminStatTile } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/candidates")({
   ssr: false,
@@ -106,91 +107,66 @@ function AdminCandidatesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 space-y-6">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
 
-        <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="size-4" /> Back to Admin Console
-        </Link>
-
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Admin · Candidates
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Candidate Management</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
-                {loading ? "Loading…" : `${total.toLocaleString()} total candidates`}
-                {!loading && <span style={{ marginLeft: 8, fontSize: 12 }}>({registeredCount} registered · {pocTotal.toLocaleString()} PERKESO)</span>}
-              </p>
-            </div>
-            <button onClick={() => fetchCandidates(pocPage, sourceFilter, debouncedSearch)} disabled={loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </button>
-          </div>
-        </div>
+        <AdminPageHeader
+          badge="Admin · Candidates"
+          title="Candidate Management"
+          subtitle={loading ? "Loading…" : `${total.toLocaleString()} total candidates · ${registeredCount} registered · ${pocTotal.toLocaleString()} PERKESO`}
+          backTo="/admin"
+          backLabel="Back to Admin Console"
+          onRefresh={() => fetchCandidates(pocPage, sourceFilter, debouncedSearch)}
+          refreshLoading={loading}
+        />
 
         {/* KPI row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total", value: total, color: '#512ACC' },
-            { label: "Registered", value: registeredCount, color: '#15803d' },
-            { label: "PERKESO", value: pocTotal, color: '#f36c21' },
-            { label: "This Page", value: candidates.length, color: '#6d28d9' },
+            { label: "Total", value: total, color: "primary" as const },
+            { label: "Registered", value: registeredCount, color: "success" as const },
+            { label: "PERKESO", value: pocTotal, color: "warning" as const },
+            { label: "This Page", value: candidates.length, color: "destructive" as const },
           ].map(({ label, value, color }) => (
-            <div key={label} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(81,42,204,0.04)' }}>
-              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>{loading ? "…" : value.toLocaleString()}</p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{label}</p>
-            </div>
+            <AdminStatTile key={label} label={label} value={loading ? "…" : value.toLocaleString()} color={color} />
           ))}
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="relative flex-1 min-w-[220px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input className="pl-9 pr-8 h-9 text-sm" placeholder="Search skills, location, education, ID…" value={search} onChange={e => handleSearchChange(e.target.value)} />
-            {search && (
-              <button onClick={() => handleSearchChange("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
-          <div className="flex rounded-lg border border-border overflow-hidden text-xs font-semibold">
-            {(["all", "registered", "poc"] as SourceFilter[]).map(s => (
-              <button key={s} onClick={() => handleSourceChange(s)}
-                className={`px-3 py-1.5 capitalize transition-colors ${sourceFilter === s ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:text-foreground"}`}>
-                {s === "poc" ? "PERKESO" : s === "registered" ? "Registered" : "All"}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Table */}
-        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
-            <BarChart3 style={{ width: 16, height: 16, color: '#512ACC' }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>
-              {loading ? "Loading…" : `Showing ${candidates.length} of ${total.toLocaleString()} candidates`}
-            </h2>
+        <AdminSectionCard
+          icon={<BarChart3 className="size-5 text-primary" />}
+          title={loading ? "Loading…" : `Showing ${candidates.length} of ${total.toLocaleString()} candidates`}
+          subtitle="Search, filter by source, and view candidate details"
+        >
+          {/* Filters */}
+          <div className="flex flex-wrap gap-3 items-center mb-4">
+            <div className="relative flex-1 min-w-[220px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input className="pl-9 pr-8 h-9 text-sm" placeholder="Search skills, location, education, ID…" value={search} onChange={e => handleSearchChange(e.target.value)} />
+              {search && (
+                <button onClick={() => handleSearchChange("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
+            <div className="flex rounded-lg border border-border overflow-hidden text-xs font-semibold">
+              {(["all", "registered", "poc"] as SourceFilter[]).map(s => (
+                <button key={s} onClick={() => handleSourceChange(s)}
+                  className={`px-3 py-1.5 capitalize transition-colors ${sourceFilter === s ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:text-foreground"}`}>
+                  {s === "poc" ? "PERKESO" : s === "registered" ? "Registered" : "All"}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>
           ) : candidates.length === 0 ? (
-            <div className="py-14 text-center">
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-10 text-center">
               <Users className="size-10 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm font-semibold text-foreground mb-1">No candidates found</p>
               <p className="text-xs text-muted-foreground">Try clearing the search or changing the filter.</p>
             </div>
           ) : (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-border rounded-xl border border-border overflow-hidden">
               {candidates.map(c => (
                 <div key={`${c.source}-${c.id}`} className="flex flex-wrap items-center gap-3 px-5 py-3 hover:bg-accent/20 transition-colors">
                   {/* Source badge */}
@@ -221,7 +197,6 @@ function AdminCandidatesPage() {
                   {/* Engagement */}
                   <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
                     <span>{c.applications} apps</span>
-                    <span>{c.interviews} interviews</span>
                     {c.offers > 0 && <span className="text-green-600 font-semibold">{c.offers} offers</span>}
                   </div>
                   {/* Actions */}
@@ -242,7 +217,7 @@ function AdminCandidatesPage() {
               ))}
             </div>
           )}
-        </div>
+        </AdminSectionCard>
 
         {/* Pagination for POC candidates */}
         {pocTotal > 50 && sourceFilter !== "registered" && (
@@ -302,10 +277,9 @@ function AdminCandidatesPage() {
                 </div>
               </div>
             )}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {[
                 { label: "Applications", value: selectedCandidate.applications },
-                { label: "Interviews", value: selectedCandidate.interviews },
                 { label: "Offers", value: selectedCandidate.offers },
               ].map(({ label, value }) => (
                 <div key={label} className="rounded-xl border border-border bg-background p-3 text-center">

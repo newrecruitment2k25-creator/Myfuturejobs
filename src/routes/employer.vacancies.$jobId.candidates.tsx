@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ArrowLeft, Users, Search, SlidersHorizontal, BarChart2,
   ChevronRight, TrendingUp, Brain,
-  ClipboardList, Video, ChevronDown, History, Sparkles, X, Loader2,
+  ClipboardList, ChevronDown, History, Sparkles, Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,11 +103,10 @@ function CandidateCard({ candidate, jobId, selected, onSelect }: {
       </div>
 
       {/* Score row */}
-      <div className="grid grid-cols-4 gap-2 mb-4 rounded-xl bg-secondary/40 p-3">
+      <div className="grid grid-cols-3 gap-2 mb-4 rounded-xl bg-secondary/40 p-3">
         <ScorePill value={candidate.skillsMatch} label="Skills" />
         <ScorePill value={candidate.industryAlignment} label="Industry" />
         <ScorePill value={candidate.employabilityScore} label="Employability" />
-        <ScorePill value={candidate.interviewScore ?? 0} label="Interview" />
       </div>
 
       {/* Badges */}
@@ -118,11 +117,6 @@ function CandidateCard({ candidate, jobId, selected, onSelect }: {
         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${shortlistCfg.bg} ${shortlistCfg.text}`}>
           {candidate.shortlistRecommendation}
         </span>
-        {!candidate.hasInterviewData && (
-          <span className="inline-flex items-center rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground">
-            No Interview
-          </span>
-        )}
       </div>
 
       {/* Skills snippets */}
@@ -144,13 +138,6 @@ function CandidateCard({ candidate, jobId, selected, onSelect }: {
             View Profile <ChevronRight className="ml-1 size-3" />
           </Link>
         </Button>
-        {candidate.hasInterviewData && (
-          <Button asChild size="sm" variant="outline">
-            <Link to="/employer/interviews/$sessionId/report" params={{ sessionId: candidate.sessionId }}>
-              Report
-            </Link>
-          </Button>
-        )}
       </div>
     </div>
   );
@@ -365,12 +352,11 @@ function CandidateMatchingPage() {
           </div>
 
           {/* Quick stats */}
-          <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
               { label: "Total Candidates", value: (effectiveIntelligence ?? intelligence).totalApplicants },
               { label: "Matched", value: (effectiveIntelligence ?? intelligence).matchedCandidates },
               { label: "Avg Match Score", value: `${(effectiveIntelligence ?? intelligence).averageMatchScore}%` },
-              { label: "Interview Completion", value: `${(effectiveIntelligence ?? intelligence).interviewCompletionRate}%` },
             ].map(({ label, value }) => (
               <div key={label} className="rounded-xl bg-secondary/40 px-4 py-3 text-center">
                 <p className="text-xl font-bold text-primary">{value}</p>
@@ -608,7 +594,6 @@ function CandidateMatchingPage() {
                       )}
                       <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
                         <span>{c.applications} apps</span>
-                        <span>{c.interviews} interviews</span>
                         {c.offers > 0 && <span className="text-green-600 font-semibold">{c.offers} offers</span>}
                         {c.preferred_salary && <span>{c.preferred_salary}</span>}
                       </div>
@@ -644,9 +629,6 @@ function CandidateMatchingPage() {
                             {app.experience_level && <span>{app.experience_level}</span>}
                             {app.overall_score !== null && (
                               <span className="font-medium text-primary">CV Score: {app.overall_score}</span>
-                            )}
-                            {app.interview_score !== null && (
-                              <span className="font-medium text-orange-600">Interview: {app.interview_score}</span>
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground mt-0.5">
@@ -687,21 +669,6 @@ function CandidateMatchingPage() {
                             </div>
                           </div>
 
-                          {/* Send interview button when shortlisted/interview */}
-                          {(app.status === "shortlisted" || app.status === "interview") && app.interview_session_id === null && (
-                            <Button asChild size="sm" variant="outline" className="gap-1 text-xs">
-                              <Link to="/employer/interviews/create">
-                                <Video className="size-3" /> Send Interview
-                              </Link>
-                            </Button>
-                          )}
-                          {app.interview_session_id && (
-                            <Button asChild size="sm" variant="outline" className="gap-1 text-xs">
-                              <Link to="/employer/interviews/$sessionId/report" params={{ sessionId: app.interview_session_id }}>
-                                Report
-                              </Link>
-                            </Button>
-                          )}
                         </div>
                       </div>
 

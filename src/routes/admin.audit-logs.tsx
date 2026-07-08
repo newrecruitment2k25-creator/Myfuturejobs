@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { FileText, ArrowLeft, Search, Shield, Loader2, RefreshCw, Database, Activity, Users, Zap } from "lucide-react";
+import { FileText, Search, Shield, Loader2, Database, Activity, Users, Zap } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOpsGuard } from "@/lib/use-ops-guard";
@@ -10,6 +10,7 @@ import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/audit-logs")({
   ssr: false,
@@ -140,32 +141,17 @@ function AdminAuditLogsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 space-y-6">
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
 
-        <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="size-4" /> Back to Admin Console
-        </Link>
-
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Admin · Audit
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Audit Logs</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>All system actions recorded from admin operations.</p>
-            </div>
-            <button onClick={fetchLogs} disabled={loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </button>
-          </div>
-        </div>
+        <AdminPageHeader
+          badge="Admin · Audit"
+          title="Audit Logs"
+          subtitle="All system actions recorded from admin operations."
+          backTo="/admin"
+          backLabel="Back to Admin Console"
+          onRefresh={fetchLogs}
+          refreshLoading={loading}
+        />
 
         {/* ── Summary cards ───────────────────────────────────────────── */}
         {allLogs.length > 0 && (
@@ -255,15 +241,11 @@ function AdminAuditLogsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="size-5 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">Logs ({filteredLogs.length}{filteredLogs.length < allLogs.length ? ` of ${allLogs.length}` : ""})</h2>
-          </div>
+        <AdminSectionCard icon={<FileText className="size-5 text-primary" />} title={`Logs (${filteredLogs.length}${filteredLogs.length < allLogs.length ? ` of ${allLogs.length}` : ""})`} subtitle="Filter by severity, module, and actor">
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>
           ) : filteredLogs.length === 0 ? (
-            <div className="py-14 text-center">
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-10 text-center">
               <Database className="size-10 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm font-semibold text-foreground mb-1">{allLogs.length === 0 ? "No audit logs yet" : "No logs match the current filters"}</p>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto">
@@ -289,7 +271,7 @@ function AdminAuditLogsPage() {
               ))}
             </div>
           )}
-        </div>
+        </AdminSectionCard>
 
       </main>
     </div>

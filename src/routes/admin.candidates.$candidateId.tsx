@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   ArrowLeft, Shield, Loader2, FileText, Briefcase,
-  Video, BarChart3, User,
+  BarChart3, User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOpsGuard } from "@/lib/use-ops-guard";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/admin/candidates/$candidateId")({
   head: () => ({ meta: [{ title: "Candidate Profile - MYFutureJobs Admin" }] }),
 });
 
-type Tab = "overview" | "analyses" | "applications" | "interviews";
+type Tab = "overview" | "analyses" | "applications";
 
 function fmtDate(d: string) {
   return new Date(d).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" });
@@ -63,7 +63,6 @@ function CandidateDetailPage() {
     { id: "overview",     label: "Overview",     icon: User },
     { id: "analyses",     label: "CV Analyses",  icon: BarChart3,  count: detail?.analyses.length },
     { id: "applications", label: "Applications", icon: Briefcase,  count: detail?.applications.length },
-    { id: "interviews",   label: "Interviews",   icon: Video,      count: detail?.interviewSessions.length },
   ];
 
   const latestAnalysis = detail?.analyses?.[0] ?? null;
@@ -170,25 +169,6 @@ function CandidateDetailPage() {
                   <p className="text-xs text-muted-foreground">{fmtDateTime(a.created_at)}</p>
                 </div>
                 <span className="inline-flex rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">{a.status}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "interviews" && (
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-2">
-            {!detail?.interviewSessions.length ? (
-              <p className="text-sm text-muted-foreground py-8 text-center">No interview sessions found.</p>
-            ) : detail.interviewSessions.map(s => (
-              <div key={s.id} className="rounded-xl border border-border bg-background px-4 py-3 flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{s.role_title}</p>
-                  <p className="text-xs text-muted-foreground">{fmtDateTime(s.created_at)}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs font-semibold text-primary">{s.overall_score !== null ? `${s.overall_score}/100` : "—"}</p>
-                  <p className="text-xs text-muted-foreground">{s.status}</p>
-                </div>
               </div>
             ))}
           </div>

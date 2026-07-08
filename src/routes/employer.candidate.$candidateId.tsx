@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Loader2, ArrowLeft, Mail, Briefcase, GraduationCap, Star, FileText, MapPin, TrendingUp, CheckCircle, XCircle, Target, Award, AlignLeft, Zap, BarChart2, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { getEmployerCandidate, updateApplicationStatus } from "@/lib/ops-api";
+import { getEmployerCandidate, updateApplicationStatus, type AppStatus } from "@/lib/ops-api";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -117,7 +117,7 @@ function CandidateProfilePage() {
 
   const updateAppStatus = async (appId: string, newStatus: string) => {
     try {
-      await updateApplicationStatus(appId, newStatus);
+      await updateApplicationStatus(appId, newStatus as AppStatus);
       setApplications(prev => prev.map(a => a.id === appId ? { ...a, status: newStatus } : a));
       toast.success("Status updated");
     } catch (e: any) {
@@ -377,7 +377,7 @@ function CandidateProfilePage() {
                           <SelectContent>
                             <SelectItem value="applied">Applied</SelectItem>
                             <SelectItem value="shortlisted">Shortlisted</SelectItem>
-                            <SelectItem value="interview">Interview</SelectItem>
+                            <SelectItem value="interview">Screening</SelectItem>
                             <SelectItem value="offered">Offered</SelectItem>
                             <SelectItem value="hired">Hired</SelectItem>
                             <SelectItem value="rejected">Rejected</SelectItem>

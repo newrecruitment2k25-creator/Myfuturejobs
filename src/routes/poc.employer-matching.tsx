@@ -152,12 +152,12 @@ function CandidateCard({ match, idx }: { match: CandidateMatch; idx: number }) {
         {match.behaviour && (
           <div className="mt-4 space-y-2">
             <p className="text-xs text-muted-foreground">
-              📊 <strong>{match.behaviour.submitted_application_count ?? 0}</strong> applications · <strong>{match.behaviour.interview_count ?? 0}</strong> interviews · <strong>{match.behaviour.sign_in_count ?? 0}</strong> sign-ins
+              📊 <strong>{match.behaviour.submitted_application_count ?? 0}</strong> applications · <strong>{match.behaviour.interview_count ?? 0}</strong> screenings · <strong>{match.behaviour.sign_in_count ?? 0}</strong> sign-ins
             </p>
             <div className="grid grid-cols-4 gap-2">
               {[
                 { label: "Applications", value: match.behaviour.submitted_application_count },
-                { label: "Interviews",   value: match.behaviour.interview_count },
+                { label: "Screenings",   value: match.behaviour.interview_count },
                 { label: "Offers",       value: match.behaviour.job_offer_count },
                 { label: "Sign-ins",     value: match.behaviour.sign_in_count },
               ].map(({ label, value }) => (

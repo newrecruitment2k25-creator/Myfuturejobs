@@ -119,7 +119,7 @@ function PocDashboardPage() {
             icon={<BarChart3 className="size-5" />}
             label="Behaviour Profiles"
             value={loading ? "—" : stats!.behaviourRows.toLocaleString()}
-            sub="Application + interview signals"
+            sub="Application + behaviour signals"
           />
         </div>
 

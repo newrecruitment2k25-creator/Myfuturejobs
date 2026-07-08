@@ -20,10 +20,8 @@ import { Route as RecommendedJobsRouteImport } from './routes/recommended-jobs'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MyCvRouteImport } from './routes/my-cv'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LinkedinReviewRouteImport } from './routes/linkedin-review'
 import { Route as LabourInsightsRouteImport } from './routes/labour-insights'
 import { Route as JobsRouteImport } from './routes/jobs'
-import { Route as InterviewPreparationRouteImport } from './routes/interview-preparation'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DocumentIntelligenceRouteImport } from './routes/document-intelligence'
 import { Route as DemoRouteImport } from './routes/demo'
@@ -41,18 +39,13 @@ import { Route as PocRecommendationsRouteImport } from './routes/poc.recommendat
 import { Route as PocEmployerMatchingRouteImport } from './routes/poc.employer-matching'
 import { Route as PocDashboardRouteImport } from './routes/poc.dashboard'
 import { Route as PocAiMatchingRouteImport } from './routes/poc.ai-matching'
-import { Route as LinkedinReviewResultsRouteImport } from './routes/linkedin-review.results'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
-import { Route as InterviewSetupRouteImport } from './routes/interview.setup'
-import { Route as InterviewSessionIdRouteImport } from './routes/interview.$sessionId'
 import { Route as EmployerVacancyBuilderRouteImport } from './routes/employer.vacancy-builder'
 import { Route as EmployerTalentDiscoveryRouteImport } from './routes/employer.talent-discovery'
 import { Route as EmployerSignupRouteImport } from './routes/employer.signup'
 import { Route as EmployerOccupationIntelligenceRouteImport } from './routes/employer.occupation-intelligence'
 import { Route as EmployerLoginRouteImport } from './routes/employer.login'
 import { Route as EmployerLabourMarketIntelligenceRouteImport } from './routes/employer.labour-market-intelligence'
-import { Route as EmployerInterviewsRouteImport } from './routes/employer.interviews'
-import { Route as EmployerInterviewTemplatesRouteImport } from './routes/employer.interview-templates'
 import { Route as EmployerDashboardRouteImport } from './routes/employer.dashboard'
 import { Route as CaseworkerCandidateIdRouteImport } from './routes/caseworker.$candidateId'
 import { Route as ApplicationApplicationIdRouteImport } from './routes/application.$applicationId'
@@ -70,21 +63,14 @@ import { Route as AdminConfigurationRouteImport } from './routes/admin.configura
 import { Route as AdminCandidatesRouteImport } from './routes/admin.candidates'
 import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
 import { Route as AdminAiRulesRouteImport } from './routes/admin.ai-rules'
-import { Route as InterviewSessionIdSummaryRouteImport } from './routes/interview.$sessionId.summary'
-import { Route as InterviewSessionIdRoomRouteImport } from './routes/interview.$sessionId.room'
-import { Route as EmployerInterviewsCreateRouteImport } from './routes/employer.interviews.create'
-import { Route as EmployerInterviewTemplatesCreateRouteImport } from './routes/employer.interview-templates.create'
-import { Route as EmployerInterviewTemplatesTemplateIdRouteImport } from './routes/employer.interview-templates.$templateId'
 import { Route as EmployerCandidateCandidateIdRouteImport } from './routes/employer.candidate.$candidateId'
 import { Route as AdminCandidatesCandidateIdRouteImport } from './routes/admin.candidates.$candidateId'
 import { Route as EmployerVacancyJobIdOptimizeRouteImport } from './routes/employer.vacancy.$jobId.optimize'
 import { Route as EmployerVacanciesJobIdOccupationRouteImport } from './routes/employer.vacancies.$jobId.occupation'
 import { Route as EmployerVacanciesJobIdIntelligenceRouteImport } from './routes/employer.vacancies.$jobId.intelligence'
 import { Route as EmployerVacanciesJobIdCandidatesRouteImport } from './routes/employer.vacancies.$jobId.candidates'
-import { Route as EmployerInterviewsSessionIdReportRouteImport } from './routes/employer.interviews.$sessionId.report'
 import { Route as EmployerVacanciesJobIdCandidatesCompareRouteImport } from './routes/employer.vacancies.$jobId.candidates.compare'
 import { Route as EmployerVacanciesJobIdCandidatesCandidateIdRouteImport } from './routes/employer.vacancies.$jobId.candidates.$candidateId'
-import { Route as EmployerInterviewTemplatesTemplateIdReportInvitationIdRouteImport } from './routes/employer.interview-templates.$templateId.report.$invitationId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -141,11 +127,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LinkedinReviewRoute = LinkedinReviewRouteImport.update({
-  id: '/linkedin-review',
-  path: '/linkedin-review',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LabourInsightsRoute = LabourInsightsRouteImport.update({
   id: '/labour-insights',
   path: '/labour-insights',
@@ -154,11 +135,6 @@ const LabourInsightsRoute = LabourInsightsRouteImport.update({
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InterviewPreparationRoute = InterviewPreparationRouteImport.update({
-  id: '/interview-preparation',
-  path: '/interview-preparation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -246,25 +222,10 @@ const PocAiMatchingRoute = PocAiMatchingRouteImport.update({
   path: '/poc/ai-matching',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LinkedinReviewResultsRoute = LinkedinReviewResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
-  getParentRoute: () => LinkedinReviewRoute,
-} as any)
 const JobsJobIdRoute = JobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
   getParentRoute: () => JobsRoute,
-} as any)
-const InterviewSetupRoute = InterviewSetupRouteImport.update({
-  id: '/interview/setup',
-  path: '/interview/setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InterviewSessionIdRoute = InterviewSessionIdRouteImport.update({
-  id: '/interview/$sessionId',
-  path: '/interview/$sessionId',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const EmployerVacancyBuilderRoute = EmployerVacancyBuilderRouteImport.update({
   id: '/employer/vacancy-builder',
@@ -296,17 +257,6 @@ const EmployerLabourMarketIntelligenceRoute =
   EmployerLabourMarketIntelligenceRouteImport.update({
     id: '/employer/labour-market-intelligence',
     path: '/employer/labour-market-intelligence',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const EmployerInterviewsRoute = EmployerInterviewsRouteImport.update({
-  id: '/employer/interviews',
-  path: '/employer/interviews',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EmployerInterviewTemplatesRoute =
-  EmployerInterviewTemplatesRouteImport.update({
-    id: '/employer/interview-templates',
-    path: '/employer/interview-templates',
     getParentRoute: () => rootRouteImport,
   } as any)
 const EmployerDashboardRoute = EmployerDashboardRouteImport.update({
@@ -395,35 +345,6 @@ const AdminAiRulesRoute = AdminAiRulesRouteImport.update({
   path: '/ai-rules',
   getParentRoute: () => AdminRoute,
 } as any)
-const InterviewSessionIdSummaryRoute =
-  InterviewSessionIdSummaryRouteImport.update({
-    id: '/summary',
-    path: '/summary',
-    getParentRoute: () => InterviewSessionIdRoute,
-  } as any)
-const InterviewSessionIdRoomRoute = InterviewSessionIdRoomRouteImport.update({
-  id: '/room',
-  path: '/room',
-  getParentRoute: () => InterviewSessionIdRoute,
-} as any)
-const EmployerInterviewsCreateRoute =
-  EmployerInterviewsCreateRouteImport.update({
-    id: '/create',
-    path: '/create',
-    getParentRoute: () => EmployerInterviewsRoute,
-  } as any)
-const EmployerInterviewTemplatesCreateRoute =
-  EmployerInterviewTemplatesCreateRouteImport.update({
-    id: '/create',
-    path: '/create',
-    getParentRoute: () => EmployerInterviewTemplatesRoute,
-  } as any)
-const EmployerInterviewTemplatesTemplateIdRoute =
-  EmployerInterviewTemplatesTemplateIdRouteImport.update({
-    id: '/$templateId',
-    path: '/$templateId',
-    getParentRoute: () => EmployerInterviewTemplatesRoute,
-  } as any)
 const EmployerCandidateCandidateIdRoute =
   EmployerCandidateCandidateIdRouteImport.update({
     id: '/employer/candidate/$candidateId',
@@ -460,12 +381,6 @@ const EmployerVacanciesJobIdCandidatesRoute =
     path: '/employer/vacancies/$jobId/candidates',
     getParentRoute: () => rootRouteImport,
   } as any)
-const EmployerInterviewsSessionIdReportRoute =
-  EmployerInterviewsSessionIdReportRouteImport.update({
-    id: '/$sessionId/report',
-    path: '/$sessionId/report',
-    getParentRoute: () => EmployerInterviewsRoute,
-  } as any)
 const EmployerVacanciesJobIdCandidatesCompareRoute =
   EmployerVacanciesJobIdCandidatesCompareRouteImport.update({
     id: '/compare',
@@ -477,12 +392,6 @@ const EmployerVacanciesJobIdCandidatesCandidateIdRoute =
     id: '/$candidateId',
     path: '/$candidateId',
     getParentRoute: () => EmployerVacanciesJobIdCandidatesRoute,
-  } as any)
-const EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute =
-  EmployerInterviewTemplatesTemplateIdReportInvitationIdRouteImport.update({
-    id: '/report/$invitationId',
-    path: '/report/$invitationId',
-    getParentRoute: () => EmployerInterviewTemplatesTemplateIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -497,10 +406,8 @@ export interface FileRoutesByFullPath {
   '/demo': typeof DemoRoute
   '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
-  '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
   '/labour-insights': typeof LabourInsightsRoute
-  '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
@@ -529,18 +436,13 @@ export interface FileRoutesByFullPath {
   '/application/$applicationId': typeof ApplicationApplicationIdRoute
   '/caseworker/$candidateId': typeof CaseworkerCandidateIdRoute
   '/employer/dashboard': typeof EmployerDashboardRoute
-  '/employer/interview-templates': typeof EmployerInterviewTemplatesRouteWithChildren
-  '/employer/interviews': typeof EmployerInterviewsRouteWithChildren
   '/employer/labour-market-intelligence': typeof EmployerLabourMarketIntelligenceRoute
   '/employer/login': typeof EmployerLoginRoute
   '/employer/occupation-intelligence': typeof EmployerOccupationIntelligenceRoute
   '/employer/signup': typeof EmployerSignupRoute
   '/employer/talent-discovery': typeof EmployerTalentDiscoveryRoute
   '/employer/vacancy-builder': typeof EmployerVacancyBuilderRoute
-  '/interview/$sessionId': typeof InterviewSessionIdRouteWithChildren
-  '/interview/setup': typeof InterviewSetupRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
-  '/linkedin-review/results': typeof LinkedinReviewResultsRoute
   '/poc/ai-matching': typeof PocAiMatchingRoute
   '/poc/dashboard': typeof PocDashboardRoute
   '/poc/employer-matching': typeof PocEmployerMatchingRoute
@@ -549,17 +451,10 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/candidates/$candidateId': typeof AdminCandidatesCandidateIdRoute
   '/employer/candidate/$candidateId': typeof EmployerCandidateCandidateIdRoute
-  '/employer/interview-templates/$templateId': typeof EmployerInterviewTemplatesTemplateIdRouteWithChildren
-  '/employer/interview-templates/create': typeof EmployerInterviewTemplatesCreateRoute
-  '/employer/interviews/create': typeof EmployerInterviewsCreateRoute
-  '/interview/$sessionId/room': typeof InterviewSessionIdRoomRoute
-  '/interview/$sessionId/summary': typeof InterviewSessionIdSummaryRoute
-  '/employer/interviews/$sessionId/report': typeof EmployerInterviewsSessionIdReportRoute
   '/employer/vacancies/$jobId/candidates': typeof EmployerVacanciesJobIdCandidatesRouteWithChildren
   '/employer/vacancies/$jobId/intelligence': typeof EmployerVacanciesJobIdIntelligenceRoute
   '/employer/vacancies/$jobId/occupation': typeof EmployerVacanciesJobIdOccupationRoute
   '/employer/vacancy/$jobId/optimize': typeof EmployerVacancyJobIdOptimizeRoute
-  '/employer/interview-templates/$templateId/report/$invitationId': typeof EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute
   '/employer/vacancies/$jobId/candidates/$candidateId': typeof EmployerVacanciesJobIdCandidatesCandidateIdRoute
   '/employer/vacancies/$jobId/candidates/compare': typeof EmployerVacanciesJobIdCandidatesCompareRoute
 }
@@ -574,10 +469,8 @@ export interface FileRoutesByTo {
   '/demo': typeof DemoRoute
   '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
-  '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
   '/labour-insights': typeof LabourInsightsRoute
-  '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
@@ -606,18 +499,13 @@ export interface FileRoutesByTo {
   '/application/$applicationId': typeof ApplicationApplicationIdRoute
   '/caseworker/$candidateId': typeof CaseworkerCandidateIdRoute
   '/employer/dashboard': typeof EmployerDashboardRoute
-  '/employer/interview-templates': typeof EmployerInterviewTemplatesRouteWithChildren
-  '/employer/interviews': typeof EmployerInterviewsRouteWithChildren
   '/employer/labour-market-intelligence': typeof EmployerLabourMarketIntelligenceRoute
   '/employer/login': typeof EmployerLoginRoute
   '/employer/occupation-intelligence': typeof EmployerOccupationIntelligenceRoute
   '/employer/signup': typeof EmployerSignupRoute
   '/employer/talent-discovery': typeof EmployerTalentDiscoveryRoute
   '/employer/vacancy-builder': typeof EmployerVacancyBuilderRoute
-  '/interview/$sessionId': typeof InterviewSessionIdRouteWithChildren
-  '/interview/setup': typeof InterviewSetupRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
-  '/linkedin-review/results': typeof LinkedinReviewResultsRoute
   '/poc/ai-matching': typeof PocAiMatchingRoute
   '/poc/dashboard': typeof PocDashboardRoute
   '/poc/employer-matching': typeof PocEmployerMatchingRoute
@@ -626,17 +514,10 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/candidates/$candidateId': typeof AdminCandidatesCandidateIdRoute
   '/employer/candidate/$candidateId': typeof EmployerCandidateCandidateIdRoute
-  '/employer/interview-templates/$templateId': typeof EmployerInterviewTemplatesTemplateIdRouteWithChildren
-  '/employer/interview-templates/create': typeof EmployerInterviewTemplatesCreateRoute
-  '/employer/interviews/create': typeof EmployerInterviewsCreateRoute
-  '/interview/$sessionId/room': typeof InterviewSessionIdRoomRoute
-  '/interview/$sessionId/summary': typeof InterviewSessionIdSummaryRoute
-  '/employer/interviews/$sessionId/report': typeof EmployerInterviewsSessionIdReportRoute
   '/employer/vacancies/$jobId/candidates': typeof EmployerVacanciesJobIdCandidatesRouteWithChildren
   '/employer/vacancies/$jobId/intelligence': typeof EmployerVacanciesJobIdIntelligenceRoute
   '/employer/vacancies/$jobId/occupation': typeof EmployerVacanciesJobIdOccupationRoute
   '/employer/vacancy/$jobId/optimize': typeof EmployerVacancyJobIdOptimizeRoute
-  '/employer/interview-templates/$templateId/report/$invitationId': typeof EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute
   '/employer/vacancies/$jobId/candidates/$candidateId': typeof EmployerVacanciesJobIdCandidatesCandidateIdRoute
   '/employer/vacancies/$jobId/candidates/compare': typeof EmployerVacanciesJobIdCandidatesCompareRoute
 }
@@ -653,10 +534,8 @@ export interface FileRoutesById {
   '/demo': typeof DemoRoute
   '/document-intelligence': typeof DocumentIntelligenceRoute
   '/events': typeof EventsRoute
-  '/interview-preparation': typeof InterviewPreparationRoute
   '/jobs': typeof JobsRouteWithChildren
   '/labour-insights': typeof LabourInsightsRoute
-  '/linkedin-review': typeof LinkedinReviewRouteWithChildren
   '/login': typeof LoginRoute
   '/my-cv': typeof MyCvRoute
   '/privacy': typeof PrivacyRoute
@@ -685,18 +564,13 @@ export interface FileRoutesById {
   '/application/$applicationId': typeof ApplicationApplicationIdRoute
   '/caseworker/$candidateId': typeof CaseworkerCandidateIdRoute
   '/employer/dashboard': typeof EmployerDashboardRoute
-  '/employer/interview-templates': typeof EmployerInterviewTemplatesRouteWithChildren
-  '/employer/interviews': typeof EmployerInterviewsRouteWithChildren
   '/employer/labour-market-intelligence': typeof EmployerLabourMarketIntelligenceRoute
   '/employer/login': typeof EmployerLoginRoute
   '/employer/occupation-intelligence': typeof EmployerOccupationIntelligenceRoute
   '/employer/signup': typeof EmployerSignupRoute
   '/employer/talent-discovery': typeof EmployerTalentDiscoveryRoute
   '/employer/vacancy-builder': typeof EmployerVacancyBuilderRoute
-  '/interview/$sessionId': typeof InterviewSessionIdRouteWithChildren
-  '/interview/setup': typeof InterviewSetupRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
-  '/linkedin-review/results': typeof LinkedinReviewResultsRoute
   '/poc/ai-matching': typeof PocAiMatchingRoute
   '/poc/dashboard': typeof PocDashboardRoute
   '/poc/employer-matching': typeof PocEmployerMatchingRoute
@@ -705,17 +579,10 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/candidates/$candidateId': typeof AdminCandidatesCandidateIdRoute
   '/employer/candidate/$candidateId': typeof EmployerCandidateCandidateIdRoute
-  '/employer/interview-templates/$templateId': typeof EmployerInterviewTemplatesTemplateIdRouteWithChildren
-  '/employer/interview-templates/create': typeof EmployerInterviewTemplatesCreateRoute
-  '/employer/interviews/create': typeof EmployerInterviewsCreateRoute
-  '/interview/$sessionId/room': typeof InterviewSessionIdRoomRoute
-  '/interview/$sessionId/summary': typeof InterviewSessionIdSummaryRoute
-  '/employer/interviews/$sessionId/report': typeof EmployerInterviewsSessionIdReportRoute
   '/employer/vacancies/$jobId/candidates': typeof EmployerVacanciesJobIdCandidatesRouteWithChildren
   '/employer/vacancies/$jobId/intelligence': typeof EmployerVacanciesJobIdIntelligenceRoute
   '/employer/vacancies/$jobId/occupation': typeof EmployerVacanciesJobIdOccupationRoute
   '/employer/vacancy/$jobId/optimize': typeof EmployerVacancyJobIdOptimizeRoute
-  '/employer/interview-templates/$templateId/report/$invitationId': typeof EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute
   '/employer/vacancies/$jobId/candidates/$candidateId': typeof EmployerVacanciesJobIdCandidatesCandidateIdRoute
   '/employer/vacancies/$jobId/candidates/compare': typeof EmployerVacanciesJobIdCandidatesCompareRoute
 }
@@ -733,10 +600,8 @@ export interface FileRouteTypes {
     | '/demo'
     | '/document-intelligence'
     | '/events'
-    | '/interview-preparation'
     | '/jobs'
     | '/labour-insights'
-    | '/linkedin-review'
     | '/login'
     | '/my-cv'
     | '/privacy'
@@ -765,18 +630,13 @@ export interface FileRouteTypes {
     | '/application/$applicationId'
     | '/caseworker/$candidateId'
     | '/employer/dashboard'
-    | '/employer/interview-templates'
-    | '/employer/interviews'
     | '/employer/labour-market-intelligence'
     | '/employer/login'
     | '/employer/occupation-intelligence'
     | '/employer/signup'
     | '/employer/talent-discovery'
     | '/employer/vacancy-builder'
-    | '/interview/$sessionId'
-    | '/interview/setup'
     | '/jobs/$jobId'
-    | '/linkedin-review/results'
     | '/poc/ai-matching'
     | '/poc/dashboard'
     | '/poc/employer-matching'
@@ -785,17 +645,10 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/candidates/$candidateId'
     | '/employer/candidate/$candidateId'
-    | '/employer/interview-templates/$templateId'
-    | '/employer/interview-templates/create'
-    | '/employer/interviews/create'
-    | '/interview/$sessionId/room'
-    | '/interview/$sessionId/summary'
-    | '/employer/interviews/$sessionId/report'
     | '/employer/vacancies/$jobId/candidates'
     | '/employer/vacancies/$jobId/intelligence'
     | '/employer/vacancies/$jobId/occupation'
     | '/employer/vacancy/$jobId/optimize'
-    | '/employer/interview-templates/$templateId/report/$invitationId'
     | '/employer/vacancies/$jobId/candidates/$candidateId'
     | '/employer/vacancies/$jobId/candidates/compare'
   fileRoutesByTo: FileRoutesByTo
@@ -810,10 +663,8 @@ export interface FileRouteTypes {
     | '/demo'
     | '/document-intelligence'
     | '/events'
-    | '/interview-preparation'
     | '/jobs'
     | '/labour-insights'
-    | '/linkedin-review'
     | '/login'
     | '/my-cv'
     | '/privacy'
@@ -842,18 +693,13 @@ export interface FileRouteTypes {
     | '/application/$applicationId'
     | '/caseworker/$candidateId'
     | '/employer/dashboard'
-    | '/employer/interview-templates'
-    | '/employer/interviews'
     | '/employer/labour-market-intelligence'
     | '/employer/login'
     | '/employer/occupation-intelligence'
     | '/employer/signup'
     | '/employer/talent-discovery'
     | '/employer/vacancy-builder'
-    | '/interview/$sessionId'
-    | '/interview/setup'
     | '/jobs/$jobId'
-    | '/linkedin-review/results'
     | '/poc/ai-matching'
     | '/poc/dashboard'
     | '/poc/employer-matching'
@@ -862,17 +708,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/candidates/$candidateId'
     | '/employer/candidate/$candidateId'
-    | '/employer/interview-templates/$templateId'
-    | '/employer/interview-templates/create'
-    | '/employer/interviews/create'
-    | '/interview/$sessionId/room'
-    | '/interview/$sessionId/summary'
-    | '/employer/interviews/$sessionId/report'
     | '/employer/vacancies/$jobId/candidates'
     | '/employer/vacancies/$jobId/intelligence'
     | '/employer/vacancies/$jobId/occupation'
     | '/employer/vacancy/$jobId/optimize'
-    | '/employer/interview-templates/$templateId/report/$invitationId'
     | '/employer/vacancies/$jobId/candidates/$candidateId'
     | '/employer/vacancies/$jobId/candidates/compare'
   id:
@@ -888,10 +727,8 @@ export interface FileRouteTypes {
     | '/demo'
     | '/document-intelligence'
     | '/events'
-    | '/interview-preparation'
     | '/jobs'
     | '/labour-insights'
-    | '/linkedin-review'
     | '/login'
     | '/my-cv'
     | '/privacy'
@@ -920,18 +757,13 @@ export interface FileRouteTypes {
     | '/application/$applicationId'
     | '/caseworker/$candidateId'
     | '/employer/dashboard'
-    | '/employer/interview-templates'
-    | '/employer/interviews'
     | '/employer/labour-market-intelligence'
     | '/employer/login'
     | '/employer/occupation-intelligence'
     | '/employer/signup'
     | '/employer/talent-discovery'
     | '/employer/vacancy-builder'
-    | '/interview/$sessionId'
-    | '/interview/setup'
     | '/jobs/$jobId'
-    | '/linkedin-review/results'
     | '/poc/ai-matching'
     | '/poc/dashboard'
     | '/poc/employer-matching'
@@ -940,17 +772,10 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/candidates/$candidateId'
     | '/employer/candidate/$candidateId'
-    | '/employer/interview-templates/$templateId'
-    | '/employer/interview-templates/create'
-    | '/employer/interviews/create'
-    | '/interview/$sessionId/room'
-    | '/interview/$sessionId/summary'
-    | '/employer/interviews/$sessionId/report'
     | '/employer/vacancies/$jobId/candidates'
     | '/employer/vacancies/$jobId/intelligence'
     | '/employer/vacancies/$jobId/occupation'
     | '/employer/vacancy/$jobId/optimize'
-    | '/employer/interview-templates/$templateId/report/$invitationId'
     | '/employer/vacancies/$jobId/candidates/$candidateId'
     | '/employer/vacancies/$jobId/candidates/compare'
   fileRoutesById: FileRoutesById
@@ -967,10 +792,8 @@ export interface RootRouteChildren {
   DemoRoute: typeof DemoRoute
   DocumentIntelligenceRoute: typeof DocumentIntelligenceRoute
   EventsRoute: typeof EventsRoute
-  InterviewPreparationRoute: typeof InterviewPreparationRoute
   JobsRoute: typeof JobsRouteWithChildren
   LabourInsightsRoute: typeof LabourInsightsRoute
-  LinkedinReviewRoute: typeof LinkedinReviewRouteWithChildren
   LoginRoute: typeof LoginRoute
   MyCvRoute: typeof MyCvRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -987,16 +810,12 @@ export interface RootRouteChildren {
   ApiResumeBuilderRoute: typeof ApiResumeBuilderRoute
   ApplicationApplicationIdRoute: typeof ApplicationApplicationIdRoute
   EmployerDashboardRoute: typeof EmployerDashboardRoute
-  EmployerInterviewTemplatesRoute: typeof EmployerInterviewTemplatesRouteWithChildren
-  EmployerInterviewsRoute: typeof EmployerInterviewsRouteWithChildren
   EmployerLabourMarketIntelligenceRoute: typeof EmployerLabourMarketIntelligenceRoute
   EmployerLoginRoute: typeof EmployerLoginRoute
   EmployerOccupationIntelligenceRoute: typeof EmployerOccupationIntelligenceRoute
   EmployerSignupRoute: typeof EmployerSignupRoute
   EmployerTalentDiscoveryRoute: typeof EmployerTalentDiscoveryRoute
   EmployerVacancyBuilderRoute: typeof EmployerVacancyBuilderRoute
-  InterviewSessionIdRoute: typeof InterviewSessionIdRouteWithChildren
-  InterviewSetupRoute: typeof InterviewSetupRoute
   PocAiMatchingRoute: typeof PocAiMatchingRoute
   PocDashboardRoute: typeof PocDashboardRoute
   PocEmployerMatchingRoute: typeof PocEmployerMatchingRoute
@@ -1088,13 +907,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/linkedin-review': {
-      id: '/linkedin-review'
-      path: '/linkedin-review'
-      fullPath: '/linkedin-review'
-      preLoaderRoute: typeof LinkedinReviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/labour-insights': {
       id: '/labour-insights'
       path: '/labour-insights'
@@ -1107,13 +919,6 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/interview-preparation': {
-      id: '/interview-preparation'
-      path: '/interview-preparation'
-      fullPath: '/interview-preparation'
-      preLoaderRoute: typeof InterviewPreparationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -1235,33 +1040,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PocAiMatchingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/linkedin-review/results': {
-      id: '/linkedin-review/results'
-      path: '/results'
-      fullPath: '/linkedin-review/results'
-      preLoaderRoute: typeof LinkedinReviewResultsRouteImport
-      parentRoute: typeof LinkedinReviewRoute
-    }
     '/jobs/$jobId': {
       id: '/jobs/$jobId'
       path: '/$jobId'
       fullPath: '/jobs/$jobId'
       preLoaderRoute: typeof JobsJobIdRouteImport
       parentRoute: typeof JobsRoute
-    }
-    '/interview/setup': {
-      id: '/interview/setup'
-      path: '/interview/setup'
-      fullPath: '/interview/setup'
-      preLoaderRoute: typeof InterviewSetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/interview/$sessionId': {
-      id: '/interview/$sessionId'
-      path: '/interview/$sessionId'
-      fullPath: '/interview/$sessionId'
-      preLoaderRoute: typeof InterviewSessionIdRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/employer/vacancy-builder': {
       id: '/employer/vacancy-builder'
@@ -1303,20 +1087,6 @@ declare module '@tanstack/react-router' {
       path: '/employer/labour-market-intelligence'
       fullPath: '/employer/labour-market-intelligence'
       preLoaderRoute: typeof EmployerLabourMarketIntelligenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/employer/interviews': {
-      id: '/employer/interviews'
-      path: '/employer/interviews'
-      fullPath: '/employer/interviews'
-      preLoaderRoute: typeof EmployerInterviewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/employer/interview-templates': {
-      id: '/employer/interview-templates'
-      path: '/employer/interview-templates'
-      fullPath: '/employer/interview-templates'
-      preLoaderRoute: typeof EmployerInterviewTemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/employer/dashboard': {
@@ -1438,41 +1208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiRulesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/interview/$sessionId/summary': {
-      id: '/interview/$sessionId/summary'
-      path: '/summary'
-      fullPath: '/interview/$sessionId/summary'
-      preLoaderRoute: typeof InterviewSessionIdSummaryRouteImport
-      parentRoute: typeof InterviewSessionIdRoute
-    }
-    '/interview/$sessionId/room': {
-      id: '/interview/$sessionId/room'
-      path: '/room'
-      fullPath: '/interview/$sessionId/room'
-      preLoaderRoute: typeof InterviewSessionIdRoomRouteImport
-      parentRoute: typeof InterviewSessionIdRoute
-    }
-    '/employer/interviews/create': {
-      id: '/employer/interviews/create'
-      path: '/create'
-      fullPath: '/employer/interviews/create'
-      preLoaderRoute: typeof EmployerInterviewsCreateRouteImport
-      parentRoute: typeof EmployerInterviewsRoute
-    }
-    '/employer/interview-templates/create': {
-      id: '/employer/interview-templates/create'
-      path: '/create'
-      fullPath: '/employer/interview-templates/create'
-      preLoaderRoute: typeof EmployerInterviewTemplatesCreateRouteImport
-      parentRoute: typeof EmployerInterviewTemplatesRoute
-    }
-    '/employer/interview-templates/$templateId': {
-      id: '/employer/interview-templates/$templateId'
-      path: '/$templateId'
-      fullPath: '/employer/interview-templates/$templateId'
-      preLoaderRoute: typeof EmployerInterviewTemplatesTemplateIdRouteImport
-      parentRoute: typeof EmployerInterviewTemplatesRoute
-    }
     '/employer/candidate/$candidateId': {
       id: '/employer/candidate/$candidateId'
       path: '/employer/candidate/$candidateId'
@@ -1515,13 +1250,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployerVacanciesJobIdCandidatesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/employer/interviews/$sessionId/report': {
-      id: '/employer/interviews/$sessionId/report'
-      path: '/$sessionId/report'
-      fullPath: '/employer/interviews/$sessionId/report'
-      preLoaderRoute: typeof EmployerInterviewsSessionIdReportRouteImport
-      parentRoute: typeof EmployerInterviewsRoute
-    }
     '/employer/vacancies/$jobId/candidates/compare': {
       id: '/employer/vacancies/$jobId/candidates/compare'
       path: '/compare'
@@ -1535,13 +1263,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/employer/vacancies/$jobId/candidates/$candidateId'
       preLoaderRoute: typeof EmployerVacanciesJobIdCandidatesCandidateIdRouteImport
       parentRoute: typeof EmployerVacanciesJobIdCandidatesRoute
-    }
-    '/employer/interview-templates/$templateId/report/$invitationId': {
-      id: '/employer/interview-templates/$templateId/report/$invitationId'
-      path: '/report/$invitationId'
-      fullPath: '/employer/interview-templates/$templateId/report/$invitationId'
-      preLoaderRoute: typeof EmployerInterviewTemplatesTemplateIdReportInvitationIdRouteImport
-      parentRoute: typeof EmployerInterviewTemplatesTemplateIdRoute
     }
   }
 }
@@ -1612,78 +1333,6 @@ const JobsRouteChildren: JobsRouteChildren = {
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
-interface LinkedinReviewRouteChildren {
-  LinkedinReviewResultsRoute: typeof LinkedinReviewResultsRoute
-}
-
-const LinkedinReviewRouteChildren: LinkedinReviewRouteChildren = {
-  LinkedinReviewResultsRoute: LinkedinReviewResultsRoute,
-}
-
-const LinkedinReviewRouteWithChildren = LinkedinReviewRoute._addFileChildren(
-  LinkedinReviewRouteChildren,
-)
-
-interface EmployerInterviewTemplatesTemplateIdRouteChildren {
-  EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute: typeof EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute
-}
-
-const EmployerInterviewTemplatesTemplateIdRouteChildren: EmployerInterviewTemplatesTemplateIdRouteChildren =
-  {
-    EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute:
-      EmployerInterviewTemplatesTemplateIdReportInvitationIdRoute,
-  }
-
-const EmployerInterviewTemplatesTemplateIdRouteWithChildren =
-  EmployerInterviewTemplatesTemplateIdRoute._addFileChildren(
-    EmployerInterviewTemplatesTemplateIdRouteChildren,
-  )
-
-interface EmployerInterviewTemplatesRouteChildren {
-  EmployerInterviewTemplatesTemplateIdRoute: typeof EmployerInterviewTemplatesTemplateIdRouteWithChildren
-  EmployerInterviewTemplatesCreateRoute: typeof EmployerInterviewTemplatesCreateRoute
-}
-
-const EmployerInterviewTemplatesRouteChildren: EmployerInterviewTemplatesRouteChildren =
-  {
-    EmployerInterviewTemplatesTemplateIdRoute:
-      EmployerInterviewTemplatesTemplateIdRouteWithChildren,
-    EmployerInterviewTemplatesCreateRoute:
-      EmployerInterviewTemplatesCreateRoute,
-  }
-
-const EmployerInterviewTemplatesRouteWithChildren =
-  EmployerInterviewTemplatesRoute._addFileChildren(
-    EmployerInterviewTemplatesRouteChildren,
-  )
-
-interface EmployerInterviewsRouteChildren {
-  EmployerInterviewsCreateRoute: typeof EmployerInterviewsCreateRoute
-  EmployerInterviewsSessionIdReportRoute: typeof EmployerInterviewsSessionIdReportRoute
-}
-
-const EmployerInterviewsRouteChildren: EmployerInterviewsRouteChildren = {
-  EmployerInterviewsCreateRoute: EmployerInterviewsCreateRoute,
-  EmployerInterviewsSessionIdReportRoute:
-    EmployerInterviewsSessionIdReportRoute,
-}
-
-const EmployerInterviewsRouteWithChildren =
-  EmployerInterviewsRoute._addFileChildren(EmployerInterviewsRouteChildren)
-
-interface InterviewSessionIdRouteChildren {
-  InterviewSessionIdRoomRoute: typeof InterviewSessionIdRoomRoute
-  InterviewSessionIdSummaryRoute: typeof InterviewSessionIdSummaryRoute
-}
-
-const InterviewSessionIdRouteChildren: InterviewSessionIdRouteChildren = {
-  InterviewSessionIdRoomRoute: InterviewSessionIdRoomRoute,
-  InterviewSessionIdSummaryRoute: InterviewSessionIdSummaryRoute,
-}
-
-const InterviewSessionIdRouteWithChildren =
-  InterviewSessionIdRoute._addFileChildren(InterviewSessionIdRouteChildren)
-
 interface EmployerVacanciesJobIdCandidatesRouteChildren {
   EmployerVacanciesJobIdCandidatesCandidateIdRoute: typeof EmployerVacanciesJobIdCandidatesCandidateIdRoute
   EmployerVacanciesJobIdCandidatesCompareRoute: typeof EmployerVacanciesJobIdCandidatesCompareRoute
@@ -1714,10 +1363,8 @@ const rootRouteChildren: RootRouteChildren = {
   DemoRoute: DemoRoute,
   DocumentIntelligenceRoute: DocumentIntelligenceRoute,
   EventsRoute: EventsRoute,
-  InterviewPreparationRoute: InterviewPreparationRoute,
   JobsRoute: JobsRouteWithChildren,
   LabourInsightsRoute: LabourInsightsRoute,
-  LinkedinReviewRoute: LinkedinReviewRouteWithChildren,
   LoginRoute: LoginRoute,
   MyCvRoute: MyCvRoute,
   PrivacyRoute: PrivacyRoute,
@@ -1734,16 +1381,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiResumeBuilderRoute: ApiResumeBuilderRoute,
   ApplicationApplicationIdRoute: ApplicationApplicationIdRoute,
   EmployerDashboardRoute: EmployerDashboardRoute,
-  EmployerInterviewTemplatesRoute: EmployerInterviewTemplatesRouteWithChildren,
-  EmployerInterviewsRoute: EmployerInterviewsRouteWithChildren,
   EmployerLabourMarketIntelligenceRoute: EmployerLabourMarketIntelligenceRoute,
   EmployerLoginRoute: EmployerLoginRoute,
   EmployerOccupationIntelligenceRoute: EmployerOccupationIntelligenceRoute,
   EmployerSignupRoute: EmployerSignupRoute,
   EmployerTalentDiscoveryRoute: EmployerTalentDiscoveryRoute,
   EmployerVacancyBuilderRoute: EmployerVacancyBuilderRoute,
-  InterviewSessionIdRoute: InterviewSessionIdRouteWithChildren,
-  InterviewSetupRoute: InterviewSetupRoute,
   PocAiMatchingRoute: PocAiMatchingRoute,
   PocDashboardRoute: PocDashboardRoute,
   PocEmployerMatchingRoute: PocEmployerMatchingRoute,

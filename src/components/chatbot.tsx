@@ -10,7 +10,7 @@ export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hi! How can we help with your career journey today?" },
-    { role: "assistant", content: "You can ask about jobs, career advice, CV tips, or interview preparation." },
+    { role: "assistant", content: "You can ask about jobs, career advice, or CV tips." },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);

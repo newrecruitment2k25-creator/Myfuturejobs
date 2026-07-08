@@ -180,7 +180,7 @@ function LandingPage() {
             >
               <Building2 size={14} /> {t("landingRoleEmployer")}
             </Link>
-            <Link to="/login?tab=admin" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(242,159,4,0.08)", border:"1px solid rgba(242,159,4,0.15)", borderRadius:50, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"#C67A02", textDecoration:"none", transition:"all 0.15s" }}
+            <Link to={"/login?tab=admin" as any} style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(242,159,4,0.08)", border:"1px solid rgba(242,159,4,0.15)", borderRadius:50, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"#C67A02", textDecoration:"none", transition:"all 0.15s" }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(242,159,4,0.15)"; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(242,159,4,0.08)"; }}
             >

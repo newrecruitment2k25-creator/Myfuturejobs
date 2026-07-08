@@ -38,7 +38,7 @@ const EVENTS: CareerEvent[] = [
     date: "15 August 2026",
     time: "9:00 AM – 5:00 PM",
     location: "KLCC Convention Centre, Kuala Lumpur",
-    description: "Malaysia's largest annual career fair connecting thousands of jobseekers with top employers across all sectors. Over 200 companies, live interviews, and free CV consultations on-site.",
+    description: "Malaysia's largest annual career fair connecting thousands of jobseekers with top employers across all sectors. Over 200 companies, live screenings, and free CV consultations on-site.",
     tags: ["Career Fair", "Nationwide"],
     icon: Briefcase,
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80",

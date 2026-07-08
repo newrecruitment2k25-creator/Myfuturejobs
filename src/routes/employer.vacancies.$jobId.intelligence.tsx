@@ -129,11 +129,10 @@ function VacancyIntelligencePage() {
         </div>
 
         {/* Core stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <StatCard label="Total Applicants" value={intel.totalApplicants} />
           <StatCard label="Matched Candidates" value={intel.matchedCandidates} sub="≥ 42% match score" />
           <StatCard label="Average Match Score" value={`${intel.averageMatchScore}%`} />
-          <StatCard label="Interview Completion" value={`${intel.interviewCompletionRate}%`} />
         </div>
 
         {/* Candidate quality distribution */}

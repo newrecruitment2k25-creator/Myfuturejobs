@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { ChevronDown, FileText, Loader2, Video, Clock, CheckCircle2, Circle, Mail, Building2, CalendarClock, Briefcase, MapPin, Brain, Search, ArrowRight, Sparkles, History, BarChart2, Star, BookOpen, LinkedinIcon, TrendingUp, Zap, Bookmark, Award, Target, Rocket, Calendar, Activity, Gift, Medal, Flame, Trophy, Lightbulb, Users2, GraduationCap, PieChart, Play } from "lucide-react";
+import { ChevronDown, FileText, Loader2, CheckCircle2, Circle, Mail, Building2, CalendarClock, Briefcase, MapPin, Brain, Search, ArrowRight, Sparkles, History, BarChart2, Star, BookOpen, TrendingUp, Zap, Bookmark, Award, Target, Rocket, Calendar, Activity, Gift, Medal, Flame, Trophy, Lightbulb, Users2, GraduationCap, PieChart, Play } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useRoleGuard } from "@/lib/use-role-guard";
@@ -21,16 +21,6 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-type InterviewSessionRow = {
-  id: string;
-  created_at: string;
-  role_title: string;
-  interview_type: string;
-  status: string;
-  overall_score: number | null;
-  total_questions: number;
-};
-
 type ApplicationRow = {
   id: string;
   created_at: string;
@@ -41,29 +31,6 @@ type ApplicationRow = {
   company_name: string | null;
   location: string | null;
   status_history?: StatusHistoryEntry[];
-};
-
-type InvitationRow = {
-  id: string;
-  status: string;
-  deadline: string | null;
-  created_at: string;
-  overall_score: number | null;
-  template_id: string | null;
-  template: {
-    id: string;
-    title: string;
-    role_title: string;
-    company_name: string | null;
-    interview_type: string;
-  } | null;
-  practical: {
-    mode: "in_person" | "online";
-    location: string | null;
-    date: string;
-    time: string;
-    notes: string | null;
-  } | null;
 };
 
 type SavedJobRow = {
@@ -105,8 +72,6 @@ function DashboardPage() {
   const { user } = useAuth();
   const { checked, loading: roleLoading } = useRoleGuard("job_seeker");
   const [rows, setRows] = useState<AnalysisRow[] | null>(null);
-  const [interviews, setInterviews] = useState<InterviewSessionRow[] | null>(null);
-  const [invitations, setInvitations] = useState<InvitationRow[] | null>(null);
   const [applications, setApplications] = useState<ApplicationRow[] | null>(null);
   const [savedJobs, setSavedJobs] = useState<SavedJobRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -238,52 +203,6 @@ function DashboardPage() {
     })();
     (async () => {
       try {
-        const { data } = await supabase
-          .from("interview_sessions")
-          .select("id, created_at, role_title, interview_type, status, overall_score, total_questions")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(10);
-        setInterviews((data ?? []) as InterviewSessionRow[]);
-      } catch (e) { console.warn("Interviews load failed:", e); setInterviews([]); }
-    })();
-    (async () => {
-      try {
-        const { data: invRows } = await (supabase as any)
-          .from("interview_invitations")
-          .select("id, status, deadline, created_at, overall_score, template_id, ai_summary")
-          .eq("candidate_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(10);
-        if (!invRows || invRows.length === 0) { setInvitations([]); return; }
-        const aiRows = invRows.filter((r: any) => r.template_id);
-        const templateIds = [...new Set(aiRows.map((r: any) => r.template_id))];
-        const { data: templates } = templateIds.length > 0
-          ? await (supabase as any)
-              .from("interview_templates")
-              .select("id, title, role_title, company_name, interview_type")
-              .in("id", templateIds)
-          : { data: [] };
-        const tMap = new Map((templates ?? []).map((t: any) => [t.id, t]));
-        setInvitations(invRows.map((r: any) => {
-          const summary = r.ai_summary as Record<string, any> | null;
-          const isPractical = summary?.type === "practical";
-          return {
-            ...r,
-            template: r.template_id ? (tMap.get(r.template_id) ?? null) : null,
-            practical: isPractical ? {
-              mode: summary.mode ?? "in_person",
-              location: summary.location ?? null,
-              date: summary.date ?? r.deadline?.slice(0, 10) ?? "",
-              time: summary.time ?? r.deadline?.slice(11, 16) ?? "",
-              notes: summary.notes ?? null,
-            } : null,
-          };
-        }) as InvitationRow[]);
-      } catch (e) { console.warn("Invitations load failed:", e); setInvitations([]); }
-    })();
-    (async () => {
-      try {
         const { data: appRows } = await (supabase as any)
           .from("applications")
           .select("id, created_at, status, job_id, poc_vacancy_id, status_history")
@@ -371,17 +290,28 @@ function DashboardPage() {
   // ── Derived stats ────────────────────────────────────────────────────────────
   const totalApps = applications?.length ?? 0;
   const hiredOffered = applications?.filter(a => a.status === "hired" || a.status === "offered").length ?? 0;
-  const pendingInterviews = invitations?.filter(i => i.status === "pending" || i.status === "in_progress").length ?? 0;
   const totalAnalyses = rows?.length ?? 0;
 
   const STATUS_PILL: Record<string, { bg: string; color: string; label: string }> = {
     applied:     { bg: '#ede9fe', color: '#7c3aed', label: 'Applied' },
     shortlisted: { bg: '#dbeafe', color: '#1d4ed8', label: 'Shortlisted' },
-    interview:   { bg: '#e0f2fe', color: '#0369a1', label: 'Interview' },
+    interview:   { bg: '#e0f2fe', color: '#0369a1', label: 'Screening' },
     offered:     { bg: '#fef3c7', color: '#d97706', label: 'Offered' },
     hired:       { bg: '#dcfce7', color: '#15803d', label: 'Hired' },
     rejected:    { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' },
     kiv:         { bg: '#f3f4f6', color: '#6b7280', label: 'KIV' },
+  };
+
+  // Visual pipeline config for the redesigned My Applications section
+  const PIPELINE_STEPS: AppStatus[] = ['applied', 'shortlisted', 'interview', 'offered', 'hired'];
+  const STATUS_CONFIG: Record<string, { dot: string; badge: string; label: string }> = {
+    applied:     { dot: '#7c3aed', badge: 'bg-[#ede9fe] text-[#7c3aed] border-[#7c3aed]/20', label: 'Applied' },
+    shortlisted: { dot: '#1d4ed8', badge: 'bg-[#dbeafe] text-[#1d4ed8] border-[#1d4ed8]/20', label: 'Shortlisted' },
+    interview:   { dot: '#0369a1', badge: 'bg-[#e0f2fe] text-[#0369a1] border-[#0369a1]/20', label: 'Screening' },
+    offered:     { dot: '#d97706', badge: 'bg-[#fef3c7] text-[#d97706] border-[#d97706]/20', label: 'Offered' },
+    hired:       { dot: '#15803d', badge: 'bg-[#dcfce7] text-[#15803d] border-[#15803d]/20', label: 'Hired' },
+    rejected:    { dot: '#dc2626', badge: 'bg-[#fee2e2] text-[#dc2626] border-[#dc2626]/20', label: 'Rejected' },
+    kiv:         { dot: '#6b7280', badge: 'bg-[#f3f4f6] text-[#6b7280] border-[#6b7280]/20', label: 'KIV' },
   };
 
   const statusFunnelOrder = ['hired','offered','shortlisted','applied','kiv','rejected'] as const;
@@ -393,11 +323,10 @@ function DashboardPage() {
   const maxFunnelCount = Math.max(1, ...Object.values(statusCounts));
 
   const AI_TOOLS = [
-    { icon: FileText,     label: 'Check Resume Score',       desc: 'Score your CV',        href: '/analyze',                 bg: '#ede9fe', color: '#7c3aed' },
-    { icon: Brain,        label: 'Resume Builder',   desc: 'Build with AI',        href: '/resume-builder',          bg: '#fef3c7', color: '#d97706' },
-    { icon: Star,         label: 'Skills Passport',  desc: 'Track your skills',    href: '/skills-passport',         bg: '#dbeafe', color: '#1d4ed8' },
-    { icon: MapPin,       label: 'Career Pathway',   desc: 'Plan your career',     href: '/career-pathway',          bg: '#fce7f3', color: '#be185d' },
-    { icon: LinkedinIcon, label: 'LinkedIn Review',  desc: 'Optimise profile',     href: '/linkedin-review',         bg: '#e0f2fe', color: '#0369a1' },
+    { icon: FileText,     label: 'Check Resume Score', desc: 'Score your CV',        href: '/analyze',                 bg: '#ede9fe', color: '#7c3aed' },
+    { icon: Brain,        label: 'Resume Builder',     desc: 'Build with AI',        href: '/resume-builder',          bg: '#fef3c7', color: '#d97706' },
+    { icon: Star,         label: 'Skills Passport',    desc: 'Track your skills',    href: '/skills-passport',         bg: '#dbeafe', color: '#1d4ed8' },
+    { icon: MapPin,       label: 'Career Pathway',     desc: 'Plan your career',     href: '/career-pathway',          bg: '#fce7f3', color: '#be185d' },
   ];
 
   const greetHour = new Date().getHours();
@@ -577,7 +506,6 @@ function DashboardPage() {
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                   {[
                     { label: 'Applications', value: pocBehaviour.total_applications },
-                    { label: 'Interviews',   value: pocBehaviour.total_interviews },
                     { label: 'Offers',       value: pocBehaviour.total_offers },
                     { label: 'Sign-ins',     value: pocBehaviour.sign_in_count },
                   ].map(({ label, value }) => (
@@ -605,68 +533,116 @@ function DashboardPage() {
         {/* ── 3. Main 2-column grid ──────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 16, alignItems: 'start' }}>
 
-          {/* Left: Applications with Stepper */}
+          {/* Left: Applications visual pipeline */}
           <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(81,42,204,0.12)' }}>
-                  <Briefcase style={{ width: 16, height: 16, color: '#512ACC' }} />
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, rgba(243,108,33,0.15) 0%, rgba(81,42,204,0.1) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.2)' }}>
+                  <Activity style={{ width: 16, height: 16, color: '#f36c21' }} />
                 </div>
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>My Applications</span>
+                <div>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', display: 'block' }}>My Applications</span>
+                  <span style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 600 }}>{totalApps} active track{totalApps === 1 ? '' : 's'}</span>
+                </div>
               </div>
-              {applications && applications.length > 5 && (
+              {applications && applications.length > 4 && (
                 <button
                   onClick={() => setExpanded(expanded === '__all_apps__' ? null : '__all_apps__')}
                   style={{ fontSize: 12, fontWeight: 600, color: '#f36c21', background: 'rgba(243,108,33,0.08)', border: '1px solid rgba(243,108,33,0.15)', borderRadius: 8, cursor: 'pointer', padding: '5px 12px', transition: 'all 0.15s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(243,108,33,0.15)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(243,108,33,0.08)'; }}
                 >
-                  {expanded === '__all_apps__' ? 'Show less ↑' : `View all (${applications.length}) →`}
+                  {expanded === '__all_apps__' ? 'Collapse ↑' : `Expand (${applications.length}) →`}
                 </button>
               )}
             </div>
-            <div style={{ padding: '16px 22px' }}>
+            <div style={{ padding: '18px 22px' }}>
             {applications === null ? (
-              <div style={{ display:'flex', justifyContent:'center', padding:'24px 0' }}><Loader2 className="size-5 animate-spin" style={{ color: '#f36c21' }} /></div>
+              <div style={{ display:'flex', justifyContent:'center', padding:'28px 0' }}><Loader2 className="size-5 animate-spin" style={{ color: '#f36c21' }} /></div>
             ) : applications.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: 'var(--base)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', border: '1px solid var(--line)' }}>
-                  <Briefcase style={{ width: 26, height: 26, color: 'var(--line-strong)' }} />
+              <div style={{ textAlign: 'center', padding: '36px 0' }}>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(81,42,204,0.08) 0%, rgba(243,108,33,0.08) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '1px dashed var(--line)' }}>
+                  <Activity style={{ width: 28, height: 28, color: 'var(--line-strong)' }} />
                 </div>
-                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', margin: '0 0 4px' }}>No applications yet</p>
-                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 12px' }}>Start your job search today</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: '0 0 4px' }}>No applications tracking yet</p>
+                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 16px' }}>Apply to a job and watch your pipeline move forward</p>
                 <Link to="/jobs" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', borderRadius:10, padding:'8px 18px', textDecoration:'none', boxShadow:'0 2px 10px rgba(243,108,33,0.25)' }}>
                   <Search style={{ width: 12, height: 12 }} /> Browse Jobs
                 </Link>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {(expanded === '__all_apps__' ? applications : applications.slice(0, 5)).map((app) => {
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
+                {(expanded === '__all_apps__' ? applications : applications.slice(0, 4)).map((app, idx, arr) => {
+                  const statusCfg = STATUS_CONFIG[app.status as any] ?? STATUS_CONFIG.applied;
+                  const isTerminal = app.status === 'rejected' || app.status === 'kiv';
+                  const currentIdx = PIPELINE_STEPS.indexOf(app.status as any);
+                  const progressPct = isTerminal ? 0 : Math.max(8, ((currentIdx + 1) / PIPELINE_STEPS.length) * 100);
                   const initials = (app.company_name ?? 'J').slice(0, 2).toUpperCase();
                   const lastNote = app.status_history?.at(-1)?.notes;
+                  const isLast = idx === arr.length - 1;
                   return (
-                    <div key={app.id} style={{ borderRadius: 14, border: '1px solid var(--line)', padding: '14px 16px', background: 'var(--base)', transition: 'all 0.2s' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(81,42,204,0.04)'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
-                    >
-                      {/* Top row: avatar + title + date */}
-                      <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:10 }}>
-                        <div style={{ width:38, height:38, borderRadius:12, background:'linear-gradient(135deg, rgba(81,42,204,0.12) 0%, rgba(81,42,204,0.08) 100%)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:800, color:'#512ACC', border:'1px solid rgba(81,42,204,0.1)' }}>{initials}</div>
-                        <div style={{ minWidth:0, flex:1 }}>
-                          <div style={{ fontSize:13, fontWeight:700, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{app.job_title ?? 'Unknown Job'}</div>
-                          <div style={{ fontSize:11, color:'var(--muted)', marginTop: 2 }}>{app.company_name ?? ''}{app.location ? ` · ${app.location}` : ''}</div>
+                    <div key={app.id} style={{ display: 'flex', gap: 14, position: 'relative' }}>
+                      {/* Rail */}
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 36, flexShrink: 0 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '3px solid #fff', background: statusCfg.dot, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 4px 14px ${statusCfg.dot}50`, zIndex: 2 }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: '#fff' }}>{initials.slice(0, 1)}</span>
                         </div>
-                        <div style={{ display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
-                          <span style={{ fontSize:10, color:'var(--muted)', whiteSpace:'nowrap' }}>{formatDate(app.created_at)}</span>
-                          <Link to="/application/$applicationId" params={{ applicationId: app.id }} style={{ fontSize:11, fontWeight:700, color:'#f36c21', textDecoration:'none', padding: '3px 8px', borderRadius: 6, background: 'rgba(243,108,33,0.08)' }}>View</Link>
+                        {!isLast && (
+                          <div style={{ width: 2, flex: 1, background: 'repeating-linear-gradient(to bottom, var(--line) 0, var(--line) 6px, transparent 6px, transparent 12px)', marginTop: 8 }} />
+                        )}
+                      </div>
+                      {/* Card */}
+                      <div style={{ flex: 1, paddingBottom: isLast ? 0 : 18 }}>
+                        <div style={{ borderRadius: 16, border: '1px solid var(--line)', padding: '14px 16px', background: 'var(--base)', position: 'relative', overflow: 'hidden', transition: 'all 0.2s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${statusCfg.dot}55`; (e.currentTarget as HTMLElement).style.boxShadow = `0 6px 20px ${statusCfg.dot}12`; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
+                        >
+                          {/* Accent top border */}
+                          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: isTerminal ? 'var(--line)' : `linear-gradient(90deg, ${statusCfg.dot} 0%, ${statusCfg.dot}80 70%, transparent 100%)` }} />
+
+                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink)', marginBottom: 2 }}>{app.job_title ?? 'Unknown Job'}</div>
+                              <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 500 }}>{app.company_name ?? 'PERKESO Vacancy'}{app.location ? ` · ${app.location}` : ''}</div>
+                            </div>
+                            <span style={{ fontSize: 10, color: 'var(--muted)', whiteSpace: 'nowrap', fontWeight: 600 }}>{formatDate(app.created_at)}</span>
+                          </div>
+
+                          {/* Compact segmented pipeline */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 10 }}>
+                            {PIPELINE_STEPS.map((step, sIdx) => {
+                              const stepCfg = STATUS_CONFIG[step];
+                              const stepDone = !isTerminal && currentIdx >= sIdx;
+                              const stepCurrent = !isTerminal && currentIdx === sIdx;
+                              return (
+                                <div key={step} style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                                  <div style={{ height: 7, flex: 1, borderRadius: sIdx === 0 ? '99px 0 0 99px' : sIdx === PIPELINE_STEPS.length - 1 ? '0 99px 99px 0' : 0, background: stepDone ? stepCfg.dot : 'var(--line)', opacity: stepCurrent ? 1 : stepDone ? 0.75 : 0.35, transition: 'all 0.3s' }} />
+                                  {sIdx < PIPELINE_STEPS.length - 1 && <div style={{ width: 2, height: 7, background: '#fff' }} />}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                            <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold capitalize ${statusCfg.badge}`}>
+                              <span className={`size-1.5 rounded-full ${statusCfg.dot}`} />
+                              {statusCfg.label}
+                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              {!isTerminal && (
+                                <span style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 600 }}>{Math.round(progressPct)}% through pipeline</span>
+                              )}
+                              <Link to="/application/$applicationId" params={{ applicationId: app.id }} style={{ fontSize: 11, fontWeight: 700, color: '#f36c21', textDecoration: 'none', padding: '4px 10px', borderRadius: 8, background: 'rgba(243,108,33,0.08)' }}>View</Link>
+                            </div>
+                          </div>
+
+                          {lastNote && (
+                            <div style={{ marginTop: 10, fontSize: 10, color: 'var(--muted)', background: 'rgba(81,42,204,0.04)', borderRadius: 8, padding:'6px 10px', border:'1px solid rgba(81,42,204,0.06)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <Mail style={{ width: 12, height: 12, flexShrink: 0 }} /> {lastNote}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      {/* Status stepper */}
-                      <AppStatusStepper status={app.status as any} />
-                      {/* Status note */}
-                      {lastNote && (
-                        <div style={{ marginTop:8, fontSize:10, color:'var(--muted)', background:'rgba(81,42,204,0.05)', borderRadius:8, padding:'5px 10px', border:'1px solid rgba(81,42,204,0.06)' }}>{lastNote}</div>
-                      )}
                     </div>
                   );
                 })}
@@ -1171,7 +1147,7 @@ function DashboardPage() {
 const STATUS_COLORS: Record<string, string> = {
   Applied:     "#6366f1",
   Shortlisted: "#f59e0b",
-  Interview:   "#3b82f6",
+  Screening:   "#3b82f6",
   KIV:         "#8b5cf6",
   Offered:     "#10b981",
   Hired:       "#059669",
@@ -1186,13 +1162,16 @@ function ApplicationAnalyticsCard({ applications }: { applications: ApplicationR
     // Status counts
     const statusCounts: Record<string, number> = {};
     applications.forEach((a) => {
-      const s = a.status ?? "Applied";
+      const s = a.status ?? "applied";
       statusCounts[s] = (statusCounts[s] ?? 0) + 1;
     });
-    const chartData = Object.entries(statusCounts).map(([name, count]) => ({ name, count }));
+    const chartData = Object.entries(statusCounts).map(([name, count]) => ({
+      name: name === "interview" ? "Screening" : name.charAt(0).toUpperCase() + name.slice(1),
+      count,
+    }));
 
-    // Response rate: statuses beyond "Applied" = responded
-    const responded = applications.filter((a) => a.status && a.status !== "Applied").length;
+    // Response rate: statuses beyond "applied" = responded
+    const responded = applications.filter((a) => a.status && a.status !== "applied").length;
     const responseRate = Math.round((responded / applications.length) * 100);
 
     // Most applied industries (from job_title heuristics)

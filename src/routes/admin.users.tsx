@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { Users, ArrowLeft, Search, Shield, Loader2, RefreshCw } from "lucide-react";
+import { Users, Search, Shield, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import { useOpsGuard } from "@/lib/use-ops-guard";
 import { listProfiles, updateUserRole, type ProfileRow } from "@/lib/ops-api";
+import { AdminPageHeader, AdminSectionCard, AdminStatTile } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/users")({
   ssr: false,
@@ -50,7 +51,7 @@ function UserRow({ p, onRoleChange }: { p: ProfileRow; onRoleChange: (id: string
           {p.last_login && ` · Last login ${fmtDate(p.last_login)}`}
         </p>
         <p className="text-xs text-muted-foreground">
-          {p.analysis_count} analyses · {p.interview_count} interviews · {p.app_count} applications
+          {p.analysis_count} analyses · {p.interview_count} screenings · {p.app_count} applications
         </p>
       </div>
       <span className={`inline-flex shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${roleBadge(localRole)}`}>
@@ -130,73 +131,54 @@ function AdminUsersPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 space-y-6">
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
 
-        <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="size-4" /> Back to Admin Console
-        </Link>
-
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Admin · Users
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>User Administration</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Manage accounts, roles, and access. All changes are audit logged.</p>
-            </div>
-            <button onClick={fetchProfiles} disabled={loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </button>
-          </div>
-        </div>
+        <AdminPageHeader
+          badge="Admin · Users"
+          title="User Administration"
+          subtitle="Manage accounts, roles, and access. All changes are audit logged."
+          backTo="/admin"
+          backLabel="Back to Admin Console"
+          onRefresh={fetchProfiles}
+          refreshLoading={loading}
+        />
 
         <div className="grid grid-cols-3 gap-3">
           {[
-            { role: "admin", color: '#dc2626' },
-            { role: "employer", color: '#f36c21' },
-            { role: "job_seeker", color: '#512ACC' },
+            { role: "admin", color: "destructive" as const },
+            { role: "employer", color: "warning" as const },
+            { role: "job_seeker", color: "primary" as const },
           ].map(({ role, color }) => (
-            <div key={role} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(81,42,204,0.04)' }}>
-              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>
-                {loading ? "…" : profiles.filter(p => p.role === role).length}
-              </p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{role}</p>
-            </div>
+            <AdminStatTile
+              key={role}
+              label={role}
+              value={loading ? "…" : profiles.filter(p => p.role === role).length}
+              color={color}
+            />
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input className="pl-9 h-9 text-sm" placeholder="Search by email…" value={search} onChange={e => setSearch(e.target.value)} />
+        <AdminSectionCard icon={<Users className="size-5 text-primary" />} title={`Users (${filtered.length})`} subtitle="Filter and update roles">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input className="pl-9 h-9 text-sm" placeholder="Search by email…" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {["All", "admin", "employer", "job_seeker"].map(r => (
+                <button key={r} onClick={() => setRoleFilter(r)}
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                    roleFilter === r ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >{r}</button>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {["All", "admin", "employer", "job_seeker"].map(r => (
-              <button key={r} onClick={() => setRoleFilter(r)}
-                className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
-                  roleFilter === r ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >{r}</button>
-            ))}
-          </div>
-        </div>
 
-        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(81,42,204,0.04)', padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <Users style={{ width: 18, height: 18, color: '#512ACC' }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>Users ({filtered.length})</h2>
-          </div>
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>
           ) : filtered.length === 0 ? (
-            <div className="py-14 text-center">
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-10 text-center">
               <Users className="size-10 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">{profiles.length === 0 ? "No users in database." : "No users match filter."}</p>
             </div>
@@ -207,7 +189,7 @@ function AdminUsersPage() {
               ))}
             </div>
           )}
-        </div>
+        </AdminSectionCard>
 
       </main>
     </div>

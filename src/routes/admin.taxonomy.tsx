@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { Database, ArrowLeft, Plus, Search, RefreshCw, Loader2, Shield } from "lucide-react";
+import { Database, Plus, Search, Loader2, Shield } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useOpsGuard } from "@/lib/use-ops-guard";
 import { listTaxonomy, createTaxonomy, toggleTaxonomy, type TaxonomyRow } from "@/lib/ops-api";
+import { AdminPageHeader, AdminSectionCard, AdminStatTile } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/taxonomy")({
   ssr: false,
@@ -98,58 +99,36 @@ function AdminTaxonomyPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 space-y-6">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
 
-        <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="size-4" /> Back to Admin Console
-        </Link>
-
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Admin · Taxonomy
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Taxonomy Management</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>MASCO occupation codes, skills taxonomy. All changes are audit-logged.</p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button onClick={fetchData} disabled={loading}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-              >
-                <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-              </button>
-              <button onClick={() => setShowAdd(!showAdd)}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(243,108,33,0.2)' }}
-              >
-                <Plus className="size-4" /> Add Occupation
-              </button>
-            </div>
-          </div>
-        </div>
+        <AdminPageHeader
+          badge="Admin · Taxonomy"
+          title="Taxonomy Management"
+          subtitle="MASCO occupation codes, skills taxonomy. All changes are audit-logged."
+          backTo="/admin"
+          backLabel="Back to Admin Console"
+          onRefresh={fetchData}
+          refreshLoading={loading}
+        >
+          <Button onClick={() => setShowAdd(!showAdd)} className="gap-2 bg-gradient-to-r from-[#f36c21] to-[#ff8c42] text-white hover:opacity-90">
+            <Plus className="size-4" /> Add Occupation
+          </Button>
+        </AdminPageHeader>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total Occupations", value: entries.length, color: '#512ACC' },
-            { label: "Active", value: activeCount, color: '#15803d' },
-            { label: "Inactive", value: entries.length - activeCount, color: '#dc2626' },
-            { label: "Total Skills", value: totalSkills, color: '#f36c21' },
+            { label: "Total Occupations", value: entries.length, color: "primary" as const },
+            { label: "Active", value: activeCount, color: "success" as const },
+            { label: "Inactive", value: entries.length - activeCount, color: "destructive" as const },
+            { label: "Total Skills", value: totalSkills, color: "warning" as const },
           ].map(({ label, value, color }) => (
-            <div key={label} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(81,42,204,0.04)' }}>
-              <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>{loading ? "…" : value}</p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontWeight: 600 }}>{label}</p>
-            </div>
+            <AdminStatTile key={label} label={label} value={loading ? "…" : value} color={color} />
           ))}
         </div>
 
         {showAdd && (
-          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 space-y-3">
-            <p className="text-sm font-semibold text-foreground">Add New Occupation</p>
-            <div className="grid gap-3 sm:grid-cols-2">
+          <AdminSectionCard icon={<Plus className="size-5 text-primary" />} title="Add New Occupation" subtitle="Create a new MASCO occupation entry">
+            <div className="grid gap-3 sm:grid-cols-2 mb-3">
               <Input placeholder="Code (e.g., MASCO-101)" value={newCode} onChange={e => setNewCode(e.target.value)} />
               <Input placeholder="Title (e.g., Software Developer)" value={newTitle} onChange={e => setNewTitle(e.target.value)} />
               <select className="h-9 rounded-md border border-border bg-background px-3 text-sm" value={newLevel} onChange={e => setNewLevel(Number(e.target.value))}>
@@ -160,30 +139,26 @@ function AdminTaxonomyPage() {
               </select>
               <Input placeholder="Description (optional)" value={newDesc} onChange={e => setNewDesc(e.target.value)} />
             </div>
-            <Input placeholder="Skills (comma-separated, e.g., Java, Python, SQL)" value={newSkills} onChange={e => setNewSkills(e.target.value)} />
+            <Input className="mb-3" placeholder="Skills (comma-separated, e.g., Java, Python, SQL)" value={newSkills} onChange={e => setNewSkills(e.target.value)} />
             <div className="flex gap-2">
               <Button size="sm" onClick={handleAdd} disabled={adding} className="gap-2">
                 {adding ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />} Add
               </Button>
               <Button variant="outline" size="sm" onClick={() => setShowAdd(false)}>Cancel</Button>
             </div>
-          </div>
+          </AdminSectionCard>
         )}
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input className="pl-9 h-9 text-sm" placeholder="Search by code or title…" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-
-        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(81,42,204,0.04)', padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <Database style={{ width: 18, height: 18, color: '#512ACC' }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>Occupations ({filtered.length})</h2>
+        <AdminSectionCard icon={<Database className="size-5 text-primary" />} title={`Occupations (${filtered.length})`} subtitle="Search and toggle taxonomy entries">
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input className="pl-9 h-9 text-sm" placeholder="Search by code or title…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
+
           {loading ? (
             <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>
           ) : filtered.length === 0 ? (
-            <div className="py-14 text-center">
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-10 text-center">
               <Database className="size-10 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm font-semibold text-foreground mb-1">{entries.length === 0 ? "No taxonomy data yet" : "No matches"}</p>
               <p className="text-xs text-muted-foreground">{entries.length === 0 ? "Taxonomy data will appear once MASCO codes are imported." : "Try clearing the search."}</p>
@@ -220,7 +195,7 @@ function AdminTaxonomyPage() {
               ))}
             </div>
           )}
-        </div>
+        </AdminSectionCard>
 
       </main>
     </div>

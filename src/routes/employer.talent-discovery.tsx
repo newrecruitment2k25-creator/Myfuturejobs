@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
-import { Search, Loader2, Sparkles, MapPin, GraduationCap, Briefcase, DollarSign, CheckCircle, XCircle, BookmarkPlus, ExternalLink, Activity, SlidersHorizontal, X, Send } from "lucide-react";
+import { Search, Loader2, Sparkles, MapPin, GraduationCap, Briefcase, DollarSign, CheckCircle, XCircle, BookmarkPlus, ExternalLink, Activity, SlidersHorizontal, Star, FileText, User, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,8 +81,6 @@ function TalentDiscoveryPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [engFilter, setEngFilter] = useState<EngagementFilter>("all");
   const [sortMode, setSortMode] = useState<SortMode>("score");
-  const [inviteTarget, setInviteTarget] = useState<CandidateResult | null>(null);
-  const [inviteSent, setInviteSent] = useState<Set<string>>(new Set());
 
   const [saved, setSaved] = useState<Set<string>>(() => {
     try {
@@ -229,44 +227,69 @@ function TalentDiscoveryPage() {
         {!searching && hasSearched && (
           <>
             {/* Summary + filter bar */}
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-foreground">
-                  Found <strong>{total}</strong> candidate{total !== 1 ? "s" : ""} matching &ldquo;{searchedQuery}&rdquo;
-                  {engFilter !== "all" && <span className="ml-2 text-xs font-normal text-muted-foreground">(filtered: {engFilter.replace("_", " ")})</span>}
-                </p>
+            <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    <strong className="text-primary">{total}</strong> candidate{total !== 1 ? "s" : ""} found
+                  </p>
+                  <p className="text-xs text-muted-foreground">for &ldquo;{searchedQuery}&rdquo; {engFilter !== "all" && <span className="ml-1">· filtered by {engFilter.replace("_", " ")}</span>}</p>
+                </div>
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="size-3 text-muted-foreground" />
                   <select
                     value={engFilter}
                     onChange={e => setEngFilter(e.target.value as EngagementFilter)}
-                    className="text-xs border border-border rounded-lg px-2 py-1 bg-background text-foreground"
+                    className="text-xs border border-border rounded-lg px-2.5 py-1.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="all">All Engagement</option>
-                    <option value="highly_active">🔥 Highly Active</option>
-                    <option value="active">✅ Active</option>
-                    <option value="moderate">⚡ Moderate</option>
-                    <option value="low">💤 Low Activity</option>
+                    <option value="highly_active">Highly Active</option>
+                    <option value="active">Active</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="low">Low Activity</option>
                   </select>
                   <select
                     value={sortMode}
                     onChange={e => setSortMode(e.target.value as SortMode)}
-                    className="text-xs border border-border rounded-lg px-2 py-1 bg-background text-foreground"
+                    className="text-xs border border-border rounded-lg px-2.5 py-1.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
-                    <option value="score">Sort: Best Match</option>
-                    <option value="engagement">Sort: Most Engaged</option>
+                    <option value="score">Best Match</option>
+                    <option value="engagement">Most Engaged</option>
                   </select>
                 </div>
               </div>
               {parsed && (
-                <p className="text-xs text-muted-foreground">
-                  Parsed: {parsed.skills && parsed.skills.length > 0 && <span>Skills: {parsed.skills.join(", ")} | </span>}
-                  {parsed.state && <span>Location: {parsed.state} | </span>}
-                  {parsed.education_level && <span>Education: {parsed.education_level} | </span>}
-                  {parsed.experience && <span>Experience: {parsed.experience} | </span>}
-                  {parsed.job_title && <span>Role: {parsed.job_title} | </span>}
-                  {!parsed.skills?.length && !parsed.state && !parsed.education_level && "Any"}
-                </p>
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border">
+                  <span className="text-xs text-muted-foreground">Parsed:</span>
+                  {parsed.skills && parsed.skills.length > 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-foreground">
+                      <Wrench className="size-3" /> {parsed.skills.join(", ")}
+                    </span>
+                  )}
+                  {parsed.state && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-foreground">
+                      <MapPin className="size-3" /> {parsed.state}
+                    </span>
+                  )}
+                  {parsed.education_level && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-foreground">
+                      <GraduationCap className="size-3" /> {parsed.education_level}
+                    </span>
+                  )}
+                  {parsed.experience && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-foreground">
+                      <Briefcase className="size-3" /> {parsed.experience}
+                    </span>
+                  )}
+                  {parsed.job_title && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-foreground">
+                      <User className="size-3" /> {parsed.job_title}
+                    </span>
+                  )}
+                  {!parsed.skills?.length && !parsed.state && !parsed.education_level && !parsed.experience && !parsed.job_title && (
+                    <span className="text-xs text-muted-foreground">Any</span>
+                  )}
+                </div>
               )}
             </div>
 
@@ -279,150 +302,134 @@ function TalentDiscoveryPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {displayedResults.map((c, i) => (
-                  <div key={c.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                    <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <div className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold ${scoreColor(c.score)}`}>
-                          <span className={`size-2 rounded-full ${scoreEmoji(c.score)}`} />
-                          {c.score}% Match
-                        </div>
-                        {(() => { const eng = getEngagementLevel(c.behaviour); return (
+                {displayedResults.map((c, i) => {
+                  const eng = getEngagementLevel(c.behaviour);
+                  const name = c.source === "poc" ? (c.candidate_id ?? `Candidate #${i + 1}`) : (c.email ?? `User #${i + 1}`);
+                  const initial = name.replace(/^[^a-zA-Z]*/, "").charAt(0).toUpperCase() || "C";
+                  return (
+                    <div key={c.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-primary/25 hover:shadow-md">
+                      <div className="flex flex-col sm:flex-row gap-5">
+                        {/* Score ring */}
+                        <div className="flex flex-col items-center gap-2 shrink-0">
+                          <div className={`relative flex items-center justify-center rounded-full border-4 size-20 ${scoreColor(c.score)}`}
+                            style={{ background: c.score >= 80 ? "#f0fdf4" : c.score >= 60 ? "#fffbeb" : "#fef2f2" }}
+                          >
+                            <span className="text-lg font-extrabold">{c.score}%</span>
+                            <span className={`absolute -bottom-1 size-3 rounded-full ${scoreEmoji(c.score)} border-2 border-card`} />
+                          </div>
                           <span
                             title={behaviourTooltip(c.behaviour)}
                             style={{ background: eng.bg, color: eng.color, border: `1px solid ${eng.color}33` }}
-                            className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full cursor-help"
+                            className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full cursor-help"
                           >
                             <Activity className="size-3" />{eng.label}
                           </span>
-                        ); })()}
-                        <div>
-                          <p className="text-sm font-bold text-foreground">
-                            {c.source === "poc" ? (c.candidate_id ?? `Candidate #${i + 1}`) : (c.email ?? `User #${i + 1}`)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {c.education_level && <>{c.education_level}</>}
-                            {c.field_of_study && <> in {c.field_of_study}</>}
-                          </p>
+                        </div>
+
+                        {/* Details */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+                            <div className="flex items-center gap-3">
+                              <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                                {initial}
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-foreground">{name}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {c.education_level && <>{c.education_level}</>}
+                                  {c.field_of_study && <> in {c.field_of_study}</>}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => toggleSave(c.id)}
+                                className={`p-2 rounded-lg border transition-colors ${saved.has(c.id) ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:text-primary"}`}
+                                title={saved.has(c.id) ? "Unsave" : "Save Candidate"}
+                              >
+                                {saved.has(c.id) ? <Star className="size-4 fill-primary" /> : <BookmarkPlus className="size-4" />}
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-x-5 gap-y-1.5 mb-3 text-xs text-muted-foreground">
+                            {c.preferred_state && (
+                              <span className="inline-flex items-center gap-1"><MapPin className="size-3" /> {c.preferred_state}</span>
+                            )}
+                            {c.preferred_salary && (
+                              <span className="inline-flex items-center gap-1"><DollarSign className="size-3" /> {c.preferred_salary}</span>
+                            )}
+                            {c.previous_occupation && (
+                              <span className="inline-flex items-center gap-1"><Briefcase className="size-3" /> {c.previous_occupation} · {c.previous_years_experience ?? "N/A"} yrs</span>
+                            )}
+                            {c.education_level && (
+                              <span className="inline-flex items-center gap-1"><GraduationCap className="size-3" /> {c.education_level}</span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap gap-1.5 mb-3">
+                            {c.matched_skills.slice(0, 4).map(s => (
+                              <span key={s} className="inline-flex items-center gap-1 rounded-full bg-green-50 border border-green-200 px-2 py-0.5 text-xs font-medium text-green-700">
+                                <CheckCircle className="size-3" /> {s}
+                              </span>
+                            ))}
+                            {c.missing_skills.slice(0, 3).map(s => (
+                              <span key={s} className="inline-flex items-center gap-1 rounded-full bg-red-50 border border-red-200 px-2 py-0.5 text-xs font-medium text-red-700">
+                                <XCircle className="size-3" /> {s}
+                              </span>
+                            ))}
+                            {c.skills && c.skills.split(/[,;|]/).slice(0, 5).map(s => s.trim()).filter(s => s && !c.matched_skills.includes(s.toLowerCase())).map(s => (
+                              <span key={s} className="rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
+                            ))}
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-border">
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                              <span title="Applications submitted" className="inline-flex items-center gap-1"><FileText className="size-3" /> <strong>{c.applications}</strong> apps</span>
+                              <span className="inline-flex items-center gap-1"><User className="size-3" /> <strong>{c.interviews}</strong> interviews</span>
+                              {c.sign_in_count ? <span className="inline-flex items-center gap-1"><Activity className="size-3" /> <strong>{c.sign_in_count}</strong> sign-ins</span> : null}
+                              {c.offers > 0 && <span className="inline-flex items-center gap-1">🎯 <strong>{c.offers}</strong> offers</span>}
+                              {c.overall_score && <span className="text-foreground/80">CV Score: <strong>{c.overall_score}</strong></span>}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {c.source === "registered" && c.id && (
+                                <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" asChild>
+                                  <Link to="/employer/candidate/$candidateId" params={{ candidateId: c.id }}>
+                                    <ExternalLink className="size-3" /> Profile
+                                  </Link>
+                                </Button>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => toggleSave(c.id)}
-                          className={`p-1.5 rounded-lg border transition-colors ${saved.has(c.id) ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:text-primary"}`}
-                          title={saved.has(c.id) ? "Unsave" : "Save Candidate"}
-                        >
-                          <BookmarkPlus className="size-4" />
-                        </button>
-                      </div>
                     </div>
-
-                    {/* Details row */}
-                    <div className="flex flex-wrap gap-x-5 gap-y-1.5 mb-3 text-xs text-muted-foreground">
-                      {c.preferred_state && (
-                        <span className="inline-flex items-center gap-1"><MapPin className="size-3" /> {c.preferred_state}</span>
-                      )}
-                      {c.preferred_salary && (
-                        <span className="inline-flex items-center gap-1"><DollarSign className="size-3" /> {c.preferred_salary}</span>
-                      )}
-                      {c.previous_occupation && (
-                        <span className="inline-flex items-center gap-1"><Briefcase className="size-3" /> {c.previous_occupation} ({c.previous_years_experience ?? "N/A"})</span>
-                      )}
-                      {c.education_level && (
-                        <span className="inline-flex items-center gap-1"><GraduationCap className="size-3" /> {c.education_level}</span>
-                      )}
-                    </div>
-
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {c.matched_skills.map(s => (
-                        <span key={s} className="inline-flex items-center gap-1 rounded-full bg-green-50 border border-green-200 px-2 py-0.5 text-xs font-medium text-green-700">
-                          <CheckCircle className="size-3" /> {s}
-                        </span>
-                      ))}
-                      {c.missing_skills.map(s => (
-                        <span key={s} className="inline-flex items-center gap-1 rounded-full bg-red-50 border border-red-200 px-2 py-0.5 text-xs font-medium text-red-700">
-                          <XCircle className="size-3" /> {s}
-                        </span>
-                      ))}
-                      {c.skills && c.skills.split(/[,;|]/).slice(0, 5).map(s => s.trim()).filter(s => s && !c.matched_skills.includes(s.toLowerCase())).map(s => (
-                        <span key={s} className="rounded-full bg-secondary border border-border px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
-                      ))}
-                    </div>
-
-                    {/* Metrics + Actions */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-border">
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span title="Applications submitted">📊 <strong>{c.applications}</strong> apps · <strong>{c.interviews}</strong> interviews{c.sign_in_count ? ` · ${c.sign_in_count} sign-ins` : ""}</span>
-                        {c.offers > 0 && <span>🎯 <strong>{c.offers}</strong> offers</span>}
-                        {c.overall_score && <span>CV Score: <strong>{c.overall_score}</strong></span>}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {c.source === "registered" && c.id && (
-                          <Button variant="outline" size="sm" className="gap-1.5 h-7 text-xs" asChild>
-                            <Link to="/employer/candidate/$candidateId" params={{ candidateId: c.id }}>
-                              <ExternalLink className="size-3" /> View Profile
-                            </Link>
-                          </Button>
-                        )}
-                        <Button
-                          variant={inviteSent.has(c.id) ? "outline" : "default"}
-                          size="sm"
-                          className="gap-1.5 h-7 text-xs"
-                          onClick={() => setInviteTarget(c)}
-                          disabled={inviteSent.has(c.id)}
-                        >
-                          <Sparkles className="size-3" /> {inviteSent.has(c.id) ? "Invited ✓" : "Invite to Interview"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>
         )}
 
-        {/* ── Invite to Interview Modal ── */}
-        {inviteTarget && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
-            onClick={() => setInviteTarget(null)}
-          >
-            <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "var(--radius-md)", padding: 24, maxWidth: 460, width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}
-              onClick={e => e.stopPropagation()}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--ink)", margin: 0 }}>Invite to Interview</h3>
-                <button onClick={() => setInviteTarget(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--muted)" }}><X className="size-4" /></button>
-              </div>
-              <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 16 }}>
-                Send an AI interview invitation to <strong style={{ color: "var(--ink)" }}>
-                  {inviteTarget.source === "poc" ? (inviteTarget.candidate_id ?? `Candidate`) : (inviteTarget.email ?? `Candidate`)}
-                </strong>.
-              </p>
-              <div style={{ background: "var(--base)", border: "1px solid var(--line)", borderRadius: "var(--radius-sm)", padding: "10px 14px", marginBottom: 16, fontSize: 12, color: "var(--muted)" }}>
-                <p style={{ margin: 0 }}>The candidate will receive an invitation link to complete a structured AI video interview. You can create and manage templates in <strong>Interview Templates</strong>.</p>
-              </div>
-              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                <button onClick={() => setInviteTarget(null)} style={{ padding: "8px 16px", border: "1px solid var(--line)", borderRadius: "var(--radius-sm)", background: "none", cursor: "pointer", fontSize: 13, color: "var(--muted)" }}>Cancel</button>
-                <Link
-                  to="/employer/interview-templates"
-                  onClick={() => { setInviteSent(prev => new Set(prev).add(inviteTarget.id)); setInviteTarget(null); }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "var(--brand)", color: "#fff", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: 600, textDecoration: "none" }}
-                >
-                  <Send className="size-3.5" /> Go to Interview Templates
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Empty state */}
         {!searching && !hasSearched && (
-          <div className="rounded-2xl border border-border bg-card p-12 text-center">
-            <Sparkles className="size-10 text-primary/40 mx-auto mb-3" />
-            <p className="text-sm font-semibold text-foreground mb-1">Describe your ideal candidate above</p>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto">Our AI will search 1,449+ candidate profiles from the PERKESO database and registered jobseekers, then rank them by relevance.</p>
+          <div className="rounded-2xl border border-dashed border-border bg-card p-12 text-center">
+            <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="size-8 text-primary/60" />
+            </div>
+            <p className="text-base font-semibold text-foreground mb-1">Find your next hire with AI</p>
+            <p className="text-xs text-muted-foreground max-w-sm mx-auto mb-5">Describe the role, skills, location, and experience you need. Our AI searches candidate profiles and ranks the best matches.</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {POPULAR_SEARCHES.slice(0, 3).map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => { setQuery(tag); handleSearch(tag); }}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

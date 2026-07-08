@@ -75,6 +75,31 @@ function BarRow({ label, value, max, color = "bg-primary" }: { label: string; va
   );
 }
 
+function CircularGauge({ value, label, sub, color }: { value: number; label: string; sub?: string; color: string }) {
+  const radius = 36;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.min(100, value) / 100) * circumference;
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="relative size-24">
+        <svg className="size-full -rotate-90" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r={radius} className="stroke-secondary" strokeWidth="7" fill="none" />
+          <circle cx="40" cy="40" r={radius} className={color} strokeWidth="7" fill="none" strokeLinecap="round"
+            style={{ strokeDasharray: circumference, strokeDashoffset: offset, transition: "stroke-dashoffset 0.7s ease" }} />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-xl font-extrabold tabular-nums">{value}</span>
+          <span className="text-[10px] text-muted-foreground">/100</span>
+        </div>
+      </div>
+      <div className="text-center">
+        <p className="text-xs font-semibold text-foreground">{label}</p>
+        {sub && <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ────────────────────────────────────
 
 function LabourMarketIntelligencePage() {
@@ -159,38 +184,39 @@ function LabourMarketIntelligencePage() {
           <div className="space-y-5">
 
             {/* Section 1: KPI tiles */}
-            <SectionCard icon={<BarChart2 className="size-5" />} title="Labour Market Overview" subtitle="Executive summary of platform workforce intelligence">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-                <StatTile label="Active Vacancies" value={report.totalVacancies.toLocaleString()} />
-                <StatTile label="Total Candidates" value={report.totalCandidates.toLocaleString()} />
-                <StatTile label="Avg Match Rate" value={`${report.avgMatchRate}%`} />
-                <StatTile label="Avg Interview Score" value={`${report.avgInterviewScore}/100`} />
-                <StatTile label="Avg Employability" value={`${report.avgEmployabilityScore}/100`} />
-                <div className={`rounded-xl px-4 py-3 text-center ${readinessCfg.bg}`}>
-                  <p className={`text-2xl font-extrabold tabular-nums ${readinessCfg.text}`}>{report.workforceReadinessScore}</p>
-                  <p className="text-xs font-medium text-foreground mt-0.5">Readiness Index</p>
-                  <p className={`text-xs font-bold mt-0.5 ${readinessCfg.text}`}>{report.workforceReadinessRating}</p>
+            <SectionCard icon={<BarChart2 className="size-5" />} title="Labour Market Overview" subtitle="Executive summary of platform workforce intelligence" accent>
+              <div className="grid gap-6 lg:grid-cols-[1fr_280px] items-start">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <StatTile label="Active Vacancies" value={report.totalVacancies.toLocaleString()} />
+                  <StatTile label="Total Candidates" value={report.totalCandidates.toLocaleString()} />
+                  <StatTile label="Avg Match Rate" value={`${report.avgMatchRate}%`} />
+                  <StatTile label="Avg Employability" value={`${report.avgEmployabilityScore}/100`} />
+                  <StatTile label="Readiness Index" value={report.workforceReadinessScore} sub={report.workforceReadinessRating} />
+                </div>
+                <div className="flex flex-wrap items-center justify-around gap-4 rounded-2xl border border-border bg-background p-5">
+                  <CircularGauge value={report.avgMatchRate} label="Match Rate" color={report.avgMatchRate >= 70 ? "stroke-emerald-500" : report.avgMatchRate >= 50 ? "stroke-amber-500" : "stroke-destructive"} />
+                  <CircularGauge value={report.workforceReadinessScore} label="Readiness" sub={report.workforceReadinessRating} color={report.workforceReadinessScore >= 70 ? "stroke-emerald-500" : report.workforceReadinessScore >= 50 ? "stroke-amber-500" : "stroke-destructive"} />
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">High Demand Occupations</p>
-                  <ul className="space-y-1.5">
+              <div className="grid gap-4 sm:grid-cols-2 mt-6">
+                <div className="rounded-xl border border-border bg-background p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">High Demand Occupations</p>
+                  <ul className="space-y-2">
                     {report.highDemandOccupations.map((o, i) => (
-                      <li key={o} className="flex items-center gap-2 text-xs text-foreground">
-                        <span className="size-5 shrink-0 rounded-full bg-primary/10 text-primary text-center font-bold leading-5">{i + 1}</span>
+                      <li key={o} className="flex items-center gap-3 text-sm text-foreground">
+                        <span className="size-6 shrink-0 rounded-full bg-primary/10 text-primary text-center text-xs font-bold leading-6">{i + 1}</span>
                         {o}
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">Emerging Occupations</p>
-                  <ul className="space-y-1.5">
+                <div className="rounded-xl border border-border bg-background p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Emerging Occupations</p>
+                  <ul className="space-y-2">
                     {report.emergingOccupationsTop.map((o, i) => (
-                      <li key={o} className="flex items-center gap-2 text-xs text-foreground">
-                        <span className="size-5 shrink-0 rounded-full bg-[#F97316]/10 text-[#F97316] text-center font-bold leading-5">{i + 1}</span>
+                      <li key={o} className="flex items-center gap-3 text-sm text-foreground">
+                        <span className="size-6 shrink-0 rounded-full bg-[#F97316]/10 text-[#F97316] text-center text-xs font-bold leading-6">{i + 1}</span>
                         {o}
                       </li>
                     ))}
@@ -201,14 +227,15 @@ function LabourMarketIntelligencePage() {
 
             {/* Section 12: Executive Insights */}
             <SectionCard icon={<Lightbulb className="size-5" />} title="Executive Insights" subtitle="AI-synthesized intelligence based on platform workforce data">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {report.executiveInsights.map((ins) => {
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {report.executiveInsights.map((ins, idx) => {
                   const cfg = getInsightConfig(ins.indicator);
                   return (
-                    <div key={ins.insight.slice(0, 30)} className={`rounded-xl border p-4 ${cfg.border}`}>
+                    <div key={idx} className="rounded-xl border border-border bg-background p-4 relative overflow-hidden">
+                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${cfg.dot ?? "bg-primary"}`} />
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`size-2 rounded-full ${cfg.dot}`} />
-                        <p className={`text-xs font-semibold ${cfg.text}`}>{ins.category}</p>
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${cfg.text}`}>{ins.category}</span>
                       </div>
                       <p className="text-xs text-foreground leading-relaxed">{ins.insight}</p>
                     </div>
@@ -219,18 +246,16 @@ function LabourMarketIntelligencePage() {
 
             {/* Workforce Readiness Index */}
             <SectionCard icon={<Activity className="size-5" />} title="Workforce Readiness Index" subtitle="Composite score of national workforce capability">
-              <div className="flex flex-wrap items-center gap-6 mb-4">
-                <div className="text-center">
-                  <p className={`text-5xl font-extrabold tabular-nums ${readinessCfg.text}`}>{report.workforceReadinessScore}</p>
-                  <p className="text-xs text-muted-foreground">/100</p>
-                  <div className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-bold ${readinessCfg.bg} ${readinessCfg.text}`}>
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <CircularGauge
+                  value={report.workforceReadinessScore}
+                  label="Readiness Score"
+                  sub={report.workforceReadinessRating}
+                  color={report.workforceReadinessScore >= 70 ? "stroke-emerald-500" : report.workforceReadinessScore >= 50 ? "stroke-amber-500" : "stroke-destructive"}
+                />
+                <div className="flex-1 min-w-[200px] text-center sm:text-left">
+                  <div className={`inline-flex rounded-full px-3 py-1 text-xs font-bold mb-3 ${readinessCfg.bg} ${readinessCfg.text}`}>
                     {report.workforceReadinessRating}
-                  </div>
-                </div>
-                <div className="flex-1 min-w-[200px]">
-                  <div className="w-full h-3 rounded-full bg-secondary mb-3">
-                    <div className={`h-3 rounded-full ${readinessCfg.bg.replace("bg-", "bg-").replace("/10", "")} bg-primary transition-all duration-700`}
-                      style={{ width: `${report.workforceReadinessScore}%` }} />
                   </div>
                   <p className="text-sm text-foreground leading-relaxed">{report.workforceReadinessExplanation}</p>
                 </div>

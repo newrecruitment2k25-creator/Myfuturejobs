@@ -251,12 +251,9 @@ function ResultsPage() {
           />
 
           {/* CTA */}
-          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+          <div className="mt-10 grid gap-3 sm:grid-cols-2">
             <Button variant="outline" size="xl" className="border-[var(--brand-red)] text-[var(--brand-red)] hover:bg-[var(--brand-red)]/10" onClick={() => setCoverOpen(true)}>
               Generate AI Cover Letter
-            </Button>
-            <Button asChild size="xl">
-              <Link to="/interview-preparation">Prepare for Interview</Link>
             </Button>
             <Button asChild variant="outline" size="xl">
               <Link to="/analyze">Analyze Another CV</Link>

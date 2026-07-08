@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { Settings, ArrowLeft, Save, Loader2, RefreshCw, Shield } from "lucide-react";
+import { Settings, Save, Loader2, Shield, SlidersHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useOpsGuard } from "@/lib/use-ops-guard";
 import { listConfig, updateConfig, type ConfigRow } from "@/lib/ops-api";
+import { AdminPageHeader, AdminSectionCard, AdminEmptyState } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/configuration")({
   ssr: false,
@@ -16,9 +17,15 @@ export const Route = createFileRoute("/admin/configuration")({
 const CATEGORY_LABELS: Record<string, string> = {
   ai: "AI Settings",
   matching: "Matching Engine",
-  interview: "Interview Settings",
   platform: "Platform Settings",
   general: "General",
+};
+
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  ai: <Sparkles className="size-5" />,
+  matching: <SlidersHorizontal className="size-5" />,
+  platform: <Settings className="size-5" />,
+  general: <Settings className="size-5" />,
 };
 
 const KEY_LABELS: Record<string, string> = {
@@ -31,12 +38,39 @@ const KEY_LABELS: Record<string, string> = {
   matching_location_weight: "Location Weight",
   matching_experience_weight: "Experience Weight",
   matching_min_score: "Minimum Score Threshold",
-  interview_max_questions: "Max Questions",
-  interview_default_questions: "Default Questions",
-  interview_time_limit: "Time Limit (minutes)",
   platform_maintenance_mode: "Maintenance Mode",
   platform_registration_enabled: "Registration Enabled",
   platform_max_cv_size_mb: "Max CV Size (MB)",
+};
+
+const KEY_DESCRIPTIONS: Record<string, string> = {
+  ai_model_primary: "Default large model for reasoning tasks.",
+  ai_model_fast: "Cheaper/faster model for high-volume tasks.",
+  ai_max_tokens: "Hard cap on model output tokens.",
+  matching_skill_weight: "How heavily skill overlap influences match score.",
+  matching_education_weight: "Influence of education alignment on matching.",
+  matching_salary_weight: "Weight for salary expectation alignment.",
+  matching_location_weight: "Weight for location preference matching.",
+  matching_experience_weight: "Weight for years of experience alignment.",
+  matching_min_score: "Minimum match score threshold (0–1).",
+  platform_maintenance_mode: "Put the site into read-only maintenance mode.",
+  platform_registration_enabled: "Allow new user registrations.",
+  platform_max_cv_size_mb: "Maximum uploaded CV file size in megabytes.",
+};
+
+const DEFAULT_CONFIG: Record<string, { category: string; value: string | number | boolean; description: string }> = {
+  ai_model_primary:        { category: "ai", value: "gpt-4o-mini", description: KEY_DESCRIPTIONS.ai_model_primary },
+  ai_model_fast:           { category: "ai", value: "gpt-4o-mini", description: KEY_DESCRIPTIONS.ai_model_fast },
+  ai_max_tokens:           { category: "ai", value: 2048, description: KEY_DESCRIPTIONS.ai_max_tokens },
+  matching_skill_weight:   { category: "matching", value: 0.35, description: KEY_DESCRIPTIONS.matching_skill_weight },
+  matching_education_weight: { category: "matching", value: 0.15, description: KEY_DESCRIPTIONS.matching_education_weight },
+  matching_salary_weight: { category: "matching", value: 0.10, description: KEY_DESCRIPTIONS.matching_salary_weight },
+  matching_location_weight: { category: "matching", value: 0.15, description: KEY_DESCRIPTIONS.matching_location_weight },
+  matching_experience_weight: { category: "matching", value: 0.25, description: KEY_DESCRIPTIONS.matching_experience_weight },
+  matching_min_score:      { category: "matching", value: 0.60, description: KEY_DESCRIPTIONS.matching_min_score },
+  platform_maintenance_mode: { category: "platform", value: false, description: KEY_DESCRIPTIONS.platform_maintenance_mode },
+  platform_registration_enabled: { category: "platform", value: true, description: KEY_DESCRIPTIONS.platform_registration_enabled },
+  platform_max_cv_size_mb: { category: "platform", value: 10, description: KEY_DESCRIPTIONS.platform_max_cv_size_mb },
 };
 
 function parseValue(raw: string): string | number | boolean {
@@ -64,14 +98,16 @@ function AdminConfigPage() {
   const [loading, setLoading] = useState(true);
   const [editValues, setEditValues] = useState<Record<string, string | number | boolean>>({});
   const [saving, setSaving] = useState<string | null>(null);
+  const [seeding, setSeeding] = useState(false);
 
   const fetchConfigs = useCallback(async () => {
     setLoading(true);
     try {
       const d = await listConfig();
-      setConfigs(d.configs ?? []);
+      const rows = d.configs ?? [];
+      setConfigs(rows);
       const vals: Record<string, string | number | boolean> = {};
-      (d.configs ?? []).forEach(c => { vals[c.key] = parseValue(c.value); });
+      rows.forEach(c => { vals[c.key] = parseValue(c.value); });
       setEditValues(vals);
     } catch (err: any) {
       toast.error("Failed to load config: " + (err?.message ?? "Unknown error"));
@@ -97,15 +133,36 @@ function AdminConfigPage() {
     }
   };
 
+  const seedDefaults = async () => {
+    setSeeding(true);
+    try {
+      const existingKeys = new Set(configs.map(c => c.key));
+      const missing = Object.entries(DEFAULT_CONFIG).filter(([key]) => !existingKeys.has(key));
+      if (missing.length === 0) {
+        toast.info("All default configuration values are already present.");
+        return;
+      }
+      for (const [key, cfg] of missing) {
+        await updateConfig(key, cfg.value);
+      }
+      toast.success(`Seeded ${missing.length} default configuration values.`);
+      fetchConfigs();
+    } catch (err: any) {
+      toast.error("Failed to seed defaults: " + (err?.message ?? "Unknown error"));
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   if (guardState.status === "loading") {
-    return <div className="min-h-screen bg-background"><div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="size-8 animate-spin text-primary" /></div></div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="size-8 animate-spin text-primary" /></div>;
   }
   if (guardState.status === "unauthenticated") return null;
   if (guardState.status === "unauthorized") {
     const dashHref = guardState.role === "employer" ? "/employer/dashboard" : "/dashboard";
     return (
-      <div className="min-h-screen bg-background">
-        <div className="mx-auto max-w-md px-4 py-24 text-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-sm px-4">
           <Shield className="size-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-bold text-foreground mb-2">Unauthorized Access</h2>
           <p className="text-sm text-muted-foreground mb-6">You do not have permission to access this area.</p>
@@ -117,108 +174,121 @@ function AdminConfigPage() {
 
   const grouped = configs.reduce<Record<string, ConfigRow[]>>((acc, c) => {
     const cat = c.category || "general";
+    if (cat === "interview") return acc;
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(c);
     return acc;
   }, {});
 
+  const allCategories = Array.from(new Set([...Object.keys(grouped), ...Object.values(DEFAULT_CONFIG).map(c => c.category)])).sort();
+
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 space-y-6">
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
 
-        <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="size-4" /> Back to Admin Console
-        </Link>
-
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Admin · Configuration
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>Configuration Management</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>AI models, matching weights, interview settings, and platform toggles. All changes are audit-logged.</p>
-            </div>
-            <button onClick={fetchConfigs} disabled={loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </button>
-          </div>
-        </div>
+        <AdminPageHeader
+          badge="Admin · Configuration"
+          title="Configuration Management"
+          subtitle="AI models, matching weights, and platform toggles. All changes are audit-logged and persist to system_config."
+          backTo="/admin"
+          backLabel="Back to Admin Console"
+          onRefresh={fetchConfigs}
+          refreshLoading={loading}
+        />
 
         {loading ? (
           <div className="flex items-center justify-center py-16"><Loader2 className="size-8 animate-spin text-primary" /></div>
         ) : configs.length === 0 ? (
-          <div className="rounded-2xl border border-border bg-card p-10 text-center">
-            <Settings className="size-10 text-muted-foreground mx-auto mb-3" />
-            <p className="text-sm font-semibold text-foreground mb-1">No configuration found</p>
-            <p className="text-xs text-muted-foreground">Configuration items will appear once added to the system_config table.</p>
-          </div>
+          <AdminEmptyState
+            icon={<Settings className="size-10" />}
+            title="No configuration found"
+            description="Configuration items will appear once added to the system_config table. You can seed the default set below to enable scoring and platform controls."
+            action={
+              <Button onClick={seedDefaults} disabled={seeding}>
+                {seeding ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Sparkles className="mr-2 size-4" />}
+                Seed Default Configuration
+              </Button>
+            }
+          />
         ) : (
-          Object.entries(grouped).map(([category, items]) => (
-            <div key={category} style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(81,42,204,0.04)', padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <Settings style={{ width: 16, height: 16, color: '#512ACC' }} />
-                <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>{CATEGORY_LABELS[category] ?? category}</h2>
-              </div>
-              {items.map(item => {
-                const val = editValues[item.key];
-                const origVal = parseValue(item.value);
-                const isDirty = val !== origVal;
-                const toggle = isToggle(item.key);
+          <>
+            <div className="flex justify-end">
+              <Button variant="outline" size="sm" onClick={seedDefaults} disabled={seeding}>
+                {seeding ? <Loader2 className="mr-1.5 size-3.5 animate-spin" /> : <Sparkles className="mr-1.5 size-3.5" />}
+                Seed Missing Defaults
+              </Button>
+            </div>
 
+            <div className="grid gap-5">
+              {allCategories.map(category => {
+                const items = grouped[category] ?? [];
+                if (items.length === 0) return null;
                 return (
-                  <div key={item.key} className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3">
-                    <div className="flex-1 min-w-[200px]">
-                      <p className="text-sm font-medium text-foreground">{KEY_LABELS[item.key] ?? item.key}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{item.description ?? item.key}</p>
-                      {item.updated_at && (
-                        <p className="text-xs text-muted-foreground/60 mt-0.5">Last updated: {fmtDate(item.updated_at)}</p>
-                      )}
+                  <AdminSectionCard
+                    key={category}
+                    icon={CATEGORY_ICONS[category] ?? <Settings className="size-5" />}
+                    title={CATEGORY_LABELS[category] ?? category}
+                    subtitle={`${items.length} configurable value${items.length !== 1 ? "s" : ""}`}
+                  >
+                    <div className="space-y-3">
+                      {items.map(item => {
+                        const val = editValues[item.key];
+                        const origVal = parseValue(item.value);
+                        const isDirty = JSON.stringify(val) !== JSON.stringify(origVal);
+                        const toggle = isToggle(item.key);
+
+                        return (
+                          <div key={item.key} className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3">
+                            <div className="flex-1 min-w-[220px]">
+                              <p className="text-sm font-semibold text-foreground">{KEY_LABELS[item.key] ?? item.key}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">{item.description ?? KEY_DESCRIPTIONS[item.key] ?? item.key}</p>
+                              {item.updated_at && (
+                                <p className="text-[10px] text-muted-foreground/60 mt-1">Last updated: {fmtDate(item.updated_at)}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              {toggle ? (
+                                <button
+                                  onClick={() => setEditValues(prev => ({ ...prev, [item.key]: val === "true" || val === true ? false : true }))}
+                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${val === "true" || val === true ? "bg-primary" : "bg-muted"}`}
+                                >
+                                  <span className={`inline-block size-4 rounded-full bg-white shadow-sm transition-transform ${val === "true" || val === true ? "translate-x-6" : "translate-x-1"}`} />
+                                </button>
+                              ) : typeof val === "number" || (val !== "" && !isNaN(Number(val))) ? (
+                                <Input
+                                  type="number"
+                                  step={item.key.includes("weight") || item.key.includes("score") ? 0.05 : 1}
+                                  className="w-28 h-9 text-sm text-right"
+                                  value={val as number}
+                                  onChange={e => setEditValues(prev => ({ ...prev, [item.key]: e.target.value === "" ? "" : Number(e.target.value) }))}
+                                />
+                              ) : (
+                                <Input
+                                  className="w-48 h-9 text-sm"
+                                  value={String(val ?? "")}
+                                  onChange={e => setEditValues(prev => ({ ...prev, [item.key]: e.target.value }))}
+                                />
+                              )}
+                              <Button
+                                variant={isDirty ? "default" : "outline"}
+                                size="sm"
+                                disabled={!isDirty || saving === item.key}
+                                onClick={() => handleSave(item.key)}
+                                className="gap-1 h-8 px-3"
+                              >
+                                {saving === item.key ? <Loader2 className="size-3 animate-spin" /> : <Save className="size-3" />}
+                                Save
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {toggle ? (
-                        <button
-                          onClick={() => setEditValues(prev => ({ ...prev, [item.key]: val === "true" || val === true ? false : true }))}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${val === "true" || val === true ? "bg-primary" : "bg-secondary border border-border"}`}
-                        >
-                          <span className={`inline-block size-4 rounded-full bg-white shadow-sm transition-transform ${val === "true" || val === true ? "translate-x-6" : "translate-x-1"}`} />
-                        </button>
-                      ) : typeof val === "number" || !isNaN(Number(val)) ? (
-                        <Input
-                          type="number"
-                          className="w-24 h-9 text-sm text-right"
-                          value={val as number}
-                          onChange={e => setEditValues(prev => ({ ...prev, [item.key]: Number(e.target.value) }))}
-                        />
-                      ) : (
-                        <Input
-                          className="w-48 h-9 text-sm"
-                          value={String(val ?? "")}
-                          onChange={e => setEditValues(prev => ({ ...prev, [item.key]: e.target.value }))}
-                        />
-                      )}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={!isDirty || saving === item.key}
-                        onClick={() => handleSave(item.key)}
-                        className="gap-1 h-8 px-2"
-                      >
-                        {saving === item.key ? <Loader2 className="size-3 animate-spin" /> : <Save className="size-3" />}
-                        Save
-                      </Button>
-                    </div>
-                  </div>
+                  </AdminSectionCard>
                 );
               })}
             </div>
-          ))
+          </>
         )}
 
       </main>

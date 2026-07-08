@@ -4,12 +4,13 @@ import {
   Users, Shield, FileText, Settings, Database, Activity,
   Briefcase, MapPin, BarChart3, Loader2, RefreshCw,
   ChevronRight, CheckCircle, TrendingUp, TrendingDown, Minus,
-  Brain, Calendar, BookOpen, Star,
+  Brain, Calendar, BookOpen, Star, LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOpsGuard } from "@/lib/use-ops-guard";
 import { getAdminStats, getAdminDailyTrend, type AdminStats, type DailyTrendRow } from "@/lib/ops-api";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminPageHeader, AdminSectionCard, AdminStatTile } from "@/components/admin/admin-shell";
 
 export const Route = createFileRoute("/admin/")({
   ssr: false,
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/admin/")({
 
 const NAV_LINKS = [
   { href: "/admin/users",             icon: Users,      label: "User Accounts",        desc: "View all users, manage roles and account status" },
-  { href: "/admin/candidates",        icon: BarChart3,  label: "Candidate 360°",       desc: "360 candidate profiles, scores, applications, interviews" },
+  { href: "/admin/candidates",        icon: BarChart3,  label: "Candidate 360°",       desc: "360 candidate profiles, scores, applications, screenings" },
   { href: "/admin/employers",         icon: Briefcase,  label: "Employer Directory",   desc: "Employers, job postings, candidate activity" },
   { href: "/admin/placements",        icon: MapPin,     label: "Placements & Outcomes", desc: "Placement records, salary, retention metrics" },
   { href: "/admin/audit-logs",        icon: FileText,   label: "Audit Logs",           desc: "Full system action log with filters" },
@@ -33,7 +34,7 @@ type ReportView = "daily" | "monthly" | "bimonthly";
 
 interface BehaviourStats {
   highlyActive: number; active: number; moderate: number; low: number;
-  total: number; withInterviews: number; avgApps: number;
+  total: number; withScreenings: number; avgApps: number;
 }
 
 // ── Sparkline chart ───────────────────────────────────────────────────────────
@@ -103,8 +104,8 @@ function buildAISummary(stats: AdminStats | null, trend: DailyTrendRow[], bhv: B
     lines.push(`Application funnel: ${stats.applications.toLocaleString()} total applications — ${appPerCandidate} per candidate on average.`);
     if (stats.interviews > 0) {
       const convRate = Math.round((stats.interviews / stats.applications) * 100);
-      if (convRate > 20) lines.push(`Interview conversion rate is healthy at ${convRate}% (applications → interviews).`);
-      else lines.push(`Interview conversion rate is ${convRate}% — employers may need better candidate matching.`);
+      if (convRate > 20) lines.push(`Screening conversion rate is healthy at ${convRate}% (applications → screenings).`);
+      else lines.push(`Screening conversion rate is ${convRate}% — employers may need better candidate matching.`);
     }
   }
 
@@ -120,7 +121,7 @@ function buildAISummary(stats: AdminStats | null, trend: DailyTrendRow[], bhv: B
     }
     const todayRow = trend[trend.length - 1];
     if (todayRow) {
-      lines.push(`Today so far: ${todayRow.analyses} CV analyses, ${todayRow.applications} applications, ${todayRow.interviews} interviews.`);
+      lines.push(`Today so far: ${todayRow.analyses} CV analyses, ${todayRow.applications} applications, ${todayRow.interviews} screenings.`);
     }
   }
 
@@ -200,7 +201,7 @@ function AdminConsolePage() {
         const lo   = rows.filter(b => (b.submitted_application_count ?? 0) <= 10).length;
         const wi   = rows.filter(b => b.interview_count > 0).length;
         const avg  = Math.round(rows.reduce((s, b) => s + (b.submitted_application_count ?? 0), 0) / rows.length);
-        setBhvStats({ highlyActive: ha, active: act, moderate: mod, low: lo, total: rows.length, withInterviews: wi, avgApps: avg });
+        setBhvStats({ highlyActive: ha, active: act, moderate: mod, low: lo, total: rows.length, withScreenings: wi, avgApps: avg });
       }
     } catch {} finally { setBhvLoading(false); }
 
@@ -221,84 +222,60 @@ function AdminConsolePage() {
   const spark30 = useMemo(() => trend.slice(-30), [trend]);
 
   if (guardState.status === "loading") {
-    return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--base)" }}><Loader2 className="size-8 animate-spin" style={{ color: "var(--accent)" }} /></div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="size-8 animate-spin text-primary" /></div>;
   }
   if (guardState.status === "unauthenticated") return null;
   if (guardState.status === "unauthorized") {
     const dashHref = guardState.role === "employer" ? "/employer/dashboard" : "/dashboard";
     return (
-      <div style={{ minHeight: "100vh", background: "var(--base)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ textAlign: "center", maxWidth: 400, padding: "0 16px" }}>
-          <Shield style={{ width: 48, height: 48, color: "var(--muted)", margin: "0 auto 16px" }} />
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--ink)" }}>Unauthorized Access</h2>
-          <p style={{ fontSize: 13, color: "var(--muted)", margin: "8px 0 20px" }}>You do not have permission to access this area.</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-sm px-4">
+          <Shield className="size-12 text-muted-foreground mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-foreground mb-2">Unauthorized Access</h2>
+          <p className="text-sm text-muted-foreground mb-6">You do not have permission to access this area.</p>
           <Button asChild variant="outline"><Link to={dashHref}>Go to Dashboard</Link></Button>
         </div>
       </div>
     );
   }
 
-  const S = {
-    card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(81,42,204,0.04)" } as React.CSSProperties,
-    heading: { fontSize: 11, fontWeight: 700, color: "var(--ink)", textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 } as React.CSSProperties,
-  };
-
   return (
-    <div style={{ minHeight: "100vh", background: "var(--base)" }}>
-      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 16px", display: "flex", flexDirection: "column", gap: 16 }}>
-
-        {/* ── Page header ── */}
-        <div style={{
-          background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', borderRadius: 16, padding: '24px 28px',
-          overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(81,42,204,0.15)',
-        }}>
-          <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap", position: 'relative' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                Governance Console
-              </div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: "#fff", margin: "2px 0 0", letterSpacing: "-0.03em" }}>Admin Dashboard</h1>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>
-                Logged in as <strong style={{ color: 'rgba(255,255,255,0.7)' }}>{guardState.email}</strong>
-                {lastRefreshed && <> · Last refreshed {lastRefreshed.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit" })}</>}
-              </p>
-            </div>
-            <button onClick={fetchAll} disabled={statsLoading || trendLoading}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <RefreshCw style={{ width: 14, height: 14 }} className={(statsLoading || trendLoading) ? "animate-spin" : ""} /> Refresh
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
+        <AdminPageHeader
+          badge="Governance Console"
+          title="Admin Dashboard"
+          subtitle={`Logged in as ${guardState.email ?? "admin"}${lastRefreshed ? ` · Last refreshed ${lastRefreshed.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit" })}` : ""}`}
+          onRefresh={fetchAll}
+          refreshLoading={statsLoading || trendLoading}
+        />
 
         {/* ── AI Summary ── */}
-        <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', borderRadius: 14, padding: '18px 20px', border: 'none', boxShadow: '0 4px 20px rgba(15,23,42,0.15)' }}>
-          <p style={{ ...S.heading, color: "rgba(255,255,255,0.6)" }}><Brain style={{ width: 14, height: 14 }} /> AI System Summary</p>
+        <AdminSectionCard icon={<Brain className="size-5 text-primary" />} title="AI System Summary" subtitle="Machine-generated intelligence from platform activity" accent>
           {aiLines.length === 0 || (aiLines.length === 1 && aiLines[0].includes("Gathering")) ? (
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>Gathering system data…</p>
+            <p className="text-sm text-muted-foreground">Gathering system data…</p>
           ) : (
-            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+            <ol className="space-y-3">
               {aiLines.map((line, i) => (
-                <li key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff", marginTop: 1 }}>{i + 1}</span>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.82)", lineHeight: 1.6, margin: 0 }}>{line}</p>
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{i + 1}</span>
+                  <p className="text-sm text-foreground leading-relaxed">{line}</p>
                 </li>
               ))}
-            </ul>
+            </ol>
           )}
-        </div>
+        </AdminSectionCard>
 
         {/* ── Report view toggle ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 700, marginRight: 4 }}>View:</span>
+        <div className="flex items-center gap-2 overflow-x-auto rounded-xl border border-border bg-card p-1 shadow-sm">
           {(["daily", "monthly", "bimonthly"] as ReportView[]).map(v => (
-            <button key={v} onClick={() => setReportView(v)}
-              style={{ padding: "6px 16px", borderRadius: 10, border: "1px solid var(--line)", background: reportView === v ? "linear-gradient(135deg, #512ACC 0%, #512ACC 100%)" : "var(--surface)", color: reportView === v ? "#fff" : "var(--muted)", fontSize: 11, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}>
+            <button
+              key={v}
+              onClick={() => setReportView(v)}
+              className={`flex-1 min-w-max rounded-lg px-4 py-2 text-xs font-semibold transition-colors ${
+                reportView === v ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
               {v === "daily" ? "Daily Snapshot" : v === "monthly" ? "Monthly Report" : "Bi-Monthly (Leadership)"}
             </button>
           ))}
@@ -307,128 +284,109 @@ function AdminConsolePage() {
         {/* ── DAILY VIEW ── */}
         {reportView === "daily" && (
           <>
-            {/* Today's numbers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { label: "CV Analyses Today",    val: today.analyses,     prev: yest.analyses,     color: "#6366f1" },
-                { label: "Applications Today",   val: today.applications, prev: yest.applications, color: "#0369a1" },
-                { label: "Interviews Today",     val: today.interviews,   prev: yest.interviews,   color: "#d97706" },
-                { label: "Placements Today",     val: today.placements,   prev: yest.placements,   color: "#15803d" },
+                { label: "CV Analyses Today", val: today.analyses, prev: yest.analyses, color: "primary" as const },
+                { label: "Applications Today", val: today.applications, prev: yest.applications, color: "success" as const },
+                { label: "Screenings Today", val: today.interviews, prev: yest.interviews, color: "warning" as const },
+                { label: "Placements Today", val: today.placements, prev: yest.placements, color: "destructive" as const },
               ].map(({ label, val, prev, color }) => (
-                <div key={label} style={{ ...S.card, display: "flex", flexDirection: "column", gap: 6, transition: 'all 0.2s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(81,42,204,0.08)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(81,42,204,0.04)'; }}
-                >
-                  <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1, letterSpacing: '-0.02em' }}>{val}</span>
+                <AdminSectionCard key={label} title={label} subtitle={`vs ${prev} yesterday`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl font-extrabold text-foreground">{val}</span>
                     <TrendBadge pct={trendPct(val, prev)} />
                   </div>
-                  <p style={{ fontSize: 10, color: "var(--muted)" }}>vs {prev} yesterday</p>
-                </div>
+                </AdminSectionCard>
               ))}
             </div>
 
-            {/* 30-day sparklines */}
             {spark30.length > 0 && (
-              <div style={S.card}>
-                <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "#f36c21" }} /> Last 30 Days Activity</p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <AdminSectionCard icon={<Activity className="size-5 text-primary" />} title="Last 30 Days Activity" subtitle="Trend lines for core platform metrics">
+                <div className="grid gap-6 sm:grid-cols-2">
                   {[
-                    { label: "CV Analyses",   data: spark30.map(d => d.analyses),     color: "#6366f1" },
-                    { label: "Applications",  data: spark30.map(d => d.applications), color: "#0369a1" },
-                    { label: "Interviews",    data: spark30.map(d => d.interviews),   color: "#d97706" },
-                    { label: "Placements",    data: spark30.map(d => d.placements),   color: "#15803d" },
+                    { label: "CV Analyses", data: spark30.map(d => d.analyses), color: "#6366f1" },
+                    { label: "Applications", data: spark30.map(d => d.applications), color: "#0369a1" },
+                    { label: "Screenings", data: spark30.map(d => d.interviews), color: "#d97706" },
+                    { label: "Placements", data: spark30.map(d => d.placements), color: "#15803d" },
                   ].map(({ label, data, color }) => {
                     const total = data.reduce((a, b) => a + b, 0);
-                    const avg   = data.length > 0 ? (total / data.length).toFixed(1) : "0";
+                    const avg = data.length > 0 ? (total / data.length).toFixed(1) : "0";
                     return (
-                      <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--ink)" }}>{label}</span>
-                          <span style={{ fontSize: 10, color: "var(--muted)" }}>{total} total · {avg}/day avg</span>
+                      <div key={label} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-foreground">{label}</span>
+                          <span className="text-[10px] text-muted-foreground">{total} total · {avg}/day avg</span>
                         </div>
-                        <div style={{ overflowX: "auto" }}>
+                        <div className="overflow-x-auto">
                           <Sparkline data={data} color={color} height={44} />
                         </div>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                          <span style={{ fontSize: 9, color: "var(--muted)" }}>30 days ago</span>
-                          <span style={{ fontSize: 9, color: "var(--muted)" }}>today</span>
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
+                          <span>30 days ago</span>
+                          <span>today</span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-                {trendLoading && <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>Loading trend data…</p>}
-              </div>
+                {trendLoading && <p className="text-xs text-muted-foreground mt-4">Loading trend data…</p>}
+              </AdminSectionCard>
             )}
 
-            {/* Platform KPIs */}
-            <div style={S.card}>
-              <p style={S.heading}><Star style={{ width: 14, height: 14, color: "#f36c21" }} /> Platform Totals</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 10 }}>
+            <AdminSectionCard icon={<Star className="size-5 text-primary" />} title="Platform Totals" subtitle="Aggregate counts across all modules">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                 {[
-                  { label: "Total Candidates",    val: stats?.total_candidates ?? 0 },
-                  { label: "Registered Seekers",  val: stats?.job_seekers ?? 0 },
-                  { label: "PERKESO Candidates",  val: stats?.poc_candidates ?? 0 },
-                  { label: "Employers",           val: stats?.employers ?? 0 },
-                  { label: "Jobs Posted",         val: stats?.jobs ?? 0 },
-                  { label: "Applications",        val: stats?.applications ?? 0 },
-                  { label: "Interviews",          val: stats?.interviews ?? 0 },
-                  { label: "CV Analyses",         val: stats?.analyses ?? 0 },
-                  { label: "Placements",          val: stats?.placements ?? 0 },
+                  { label: "Total Candidates", val: stats?.total_candidates ?? 0 },
+                  { label: "Registered Seekers", val: stats?.job_seekers ?? 0 },
+                  { label: "PERKESO Candidates", val: stats?.poc_candidates ?? 0 },
+                  { label: "Employers", val: stats?.employers ?? 0 },
+                  { label: "Jobs Posted", val: stats?.jobs ?? 0 },
+                  { label: "Applications", val: stats?.applications ?? 0 },
+                  { label: "Screenings", val: stats?.interviews ?? 0 },
+                  { label: "CV Analyses", val: stats?.analyses ?? 0 },
+                  { label: "Placements", val: stats?.placements ?? 0 },
                 ].map(({ label, val }) => (
-                  <div key={label} style={{ background: "var(--base)", border: "1px solid var(--line)", borderRadius: 10, padding: "12px 12px", textAlign: "center", transition: 'all 0.15s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
-                  >
-                    <p style={{ fontSize: 20, fontWeight: 800, color: "#512ACC", letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val.toLocaleString()}</p>
-                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
-                  </div>
+                  <AdminStatTile key={label} label={label} value={statsLoading ? "…" : val.toLocaleString()} />
                 ))}
               </div>
-            </div>
+            </AdminSectionCard>
           </>
         )}
 
         {/* ── MONTHLY VIEW ── */}
         {reportView === "monthly" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={S.card}>
-              <p style={S.heading}><Calendar style={{ width: 14, height: 14, color: "#f36c21" }} /> Monthly Activity — Last 60 Days</p>
+          <div className="space-y-5">
+            <AdminSectionCard icon={<Calendar className="size-5 text-primary" />} title="Monthly Activity" subtitle="Last 60 days aggregated by month">
               {months.length === 0 ? (
-                <p style={{ fontSize: 12, color: "var(--muted)" }}>No data yet.</p>
+                <p className="text-sm text-muted-foreground">No data yet.</p>
               ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                <div className="grid gap-6 sm:grid-cols-2">
                   {[
-                    { label: "Resume Scores",  key: "analyses",     color: "#31C47A" },
-                    { label: "Applications", key: "applications", color: "#0369a1" },
-                    { label: "Interviews",   key: "interviews",   color: "#d97706" },
-                    { label: "Placements",   key: "placements",   color: "#15803d" },
+                    { label: "Resume Scores", key: "analyses" as const, color: "#31C47A" },
+                    { label: "Applications", key: "applications" as const, color: "#0369a1" },
+                    { label: "Screenings", key: "interviews" as const, color: "#d97706" },
+                    { label: "Placements", key: "placements" as const, color: "#15803d" },
                   ].map(({ label, key, color }) => (
                     <div key={key}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: "var(--ink)", marginBottom: 10 }}>{label}</p>
+                      <p className="text-xs font-semibold text-foreground mb-3">{label}</p>
                       <MonthlyBarChart months={months.map(m => ({ label: m.label, total: (m as any)[key] as number }))} field={key} color={color} />
                     </div>
                   ))}
                 </div>
               )}
-            </div>
+            </AdminSectionCard>
 
-            {/* Month-over-month table */}
             {months.length >= 2 && (
-              <div style={S.card}>
-                <p style={S.heading}><BookOpen style={{ width: 14, height: 14, color: "#f36c21" }} /> Month-over-Month Summary</p>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <AdminSectionCard icon={<BookOpen className="size-5 text-primary" />} title="Month-over-Month Summary" subtitle="Growth trends by calendar month">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
                     <thead>
-                      <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                        <th style={{ textAlign: "left", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Month</th>
-                        <th style={{ textAlign: "right", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Analyses</th>
-                        <th style={{ textAlign: "right", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Applications</th>
-                        <th style={{ textAlign: "right", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Interviews</th>
-                        <th style={{ textAlign: "right", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Placements</th>
-                        <th style={{ textAlign: "right", padding: "6px 8px", color: "var(--muted)", fontWeight: 600 }}>Conv. Rate</th>
+                      <tr className="border-b border-border">
+                        <th className="p-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Month</th>
+                        <th className="p-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Analyses</th>
+                        <th className="p-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Applications</th>
+                        <th className="p-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Screenings</th>
+                        <th className="p-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Placements</th>
+                        <th className="p-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Conv. Rate</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -436,99 +394,88 @@ function AdminConsolePage() {
                         const prev = months[i - 1];
                         const convRate = m.applications > 0 ? `${Math.round((m.interviews / m.applications) * 100)}%` : "—";
                         return (
-                          <tr key={m.label} style={{ borderBottom: "1px solid var(--line)" }}>
-                            <td style={{ padding: "7px 8px", fontWeight: 600, color: "var(--ink)" }}>{m.label}</td>
-                            <td style={{ textAlign: "right", padding: "7px 8px" }}>
-                              {m.analyses} {prev && <TrendBadge pct={trendPct(m.analyses, prev.analyses)} />}
-                            </td>
-                            <td style={{ textAlign: "right", padding: "7px 8px" }}>
-                              {m.applications} {prev && <TrendBadge pct={trendPct(m.applications, prev.applications)} />}
-                            </td>
-                            <td style={{ textAlign: "right", padding: "7px 8px" }}>
-                              {m.interviews} {prev && <TrendBadge pct={trendPct(m.interviews, prev.interviews)} />}
-                            </td>
-                            <td style={{ textAlign: "right", padding: "7px 8px" }}>{m.placements}</td>
-                            <td style={{ textAlign: "right", padding: "7px 8px", fontWeight: 700, color: "var(--brand)" }}>{convRate}</td>
+                          <tr key={m.label} className="border-b border-border last:border-0">
+                            <td className="p-3 font-semibold text-foreground">{m.label}</td>
+                            <td className="p-3 text-right text-xs">{m.analyses} {prev && <TrendBadge pct={trendPct(m.analyses, prev.analyses)} />}</td>
+                            <td className="p-3 text-right text-xs">{m.applications} {prev && <TrendBadge pct={trendPct(m.applications, prev.applications)} />}</td>
+                            <td className="p-3 text-right text-xs">{m.interviews} {prev && <TrendBadge pct={trendPct(m.interviews, prev.interviews)} />}</td>
+                            <td className="p-3 text-right text-xs">{m.placements}</td>
+                            <td className="p-3 text-right text-xs font-bold text-primary">{convRate}</td>
                           </tr>
                         );
                       })}
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </AdminSectionCard>
             )}
           </div>
         )}
 
         {/* ── BI-MONTHLY / LEADERSHIP VIEW ── */}
         {reportView === "bimonthly" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {/* Leadership summary header */}
-            <div style={{ background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', borderRadius: 14, padding: '20px 24px', border: 'none', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', overflow: 'hidden', position: 'relative' }}>
-              <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-              <div style={{ position: 'relative' }}>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  MYFutureJobs · Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
+          <div className="space-y-5">
+            <div className="rounded-2xl relative overflow-hidden bg-gradient-to-br from-[#512ACC] via-[#6B4FD6] to-[#512ACC] p-6 shadow-lg">
+              <div className="absolute -right-10 -top-10 size-44 rounded-full bg-white/5" />
+              <div className="relative">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
+                  Senior Leadership Report · Generated {new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
                 </p>
-                <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "6px 0 12px" }}>Bi-Monthly Performance Overview</h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+                <h2 className="text-xl font-extrabold text-white mt-2 mb-4">Bi-Monthly Performance Overview</h2>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
-                    { label: "Total Candidates", val: (stats?.total_candidates ?? 0).toLocaleString(), icon: "👥" },
-                    { label: "Employers Served", val: (stats?.employers ?? 0).toLocaleString(),         icon: "🏢" },
-                    { label: "Job Placements",   val: (stats?.placements ?? 0).toLocaleString(),        icon: "✅" },
-                    { label: "Resume Scores",      val: (stats?.analyses ?? 0).toLocaleString(),          icon: "📄" },
+                    { label: "Total Candidates", val: (stats?.total_candidates ?? 0).toLocaleString(), icon: <Users className="size-5" /> },
+                    { label: "Employers Served", val: (stats?.employers ?? 0).toLocaleString(), icon: <Briefcase className="size-5" /> },
+                    { label: "Job Placements", val: (stats?.placements ?? 0).toLocaleString(), icon: <CheckCircle className="size-5" /> },
+                    { label: "Resume Scores", val: (stats?.analyses ?? 0).toLocaleString(), icon: <FileText className="size-5" /> },
                   ].map(({ label, val, icon }) => (
-                    <div key={label} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 16px", textAlign: "center", border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ fontSize: 22 }}>{icon}</div>
-                      <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginTop: 4, letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val}</div>
-                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 2, fontWeight: 500 }}>{label}</div>
+                    <div key={label} className="rounded-xl bg-white/10 border border-white/10 p-4 text-center">
+                      <div className="text-white/70 flex justify-center mb-2">{icon}</div>
+                      <div className="text-2xl font-extrabold text-white">{statsLoading ? "…" : val}</div>
+                      <div className="text-[10px] text-white/50 mt-1 font-medium">{label}</div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* AI Narrative for leadership */}
-            <div style={S.card}>
-              <p style={S.heading}><Brain style={{ width: 14, height: 14, color: "#f36c21" }} /> Executive Summary</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <AdminSectionCard icon={<Brain className="size-5 text-primary" />} title="Executive Summary" subtitle="AI-generated leadership narrative">
+              <div className="space-y-3">
                 {aiLines.map((line, i) => (
-                  <div key={i} style={{ display: "flex", gap: 10, padding: "12px 14px", background: "var(--base)", borderRadius: 10, borderLeft: "3px solid #f36c21" }}>
-                    <p style={{ fontSize: 13, color: "var(--ink)", lineHeight: 1.6, margin: 0 }}>{line}</p>
+                  <div key={i} className="rounded-xl border-l-4 border-primary bg-secondary/30 p-4">
+                    <p className="text-sm text-foreground leading-relaxed">{line}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </AdminSectionCard>
 
-            {/* Funnel chart */}
-            <div style={S.card}>
-              <p style={S.heading}><TrendingUp style={{ width: 14, height: 14, color: "#f36c21" }} /> Candidate Journey Funnel</p>
+            <AdminSectionCard icon={<TrendingUp className="size-5 text-primary" />} title="Candidate Journey Funnel" subtitle="Conversion from registration to placement">
               {(() => {
                 const total = stats?.total_candidates ?? 0;
                 const analysed = Math.min(stats?.analyses ?? 0, total);
-                const applied  = Math.min(stats?.applications ?? 0, analysed);
+                const applied = Math.min(stats?.applications ?? 0, analysed);
                 const interviewed = Math.min(stats?.interviews ?? 0, applied);
-                const placed   = Math.min(stats?.placements ?? 0, interviewed);
+                const placed = Math.min(stats?.placements ?? 0, interviewed);
                 const steps = [
-                  { label: "Registered",  val: total,       color: "#6366f1" },
-                  { label: "Resume Scored", val: analysed,    color: "#31C47A" },
-                  { label: "Applied",     val: applied,     color: "#d97706" },
-                  { label: "Interviewed", val: interviewed, color: "#15803d" },
-                  { label: "Placed",      val: placed,      color: "#dc2626" },
+                  { label: "Registered", val: total, color: "bg-indigo-500" },
+                  { label: "Resume Scored", val: analysed, color: "bg-emerald-500" },
+                  { label: "Applied", val: applied, color: "bg-amber-500" },
+                  { label: "Screened", val: interviewed, color: "bg-green-600" },
+                  { label: "Placed", val: placed, color: "bg-red-500" },
                 ];
                 return (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div className="space-y-3">
                     {steps.map((s, i) => {
                       const pct = total > 0 ? Math.round((s.val / total) * 100) : 0;
                       const conv = i > 0 && steps[i - 1].val > 0 ? `${Math.round((s.val / steps[i - 1].val) * 100)}% of prev` : "";
                       return (
                         <div key={s.label}>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)" }}>{s.label}</span>
-                            <span style={{ fontSize: 11, color: "var(--muted)" }}>{s.val.toLocaleString()} ({pct}%) {conv && `· ${conv}`}</span>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="font-semibold text-foreground">{s.label}</span>
+                            <span className="text-muted-foreground">{s.val.toLocaleString()} ({pct}%) {conv && `· ${conv}`}</span>
                           </div>
-                          <div style={{ height: 12, background: "var(--line)", borderRadius: 999, overflow: "hidden" }}>
-                            <div style={{ height: "100%", borderRadius: 999, background: s.color, width: `${pct}%`, transition: "width 0.5s" }} />
+                          <div className="h-3 rounded-full bg-secondary overflow-hidden">
+                            <div className={`h-full rounded-full ${s.color} transition-all duration-500`} style={{ width: `${pct}%` }} />
                           </div>
                         </div>
                       );
@@ -536,119 +483,110 @@ function AdminConsolePage() {
                   </div>
                 );
               })()}
-            </div>
+            </AdminSectionCard>
 
-            {/* Monthly bar chart for leadership */}
             {months.length > 0 && (
-              <div style={S.card}>
-                <p style={S.heading}><BarChart3 style={{ width: 14, height: 14, color: "#f36c21" }} /> Applications vs Interviews — Monthly</p>
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 100 }}>
+              <AdminSectionCard icon={<BarChart3 className="size-5 text-primary" />} title="Applications vs Screenings — Monthly" subtitle="Comparative monthly bar chart">
+                <div className="flex items-end gap-2 h-28">
                   {months.map((m, i) => {
                     const maxVal = Math.max(...months.map(x => x.applications), 1);
-                    const appH   = Math.max(3, Math.round((m.applications / maxVal) * 88));
-                    const intH   = Math.max(3, Math.round((m.interviews / maxVal) * 88));
+                    const appH = Math.max(3, Math.round((m.applications / maxVal) * 100));
+                    const intH = Math.max(3, Math.round((m.interviews / maxVal) * 100));
                     return (
-                      <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-                        <div style={{ width: "100%", display: "flex", gap: 2, alignItems: "flex-end", justifyContent: "center" }}>
-                          <div style={{ flex: 1, height: appH, background: "#0369a1", borderRadius: "2px 2px 0 0", opacity: 0.8 }} title={`Apps: ${m.applications}`} />
-                          <div style={{ flex: 1, height: intH, background: "#d97706", borderRadius: "2px 2px 0 0", opacity: 0.8 }} title={`Interviews: ${m.interviews}`} />
+                      <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                        <div className="w-full flex gap-0.5 items-end justify-center h-24">
+                          <div className="flex-1 rounded-t bg-sky-600 opacity-80" style={{ height: appH }} title={`Apps: ${m.applications}`} />
+                          <div className="flex-1 rounded-t bg-amber-500 opacity-80" style={{ height: intH }} title={`Screenings: ${m.interviews}`} />
                         </div>
-                        <span style={{ fontSize: 9, color: "var(--muted)" }}>{m.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{m.label}</span>
                       </div>
                     );
                   })}
                 </div>
-                <div style={{ display: "flex", gap: 16, marginTop: 10 }}>
-                  <span style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 5 }}><span style={{ width: 10, height: 10, background: "#0369a1", display: "inline-block", borderRadius: 2 }} /> Applications</span>
-                  <span style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 5 }}><span style={{ width: 10, height: 10, background: "#d97706", display: "inline-block", borderRadius: 2 }} /> Interviews</span>
+                <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 rounded-sm bg-sky-600" /> Applications</span>
+                  <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 rounded-sm bg-amber-500" /> Screenings</span>
                 </div>
-              </div>
+              </AdminSectionCard>
             )}
           </div>
         )}
 
-        {/* ── Candidate Engagement (always visible) ── */}
-        <div style={S.card}>
-          <p style={S.heading}><Activity style={{ width: 14, height: 14, color: "#f36c21" }} /> Candidate Engagement Breakdown</p>
+        {/* ── Candidate Engagement ── */}
+        <AdminSectionCard icon={<Activity className="size-5 text-primary" />} title="Candidate Engagement Breakdown" subtitle="Activity segments based on applications and screenings">
           {bhvLoading ? (
-            <p style={{ fontSize: 12, color: "var(--muted)" }}>Loading…</p>
+            <p className="text-sm text-muted-foreground">Loading…</p>
           ) : bhvStats ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div className="space-y-5">
               {[
-                { label: "Highly Active",  emoji: "🔥", count: bhvStats.highlyActive, color: "#10B981", desc: ">80 applications or >3 interviews" },
-                { label: "Active",         emoji: "✅", count: bhvStats.active,       color: "#6366F1", desc: "31–80 applications" },
-                { label: "Moderate",       emoji: "⚡", count: bhvStats.moderate,     color: "#F59E0B", desc: "11–30 applications" },
-                { label: "Low Activity",   emoji: "💤", count: bhvStats.low,          color: "#94A3B8", desc: "≤10 applications" },
-              ].map(({ label, emoji, count, color, desc }) => {
+                { label: "Highly Active", icon: <span>🔥</span>, count: bhvStats.highlyActive, color: "bg-emerald-500", desc: ">80 applications or >3 screenings" },
+                { label: "Active", icon: <span>✅</span>, count: bhvStats.active, color: "bg-indigo-500", desc: "31–80 applications" },
+                { label: "Moderate", icon: <span>⚡</span>, count: bhvStats.moderate, color: "bg-amber-500", desc: "11–30 applications" },
+                { label: "Low Activity", icon: <span>💤</span>, count: bhvStats.low, color: "bg-slate-400", desc: "≤10 applications" },
+              ].map(({ label, icon, count, color, desc }) => {
                 const pct = bhvStats.total > 0 ? Math.round((count / bhvStats.total) * 100) : 0;
                 return (
                   <div key={label}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                      <div>
-                        <span style={{ fontSize: 12, fontWeight: 700, color }}>{emoji} {label}</span>
-                        <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 6 }}>{desc}</span>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                        {icon} {label}
+                        <span className="text-[10px] font-normal text-muted-foreground">{desc}</span>
                       </div>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: "var(--ink)" }}>{count.toLocaleString()} <span style={{ color: "var(--muted)", fontWeight: 400 }}>({pct}%)</span></span>
+                      <span className="text-sm font-bold text-foreground">{count.toLocaleString()} <span className="text-muted-foreground font-normal">({pct}%)</span></span>
                     </div>
-                    <div style={{ height: 8, borderRadius: 999, background: "var(--line)", overflow: "hidden" }}>
-                      <div style={{ height: "100%", borderRadius: 999, background: `linear-gradient(90deg, ${color} 0%, ${color}cc 100%)`, width: `${pct}%`, transition: "width 0.6s" }} />
+                    <div className="h-2 rounded-full bg-secondary overflow-hidden">
+                      <div className={`h-full rounded-full ${color} transition-all duration-600`} style={{ width: `${pct}%` }} />
                     </div>
                   </div>
                 );
               })}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, paddingTop: 14, borderTop: "1px solid var(--line)", marginTop: 4 }}>
-                {[
-                  { label: "Avg Apps / Candidate", val: bhvStats.avgApps },
-                  { label: "Attended Interviews",   val: bhvStats.withInterviews.toLocaleString() },
-                  { label: "Behaviour Records",     val: bhvStats.total.toLocaleString() },
-                ].map(({ label, val }) => (
-                  <div key={label} style={{ textAlign: "center", background: "var(--base)", borderRadius: 10, padding: "12px 6px", border: "1px solid var(--line)" }}>
-                    <p style={{ fontSize: 18, fontWeight: 800, color: "#512ACC", letterSpacing: '-0.02em' }}>{val}</p>
-                    <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
-                  </div>
-                ))}
+              <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border">
+                <AdminStatTile label="Avg Apps / Candidate" value={bhvStats.avgApps} />
+                <AdminStatTile label="Attended Screenings" value={bhvStats.withScreenings.toLocaleString()} />
+                <AdminStatTile label="Behaviour Records" value={bhvStats.total.toLocaleString()} />
               </div>
             </div>
           ) : (
-            <p style={{ fontSize: 12, color: "var(--muted)" }}>No behaviour data available.</p>
+            <p className="text-sm text-muted-foreground">No behaviour data available.</p>
           )}
-        </div>
+        </AdminSectionCard>
 
         {/* ── Admin Modules ── */}
-        <div style={S.card}>
-          <p style={S.heading}><Settings style={{ width: 14, height: 14, color: "#f36c21" }} /> Platform Modules</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
+        <AdminSectionCard icon={<LayoutDashboard className="size-5 text-primary" />} title="Platform Modules" subtitle="Quick navigation to all governance areas">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {NAV_LINKS.map(({ href, icon: Icon, label, desc }) => (
-              <Link key={href} to={href} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: "var(--base)", border: "1px solid var(--line)", borderRadius: 12, textDecoration: "none", transition: "all 0.2s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(81,42,204,0.3)"; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.transform = 'none'; }}>
-                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon style={{ width: 16, height: 16, color: "#512ACC" }} />
+              <Link
+                key={href}
+                to={href}
+                className="group flex items-start gap-3 rounded-xl border border-border bg-background p-4 transition-all hover:border-primary/30 hover:-translate-y-0.5 hover:shadow-sm"
+              >
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <Icon className="size-4 text-primary" />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: 0 }}>{label}</p>
-                  <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 2, lineHeight: 1.4 }}>{desc}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{label}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{desc}</p>
                 </div>
-                <ChevronRight style={{ width: 14, height: 14, color: "var(--muted)", flexShrink: 0, marginTop: 2 }} />
+                <ChevronRight className="size-4 text-muted-foreground group-hover:text-primary mt-1" />
               </Link>
             ))}
           </div>
-        </div>
+        </AdminSectionCard>
 
         {/* ── Governance ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+        <div className="grid gap-4 sm:grid-cols-3">
           {[
-            { label: "Role-Based Access", val: "Active",  ok: true },
-            { label: "Audit Logging",     val: "Enabled", ok: true },
-            { label: "PDPA Compliance",   val: "Active",  ok: true },
+            { label: "Role-Based Access", val: "Active", ok: true },
+            { label: "Audit Logging", val: "Enabled", ok: true },
+            { label: "PDPA Compliance", val: "Active", ok: true },
           ].map(({ label, val, ok }) => (
-            <div key={label} style={{ ...S.card, display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 10, background: ok ? 'rgba(220,252,231,0.5)' : 'rgba(254,226,226,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <CheckCircle style={{ width: 16, height: 16, color: ok ? "#15803d" : "#dc2626" }} />
+            <div key={label} className="rounded-2xl border border-border bg-card p-4 flex items-center gap-3 shadow-sm">
+              <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${ok ? "bg-emerald-100" : "bg-red-100"}`}>
+                <CheckCircle className={`size-4 ${ok ? "text-emerald-600" : "text-red-600"}`} />
               </div>
               <div>
-                <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 500 }}>{label}</p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: ok ? "#15803d" : "#dc2626" }}>{val}</p>
+                <p className="text-xs text-muted-foreground font-medium">{label}</p>
+                <p className={`text-sm font-bold ${ok ? "text-emerald-600" : "text-red-600"}`}>{val}</p>
               </div>
             </div>
           ))}

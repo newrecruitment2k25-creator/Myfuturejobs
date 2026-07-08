@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from "react";
 import {
   User, GraduationCap, Briefcase, Wrench, Languages, Users,
   Sparkles, Download, Eye, EyeOff, Plus, Trash2, Loader2,
-  ChevronDown, ChevronUp, CheckCircle, BarChart2, FileText,
+  ChevronDown, ChevronUp, ChevronLeft, ChevronRight, CheckCircle, BarChart2, FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,9 +121,19 @@ const TEMPLATES: { id: ResumeTemplate; label: string; desc: string; best: string
   { id: "ats",     label: "ATS Optimised", desc: "No graphics · Clean headers · Keyword-rich",   best: "Online applications",      accent: "#10B981" },
 ];
 
+type WizardStep = 1 | 2 | 3 | 4;
+
+const STEP_META: Record<WizardStep, { title: string; subtitle: string }> = {
+  1: { title: "About You", subtitle: "Start with your contact details and a strong professional summary." },
+  2: { title: "Background", subtitle: "Add your education and work history." },
+  3: { title: "Skillset", subtitle: "List your skills, languages, and optional references." },
+  4: { title: "Polish & Export", subtitle: "Choose a template, run an ATS check, then preview or download." },
+};
+
 function ResumeBuilderPage() {
   const [data, setData] = useState<ResumeData>(DEFAULT);
   const [view, setView] = useState<"form" | "preview">("form");
+  const [step, setStep] = useState<WizardStep>(1);
   const [selectedTemplate, setSelectedTemplate] = useState<ResumeTemplate>("ats");
   const [skillInput, setSkillInput] = useState("");
   const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
@@ -256,98 +266,92 @@ function ResumeBuilderPage() {
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.08)' }}>
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                AI Tools
+                AI Tools · Resume Journey
               </div>
               <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>AI Resume Builder</h1>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Build a professional, ATS-optimised Malaysian resume with AI assistance.</p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Build a professional, ATS-optimised Malaysian resume in 4 steps.</p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" onClick={() => setView(view === "form" ? "preview" : "form")} className="gap-2">
+              <Button variant="outline" size="sm" onClick={() => setView(view === "form" ? "preview" : "form")} className="gap-2 bg-white/10 border-white/10 text-white hover:bg-white/20 hover:text-white">
                 {view === "form" ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
                 {view === "form" ? "Preview Resume" : "Back to Form"}
               </Button>
-              <Button variant="outline" size="sm" onClick={runAtsScore} disabled={aiLoading.ats} className="gap-2">
-                {aiLoading.ats ? <Loader2 className="size-4 animate-spin" /> : <BarChart2 className="size-4" />}
-                ATS Score
-              </Button>
-              <Button size="sm" onClick={downloadPdf} className="gap-2">
+              <Button size="sm" onClick={downloadPdf} className="gap-2 bg-white text-[#512ACC] hover:bg-white/90">
                 <Download className="size-4" /> Download PDF
               </Button>
             </div>
           </div>
-
-          {/* ATS Score result */}
-          {atsResult && (
-            <div className={`mt-4 rounded-xl border p-4 ${atsResult.score >= 80 ? "border-green-200 bg-green-50" : atsResult.score >= 60 ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50"}`}>
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="text-center">
-                  <p className={`text-3xl font-extrabold ${atsResult.score >= 80 ? "text-green-700" : atsResult.score >= 60 ? "text-amber-700" : "text-red-700"}`}>{atsResult.score}</p>
-                  <p className="text-xs text-muted-foreground">ATS Score</p>
-                </div>
-                <div className="text-center">
-                  <p className={`text-2xl font-bold ${atsResult.score >= 80 ? "text-green-700" : atsResult.score >= 60 ? "text-amber-700" : "text-red-700"}`}>{atsResult.grade}</p>
-                  <p className="text-xs text-muted-foreground">Grade</p>
-                </div>
-                <div className="flex-1 grid sm:grid-cols-3 gap-3 min-w-0">
-                  {atsResult.strengths.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-green-700 mb-1">✓ Strengths</p>
-                      <ul className="space-y-0.5">{atsResult.strengths.map((s, i) => <li key={i} className="text-xs text-green-800">{s}</li>)}</ul>
-                    </div>
-                  )}
-                  {atsResult.improvements.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-amber-700 mb-1">⚠ Improve</p>
-                      <ul className="space-y-0.5">{atsResult.improvements.map((s, i) => <li key={i} className="text-xs text-amber-800">{s}</li>)}</ul>
-                    </div>
-                  )}
-                  {atsResult.keywords_missing.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-red-700 mb-1">+ Add Keywords</p>
-                      <div className="flex flex-wrap gap-1">{atsResult.keywords_missing.map((k, i) => <span key={i} className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-700">{k}</span>)}</div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_400px] gap-6">
-
-          {/* ── LEFT: Form ─────────────────────────────────────────────────── */}
-          {view === "form" && (
-            <div className="space-y-4 lg:col-span-2">
-
-              {/* Personal Info */}
-              <Section icon={<User className="size-4" />} title="Personal Information">
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {([["name","Full Name *"],["email","Email *"],["phone","Phone *"],["location","Location (City, State) *"],["linkedin","LinkedIn URL"],["icNumber","IC Number (Optional)"],["expectedSalary","Expected Salary (RM)"]] as [keyof PersonalInfo, string][])
-                    .map(([k, label]) => (
-                      <div key={k}>
-                        <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
-                        <Input value={data.personalInfo[k]} onChange={(e) => setPersonal(k, e.target.value)} placeholder={label.replace(" *","").replace(" (Optional)","").replace(" (RM)","").replace(" (City, State)","")} className="h-9 text-sm" />
+        {view === "form" && (
+          <>
+            {/* ── Stepper ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 22, padding: '16px 20px', borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', overflowX: 'auto' }}>
+              {([1, 2, 3, 4] as WizardStep[]).map((s, idx, arr) => {
+                const current = step === s;
+                const done = step > s;
+                return (
+                  <div key={s} style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 150 }}>
+                    <button onClick={() => setStep(s)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+                      <div style={{ width: 30, height: 30, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, transition: 'all 0.2s', border: `2px solid ${current ? '#512ACC' : done ? '#31C47A' : 'var(--line)'}`, background: current ? '#512ACC' : done ? '#dcfce7' : 'var(--surface)', color: current ? '#fff' : done ? '#15803d' : 'var(--muted)' }}>
+                        {done && !current ? '✓' : s}
                       </div>
-                    ))}
-                </div>
-              </Section>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: current ? 'var(--ink)' : done ? 'var(--ink)' : 'var(--muted)' }}>Step {s}</div>
+                        <div style={{ fontSize: 10, fontWeight: 600, color: current ? '#512ACC' : 'var(--muted)', marginTop: 1 }}>{STEP_META[s].title}</div>
+                      </div>
+                    </button>
+                    {idx < arr.length - 1 && (
+                      <div style={{ flex: 1, height: 2, background: done ? '#31C47A' : 'var(--line)', margin: '0 10px', minWidth: 18 }} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-              {/* Summary */}
-              <Section icon={<FileText className="size-4" />} title="Professional Summary">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-medium text-muted-foreground">Summary</label>
-                  <AiBtn loading={!!aiLoading.summary} onClick={aiSummary} label="Write My Summary" />
-                </div>
-                <textarea
-                  value={data.summary}
-                  onChange={(e) => setData((p) => ({ ...p, summary: e.target.value }))}
-                  rows={4}
-                  placeholder="A results-driven professional with X years of experience in…"
-                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
-                />
-              </Section>
+            {/* ── Step Title ── */}
+            <div style={{ marginBottom: 18 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--ink)', margin: 0 }}>{STEP_META[step].title}</h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>{STEP_META[step].subtitle}</p>
+            </div>
 
-              {/* Education */}
+            <div className="space-y-4">
+
+              {step === 1 && (
+                <>
+                  {/* Personal Info */}
+                  <Section icon={<User className="size-4" />} title="Personal Information">
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {([["name","Full Name *"],["email","Email *"],["phone","Phone *"],["location","Location (City, State) *"],["linkedin","LinkedIn URL"],["icNumber","IC Number (Optional)"],["expectedSalary","Expected Salary (RM)"]] as [keyof PersonalInfo, string][])
+                        .map(([k, label]) => (
+                          <div key={k}>
+                            <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
+                            <Input value={data.personalInfo[k]} onChange={(e) => setPersonal(k, e.target.value)} placeholder={label.replace(" *","").replace(" (Optional)","").replace(" (RM)","").replace(" (City, State)","")} className="h-9 text-sm" />
+                          </div>
+                        ))}
+                    </div>
+                  </Section>
+
+                  {/* Summary */}
+                  <Section icon={<FileText className="size-4" />} title="Professional Summary">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-medium text-muted-foreground">Summary</label>
+                      <AiBtn loading={!!aiLoading.summary} onClick={aiSummary} label="Write My Summary" />
+                    </div>
+                    <textarea
+                      value={data.summary}
+                      onChange={(e) => setData((p) => ({ ...p, summary: e.target.value }))}
+                      rows={4}
+                      placeholder="A results-driven professional with X years of experience in…"
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                    />
+                  </Section>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  {/* Education */}
               <Section icon={<GraduationCap className="size-4" />} title="Education">
                 {data.education.map((edu, idx) => (
                   <div key={edu.id} className="rounded-xl border border-border p-4 space-y-3">
@@ -446,7 +450,11 @@ function ResumeBuilderPage() {
                   <Plus className="size-3.5" /> Add Experience
                 </button>
               </Section>
+                </>
+              )}
 
+              {step === 3 && (
+                <>
               {/* Skills */}
               <Section icon={<Wrench className="size-4" />} title="Skills">
                 <div className="flex items-center gap-2 mb-2">
@@ -518,7 +526,11 @@ function ResumeBuilderPage() {
                   <Plus className="size-3.5" /> Add Reference
                 </button>
               </Section>
+                </>
+              )}
 
+              {step === 4 && (
+                <>
               {/* Template selector */}
               <div className="rounded-2xl border border-border bg-card shadow-sm p-5">
                 <p className="text-sm font-semibold text-foreground mb-3">Choose Your Preferred Template</p>
@@ -550,6 +562,42 @@ function ResumeBuilderPage() {
                 </div>
               </div>
 
+              {/* ATS Score result */}
+              {atsResult && (
+                <div className={`rounded-xl border p-4 ${atsResult.score >= 80 ? "border-green-200 bg-green-50" : atsResult.score >= 60 ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50"}`}>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="text-center">
+                      <p className={`text-3xl font-extrabold ${atsResult.score >= 80 ? "text-green-700" : atsResult.score >= 60 ? "text-amber-700" : "text-red-700"}`}>{atsResult.score}</p>
+                      <p className="text-xs text-muted-foreground">ATS Score</p>
+                    </div>
+                    <div className="text-center">
+                      <p className={`text-2xl font-bold ${atsResult.score >= 80 ? "text-green-700" : atsResult.score >= 60 ? "text-amber-700" : "text-red-700"}`}>{atsResult.grade}</p>
+                      <p className="text-xs text-muted-foreground">Grade</p>
+                    </div>
+                    <div className="flex-1 grid sm:grid-cols-3 gap-3 min-w-0">
+                      {atsResult.strengths.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-green-700 mb-1">✓ Strengths</p>
+                          <ul className="space-y-0.5">{atsResult.strengths.map((s, i) => <li key={i} className="text-xs text-green-800">{s}</li>)}</ul>
+                        </div>
+                      )}
+                      {atsResult.improvements.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-amber-700 mb-1">⚠ Improve</p>
+                          <ul className="space-y-0.5">{atsResult.improvements.map((s, i) => <li key={i} className="text-xs text-amber-800">{s}</li>)}</ul>
+                        </div>
+                      )}
+                      {atsResult.keywords_missing.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-red-700 mb-1">+ Add Keywords</p>
+                          <div className="flex flex-wrap gap-1">{atsResult.keywords_missing.map((k, i) => <span key={i} className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-700">{k}</span>)}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Generate / Preview CTA */}
               <div className="flex justify-end gap-3 pt-2">
                 <Button variant="outline" onClick={runAtsScore} disabled={aiLoading.ats} className="gap-2">
@@ -560,9 +608,28 @@ function ResumeBuilderPage() {
                   <Eye className="size-4" /> Preview Resume
                 </Button>
               </div>
+                </>
+              )}
 
             </div>
-          )}
+
+            {/* ── Step Navigation ── */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 8 }}>
+              <Button variant="outline" onClick={() => setStep((s) => Math.max(1, s - 1) as WizardStep)} disabled={step === 1} className="gap-2">
+                <ChevronLeft className="size-4" /> Back
+              </Button>
+              {step < 4 ? (
+                <Button onClick={() => setStep((s) => Math.min(4, s + 1) as WizardStep)} className="gap-2">
+                  Next <ChevronRight className="size-4" />
+                </Button>
+              ) : (
+                <Button onClick={() => setView("preview")} className="gap-2">
+                  <Eye className="size-4" /> Preview Resume
+                </Button>
+              )}
+            </div>
+
+          </>)}
 
           {/* ── RIGHT / Full: Preview ─────────────────────────────────────── */}
           {view === "preview" && (
@@ -691,7 +758,6 @@ function ResumeBuilderPage() {
             </div>
           )}
 
-        </div>
       </main>
     </div>
   );

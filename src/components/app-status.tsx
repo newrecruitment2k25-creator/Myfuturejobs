@@ -6,7 +6,7 @@ import type { AppStatus } from "@/lib/ops-api";
 export const STATUS_CONFIG: Record<AppStatus, { label: string; badge: string; dot: string }> = {
   applied:     { label: "Applied",     badge: "bg-blue-50 text-blue-700 border-blue-200",     dot: "bg-blue-500" },
   shortlisted: { label: "Shortlisted", badge: "bg-purple-50 text-purple-700 border-purple-200", dot: "bg-purple-500" },
-  interview:   { label: "Interview",   badge: "bg-orange-50 text-orange-700 border-orange-200", dot: "bg-orange-500" },
+  interview:   { label: "Screening",   badge: "bg-orange-50 text-orange-700 border-orange-200", dot: "bg-orange-500" },
   kiv:         { label: "KIV",         badge: "bg-yellow-50 text-yellow-700 border-yellow-200", dot: "bg-yellow-500" },
   offered:     { label: "Offered",     badge: "bg-emerald-50 text-emerald-700 border-emerald-200", dot: "bg-emerald-500" },
   hired:       { label: "Hired",       badge: "bg-green-100 text-green-800 border-green-300",  dot: "bg-green-700" },
