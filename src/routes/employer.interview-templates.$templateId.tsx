@@ -218,7 +218,7 @@ function TemplateDetailPage() {
               <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>{template?.role_title}{template?.company_name ? ` · ${template.company_name}` : ""}</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ borderRadius: 999, background: 'rgba(32,82,149,0.1)', padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#205295', textTransform: 'capitalize' }}>{template?.interview_type}</span>
+              <span style={{ borderRadius: 999, background: 'rgba(81,42,204,0.1)', padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#512ACC', textTransform: 'capitalize' }}>{template?.interview_type}</span>
               {template?.experience_level && <span style={{ borderRadius: 999, background: 'var(--secondary)', padding: '4px 12px', fontSize: 11, fontWeight: 600, color: 'var(--muted)' }}>{template.experience_level}</span>}
             </div>
           </div>

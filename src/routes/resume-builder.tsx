@@ -216,10 +216,10 @@ function ResumeBuilderPage() {
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${data.personalInfo.name || "Resume"}</title><style>
       *{margin:0;padding:0;box-sizing:border-box}
       body{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;color:#111;background:#fff;padding:24px 32px;max-width:800px;margin:0 auto}
-      h1{font-size:20pt;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+      h1{font-size:20pt;font-weight:700;color:#202020;margin-bottom:2px}
       .contact{font-size:9pt;color:#555;margin-bottom:10px}
       .contact span{margin-right:12px}
-      h2{font-size:11pt;font-weight:700;color:#1a1a2e;border-bottom:1.5px solid #1a1a2e;margin:12px 0 6px;padding-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+      h2{font-size:11pt;font-weight:700;color:#202020;border-bottom:1.5px solid #202020;margin:12px 0 6px;padding-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
       .summary{font-size:10pt;line-height:1.5;color:#333;margin-bottom:4px}
       .entry{margin-bottom:8px}
       .entry-header{display:flex;justify-content:space-between;align-items:baseline}
@@ -250,7 +250,7 @@ function ResumeBuilderPage() {
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
 
         {/* Header */}
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
           <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
@@ -582,7 +582,7 @@ function ResumeBuilderPage() {
               {/* ATS Resume Preview */}
               <div ref={previewRef} className="bg-white text-[#111] rounded-2xl border border-border shadow-sm p-8 max-w-3xl mx-auto font-['Segoe_UI',Arial,sans-serif] text-[11pt] leading-relaxed">
                 {/* Header */}
-                <h1 className="text-[22pt] font-bold mb-0.5" style={{ color: TEMPLATES.find(t => t.id === selectedTemplate)?.accent ?? '#1a1a2e', fontFamily: selectedTemplate === 'classic' ? 'Georgia,serif' : 'inherit' }}>{data.personalInfo.name || "Your Name"}</h1>
+                <h1 className="text-[22pt] font-bold mb-0.5" style={{ color: TEMPLATES.find(t => t.id === selectedTemplate)?.accent ?? '#202020', fontFamily: selectedTemplate === 'classic' ? 'Georgia,serif' : 'inherit' }}>{data.personalInfo.name || "Your Name"}</h1>
                 <div className="text-[9pt] text-[#555] flex flex-wrap gap-x-4 gap-y-0.5 mb-3 border-b border-[#ddd] pb-3">
                   {data.personalInfo.email && <span>{data.personalInfo.email}</span>}
                   {data.personalInfo.phone && <span>{data.personalInfo.phone}</span>}
@@ -594,7 +594,7 @@ function ResumeBuilderPage() {
                 {/* Summary */}
                 {data.summary && (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">Professional Summary</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">Professional Summary</h2>
                     <p className="text-[10pt] text-[#333] mb-4 leading-relaxed">{data.summary}</p>
                   </>
                 )}
@@ -602,7 +602,7 @@ function ResumeBuilderPage() {
                 {/* Experience */}
                 {data.experience.some((e) => e.company || e.title) && (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">Work Experience</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">Work Experience</h2>
                     <div className="mb-4 space-y-3">
                       {data.experience.filter((e) => e.company || e.title).map((exp) => (
                         <div key={exp.id}>
@@ -627,7 +627,7 @@ function ResumeBuilderPage() {
                 {/* Education */}
                 {data.education.some((e) => e.institution) && (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">Education</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">Education</h2>
                     <div className="mb-4 space-y-2">
                       {data.education.filter((e) => e.institution).map((edu) => (
                         <div key={edu.id}>
@@ -645,7 +645,7 @@ function ResumeBuilderPage() {
                 {/* Skills */}
                 {data.skills.length > 0 && (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">Skills</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">Skills</h2>
                     <div className="mb-4 flex flex-wrap gap-1.5">
                       {data.skills.map((s) => (
                         <span key={s} className="rounded border border-[#c7d0ff] bg-[#f0f2ff] px-2 py-0.5 text-[9pt] text-[#2a3080]">{s}</span>
@@ -657,7 +657,7 @@ function ResumeBuilderPage() {
                 {/* Languages */}
                 {data.languages.some((l) => l.name) && (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">Languages</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">Languages</h2>
                     <div className="mb-4 grid grid-cols-3 gap-x-4 gap-y-1">
                       {data.languages.filter((l) => l.name).map((lang) => (
                         <div key={lang.id} className="flex justify-between text-[9.5pt]">
@@ -672,11 +672,11 @@ function ResumeBuilderPage() {
                 {/* References */}
                 {data.references.length > 0 ? (
                   <>
-                    <h2 className="text-[10pt] font-bold text-[#1a1a2e] uppercase tracking-wider border-b border-[#1a1a2e] pb-0.5 mb-2">References</h2>
+                    <h2 className="text-[10pt] font-bold text-[#202020] uppercase tracking-wider border-b border-[#202020] pb-0.5 mb-2">References</h2>
                     <div className="grid grid-cols-2 gap-4">
                       {data.references.map((ref) => (
                         <div key={ref.id} className="text-[9.5pt] leading-snug">
-                          <p className="font-semibold text-[#1a1a2e]">{ref.name}</p>
+                          <p className="font-semibold text-[#202020]">{ref.name}</p>
                           <p className="text-[#555]">{ref.title}{ref.company ? `, ${ref.company}` : ""}</p>
                           {ref.phone && <p className="text-[#777]">{ref.phone}</p>}
                           {ref.email && <p className="text-[#777]">{ref.email}</p>}

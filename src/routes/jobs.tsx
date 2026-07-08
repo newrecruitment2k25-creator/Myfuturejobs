@@ -357,10 +357,10 @@ function SmartSearchBar({
             display: 'flex', alignItems: 'center', gap: 12,
             background: 'var(--surface)', border: '1.5px solid var(--line)',
             borderRadius: 14, padding: '10px 12px 10px 18px',
-            boxShadow: '0 2px 12px rgba(10,38,71,0.06)',
+            boxShadow: '0 2px 12px rgba(81,42,204,0.06)',
             minHeight: 56, transition: 'border-color 0.15s',
           }}>
-            <Search style={{ width: 18, height: 18, color: '#205295', opacity: 0.7, flexShrink: 0 }} />
+            <Search style={{ width: 18, height: 18, color: '#512ACC', opacity: 0.7, flexShrink: 0 }} />
             <input
               ref={inputRef}
               value={value}
@@ -384,10 +384,10 @@ function SmartSearchBar({
               onClick={() => onSearch()}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                background: 'linear-gradient(135deg, #0A2647 0%, #205295 100%)', color: '#fff', border: 'none',
+                background: 'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)', color: '#fff', border: 'none',
                 borderRadius: 10, padding: '9px 22px', fontSize: 13,
                 fontWeight: 700, cursor: 'pointer', flexShrink: 0,
-                boxShadow: '0 2px 8px rgba(10,38,71,0.15)',
+                boxShadow: '0 2px 8px rgba(81,42,204,0.15)',
               }}
             >
               <Search style={{ width: 15, height: 15 }} /> Search
@@ -402,7 +402,7 @@ function SmartSearchBar({
             {BM_EN_DEMO_CHIPS.map(chip => (
               <button key={chip.label} onClick={() => { onChange(chip.label); onSearch(chip.label); }}
                 title={chip.hint}
-                style={{ fontSize: 11, fontWeight: 700, color: '#205295', background: 'rgba(32,82,149,0.06)', border: '1px solid rgba(32,82,149,0.12)', borderRadius: 999, padding: '3px 10px', cursor: 'pointer', transition: 'all 0.15s' }}>
+                style={{ fontSize: 11, fontWeight: 700, color: '#512ACC', background: 'rgba(81,42,204,0.06)', border: '1px solid rgba(81,42,204,0.12)', borderRadius: 999, padding: '3px 10px', cursor: 'pointer', transition: 'all 0.15s' }}>
                 {chip.label}
               </button>
             ))}
@@ -413,7 +413,7 @@ function SmartSearchBar({
             <div style={{
               position: 'absolute', top: '100%', left: 0, right: 0,
               background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14,
-              boxShadow: '0 8px 32px rgba(10,38,71,0.12)',
+              boxShadow: '0 8px 32px rgba(81,42,204,0.12)',
               zIndex: 100, marginTop: 6, overflow: 'hidden',
             }}>
               {(value.length < 2 ? recentSearches.map(r => ({ type: "recent" as const, text: r })) : suggestions).map((s, i) => (
@@ -423,7 +423,7 @@ function SmartSearchBar({
                   style={{
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '10px 16px', cursor: 'pointer',
-                    background: highlightIdx === i ? 'rgba(32,82,149,0.06)' : 'transparent',
+                    background: highlightIdx === i ? 'rgba(81,42,204,0.06)' : 'transparent',
                     borderBottom: i < suggestions.length - 1 ? '1px solid var(--line)' : 'none',
                   }}
                 >
@@ -461,8 +461,8 @@ function SmartSearchBar({
                 {DEFAULT_CHIPS.map(chip => (
                   <button key={chip} onMouseDown={() => handleSelect(chip)}
                     style={{
-                      fontSize: 12, fontWeight: 600, color: '#205295', cursor: 'pointer',
-                      background: 'rgba(32,82,149,0.06)', border: '1px solid var(--line)',
+                      fontSize: 12, fontWeight: 600, color: '#512ACC', cursor: 'pointer',
+                      background: 'rgba(81,42,204,0.06)', border: '1px solid var(--line)',
                       borderRadius: 8, padding: '4px 12px', transition: 'all 0.15s',
                     }}>
                     {chip}
@@ -479,7 +479,7 @@ function SmartSearchBar({
             <Sparkles style={{ width: 13, height: 13, color: '#f36c21' }} />
             <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', marginRight: 4 }}>Understood:</span>
             {parsedQuery.role && (
-              <span style={{ fontSize: 11, fontWeight: 600, background: '#205295', color: '#fff', borderRadius: 6, padding: '2px 8px' }}>{parsedQuery.role}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, background: '#512ACC', color: '#fff', borderRadius: 6, padding: '2px 8px' }}>{parsedQuery.role}</span>
             )}
             {Array.from(new Set([...parsedQuery.locations, ...locationFilters])).map(l => (
               <span key={l} style={{ fontSize: 11, fontWeight: 600, background: '#0d9488', color: '#fff', borderRadius: 6, padding: '2px 8px' }}>{l}</span>
@@ -503,7 +503,7 @@ function SmartSearchBar({
               {total > 0 ? `${total.toLocaleString()} jobs found` : "No jobs found"}
             </span>
             {semanticActive && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#205295', background: 'rgba(32,82,149,0.08)', borderRadius: 999, padding: '2px 8px', marginLeft: 4 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#512ACC', background: 'rgba(81,42,204,0.08)', borderRadius: 999, padding: '2px 8px', marginLeft: 4 }}>
                 <Sparkles style={{ width: 9, height: 9 }} /> Semantic AI ranking active
               </span>
             )}
@@ -558,7 +558,7 @@ function JobCardGrid({
         display: 'flex', flexDirection: 'column', gap: 10,
       }}
       onClick={onSelect}
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(10,38,71,0.08)'; }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(81,42,204,0.08)'; }}
       onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -615,7 +615,7 @@ function JobCardGrid({
         <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--muted)' }}>
           {job.created_at ? timeAgo(job.created_at) : "Today"}
         </span>
-        <span style={{ fontSize: 11, fontWeight: 600, color: '#205295', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#512ACC', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
           View Details <ChevronRight style={{ width: 12, height: 12 }} />
         </span>
       </div>
@@ -627,7 +627,7 @@ function JobCardGrid({
 function InfoBox({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
   return (
     <div style={{ background: 'var(--base)', border: '1px solid var(--line)', borderRadius: 10, padding: '10px 14px', transition: 'border-color 0.15s' }}
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.2)'; }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.2)'; }}
       onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--muted)', marginBottom: 3 }}>
@@ -660,7 +660,7 @@ function JobDetail({
             <h1 style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--ink)', margin: 0, lineHeight: 1.3 }}>{job.job_title}</h1>
             <p style={{ fontSize: 13, fontWeight: 600, color: '#f36c21', marginTop: 3 }}>{displayName}</p>
             <p style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-              <MapPin style={{ width: 13, height: 13, color: '#205295', flexShrink: 0 }} />{location}
+              <MapPin style={{ width: 13, height: 13, color: '#512ACC', flexShrink: 0 }} />{location}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -748,11 +748,11 @@ function JobDetail({
         {/* About the Company */}
         <section>
           <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--ink)', borderBottom: '1px solid var(--line)', paddingBottom: 8, marginBottom: 14 }}>About the Company</h2>
-          <div style={{ borderRadius: 12, padding: 16, background: 'rgba(32,82,149,0.03)', border: '1px solid var(--line)' }}>
+          <div style={{ borderRadius: 12, padding: 16, background: 'rgba(81,42,204,0.03)', border: '1px solid var(--line)' }}>
             <div className="flex items-center gap-3 mb-3">
               <CompanyLogo name={displayName} size="md" />
               <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#205295', margin: 0 }}>{displayName}</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#512ACC', margin: 0 }}>{displayName}</p>
                 <p style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
                   <MapPin className="size-3" />{location}
                 </p>
@@ -760,12 +760,12 @@ function JobDetail({
             </div>
             {job.source === "poc" ? (
               <p style={{ fontSize: 12, lineHeight: 1.6, color: 'var(--muted)' }}>
-                Employers in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.occupation_name ?? "General"}</span> sector across Malaysia. Registered with PERKESO and actively hiring through MYFutureJobs.
+                Employers in the <span style={{ fontWeight: 600, color: '#512ACC' }}>{job.occupation_name ?? "General"}</span> sector across Malaysia. Registered with PERKESO and actively hiring through MYFutureJobs.
               </p>
             ) : (
               <>
                 <p style={{ fontSize: 12, lineHeight: 1.6, color: 'var(--muted)' }}>
-                  {displayName} is a Malaysian employer in the <span style={{ fontWeight: 600, color: '#205295' }}>{job.industry ?? "General"}</span> sector, actively recruiting via MYFutureJobs.
+                  {displayName} is a Malaysian employer in the <span style={{ fontWeight: 600, color: '#512ACC' }}>{job.industry ?? "General"}</span> sector, actively recruiting via MYFutureJobs.
                 </p>
                 {job.created_at && (
                   <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
@@ -807,7 +807,7 @@ function FilterSidebar({
   const pill = (label: string, active: boolean, onClick: () => void) => (
     <button key={label} onClick={onClick} style={{
       fontSize: 11, fontWeight: 600, borderRadius: 8, padding: '4px 10px', cursor: 'pointer',
-      background: active ? 'linear-gradient(135deg, #0A2647 0%, #205295 100%)' : 'var(--base)', color: active ? '#fff' : 'var(--ink)',
+      background: active ? 'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)' : 'var(--base)', color: active ? '#fff' : 'var(--ink)',
       border: active ? 'none' : '1px solid var(--line)', transition: 'all 0.15s',
     }}>{label}</button>
   );
@@ -1552,7 +1552,7 @@ function JobsPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-5">
           {loading ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 0' }}>
-              <Loader2 className="size-8 animate-spin" style={{ color: '#205295' }} />
+              <Loader2 className="size-8 animate-spin" style={{ color: '#512ACC' }} />
             </div>
           ) : scoredJobs.length === 0 ? (
             <div style={{ padding: '32px 20px', textAlign: 'center' }}>
@@ -1573,12 +1573,12 @@ function JobsPage() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
                 {Object.keys(SYNONYMS).slice(0, 4).map(s => (
                   <button key={s} onClick={() => { setQuery(s); handleSearch(s); }}
-                    style={{ fontSize: 12, fontWeight: 500, color: '#205295', background: 'rgba(32,82,149,0.06)', border: '1px solid var(--line)', borderRadius: 999, padding: '4px 12px', cursor: 'pointer', transition: 'all 0.15s' }}
+                    style={{ fontSize: 12, fontWeight: 500, color: '#512ACC', background: 'rgba(81,42,204,0.06)', border: '1px solid var(--line)', borderRadius: 999, padding: '4px 12px', cursor: 'pointer', transition: 'all 0.15s' }}
                   >{s}</button>
                 ))}
               </div>
               <a href="/jobs" style={{ fontSize: 12, color: '#f36c21', fontWeight: 600 }}>Browse all 5,828 jobs →</a>
-              {hasFilters && <div style={{ marginTop: 12 }}><button onClick={clearFilters} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>{t("clearFilters")}</button></div>}
+              {hasFilters && <div style={{ marginTop: 12 }}><button onClick={clearFilters} style={{ fontSize: 13, fontWeight: 600, color: '#512ACC', background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>{t("clearFilters")}</button></div>}
             </div>
           ) : (
             <div>
@@ -1590,7 +1590,7 @@ function JobsPage() {
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   {hasSearched && (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#205295', background: 'rgba(32,82,149,0.08)', borderRadius: 999, padding: '2px 8px' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#512ACC', background: 'rgba(81,42,204,0.08)', borderRadius: 999, padding: '2px 8px' }}>
                       <Sparkles style={{ width: 9, height: 9 }} /> Semantic AI ranking active
                     </span>
                   )}
@@ -1626,7 +1626,7 @@ function JobsPage() {
               {/* Load more */}
               {jobs.length < total && scoredJobs.length >= 50 && (
                 <div style={{ padding: '20px', textAlign: 'center' }}>
-                  <button onClick={loadMore} disabled={loadingMore} style={{ fontSize: 13, fontWeight: 600, color: '#205295', background: 'none', border: '1px solid var(--line)', borderRadius: 10, padding: '8px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
+                  <button onClick={loadMore} disabled={loadingMore} style={{ fontSize: 13, fontWeight: 600, color: '#512ACC', background: 'none', border: '1px solid var(--line)', borderRadius: 10, padding: '8px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
                     {loadingMore && <Loader2 className="size-4 animate-spin" />}
                     {t("loadMore")}
                   </button>
@@ -1647,7 +1647,7 @@ function JobsPage() {
         >
           {loadingDetail ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px' }}>
-              <Loader2 className="size-8 animate-spin" style={{ color: '#205295' }} />
+              <Loader2 className="size-8 animate-spin" style={{ color: '#512ACC' }} />
             </div>
           ) : selectedJobDetail ? (
             <JobDetail

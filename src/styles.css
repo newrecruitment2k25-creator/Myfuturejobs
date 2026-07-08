@@ -25,18 +25,18 @@
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--base);
   --color-muted-foreground: var(--muted);
-  --color-accent: var(--base);
-  --color-accent-foreground: var(--accent-blue);
-  --color-destructive: #C23B22;
+  --color-accent: var(--success);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #DC2626;
   --color-destructive-foreground: #ffffff;
   --color-border: var(--line);
   --color-input: var(--line-strong);
   --color-ring: var(--brand);
-  --color-chart-1: #205295;
-  --color-chart-2: #0A2647;
-  --color-chart-3: #0D7C66;
-  --color-chart-4: #D4A843;
-  --color-chart-5: #2C74B3;
+  --color-chart-1: #512ACC;
+  --color-chart-2: #31C47A;
+  --color-chart-3: #F29F04;
+  --color-chart-4: #3B82F6;
+  --color-chart-5: #F43F5E;
   --color-sidebar: var(--brand);
   --color-sidebar-foreground: #ffffff;
   --color-sidebar-primary: #ffffff;
@@ -48,40 +48,40 @@
 }
 
 :root {
-  /* ── Core brand: deep navy ── */
-  --brand:       #0A2647;
-  --brand-light: #144272;
-  --brand-dark:  #061830;
+  /* ── Core brand: violet-purple ── */
+  --brand:       #512ACC;
+  --brand-light: #6B4FD6;
+  --brand-dark:  #3B1A99;
 
-  /* ── Action blue ── */
-  --accent-blue:       #205295;
-  --accent-blue-light: #2C74B3;
-  --accent-glow:       #E8F0FE;
+  /* ── Action accents ── */
+  --accent-blue:       #512ACC;
+  --accent-blue-light: #7B5CE0;
+  --accent-glow:       rgba(81,42,204,0.10);
 
   /* ── Legacy accent alias (used by existing components) ── */
-  --accent:     #205295;
-  --accent-dim: #144272;
+  --accent:     #31C47A;
+  --accent-dim: #27A866;
 
   /* ── Success / gap / danger ── */
-  --success:       #0D7C66;
-  --success-light: #E6F5F0;
-  --warning:       #D4A843;
+  --success:       #31C47A;
+  --success-light: #E8FBF1;
+  --warning:       #F29F04;
   --warning-light: #FFF8E7;
-  --danger:        #C23B22;
+  --danger:        #DC2626;
 
   /* ── Text ── */
-  --ink:    #1A1A2E;
-  --muted:  #5A6478;
-  --subtle: #8A94A6;
+  --ink:    #202020;
+  --muted:  #5A5A5A;
+  --subtle: #9CA3AF;
 
   /* ── Surfaces ── */
   --surface: #FFFFFF;
-  --base:    #F0F2F5;
-  --base-alt: #E8ECF1;
+  --base:    #FAFAFA;
+  --base-alt: #F3F4F6;
 
   /* ── Borders ── */
-  --line:        #D1D9E6;
-  --line-strong: #B8C4D6;
+  --line:        #E5E7EB;
+  --line-strong: #D1D5DB;
 
   /* ── Radii ── */
   --radius-xs: 6px;
@@ -90,11 +90,11 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
 
-  /* ── Shadows (navy-tinted, very subtle) ── */
-  --shadow-card:   0 1px 3px rgba(10,38,71,0.06), 0 1px 2px rgba(10,38,71,0.04);
-  --shadow-lift:   0 4px 12px rgba(10,38,71,0.08), 0 2px 4px rgba(10,38,71,0.04);
-  --shadow-drop:   0 8px 24px rgba(10,38,71,0.12);
-  --shadow-header: 0 1px 0 rgba(10,38,71,0.06);
+  /* ── Shadows (neutral-tinted, very subtle) ── */
+  --shadow-card:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lift:   0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-drop:   0 8px 24px rgba(0,0,0,0.12);
+  --shadow-header: 0 1px 0 rgba(0,0,0,0.06);
 
   /* ── Typography ── */
   --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
@@ -102,15 +102,15 @@
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 
   /* ── Backwards-compat aliases (keep old variable names pointing to new values) ── */
-  --primary-color:   #0A2647;
-  --secondary-color: #205295;
-  --primary-soft:    rgba(10,38,71,0.06);
-  --secondary-soft:  rgba(32,82,149,0.08);
-  --ink-color:       #1A1A2E;
-  --muted-color:     #5A6478;
-  --border-color:    #D1D9E6;
+  --primary-color:   #512ACC;
+  --secondary-color: #31C47A;
+  --primary-soft:    rgba(81,42,204,0.06);
+  --secondary-soft:  rgba(49,196,122,0.08);
+  --ink-color:       #202020;
+  --muted-color:     #5A5A5A;
+  --border-color:    #E5E7EB;
   --surface-color:   #FFFFFF;
-  --page-bg:         #F0F2F5;
+  --page-bg:         #FAFAFA;
   --shadow-sm:       var(--shadow-card);
   --shadow-md:       var(--shadow-lift);
   --radius-lg-brand: 16px;
@@ -119,25 +119,25 @@
 
   /* ── Tailwind CSS compat ── */
   --radius: 0.5rem;
-  --background: #F0F2F5;
-  --foreground: #1A1A2E;
+  --background: #FAFAFA;
+  --foreground: #202020;
   --card: #FFFFFF;
-  --card-foreground: #1A1A2E;
+  --card-foreground: #202020;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A2E;
-  --primary: #0A2647;
+  --popover-foreground: #202020;
+  --primary: #512ACC;
   --primary-foreground: #ffffff;
-  --secondary: #F0F2F5;
-  --secondary-foreground: #1A1A2E;
-  --muted-tw: #F0F2F5;
-  --muted-foreground: #5A6478;
-  --accent-tw: #E8F0FE;
-  --accent-foreground: #205295;
-  --destructive: #C23B22;
+  --secondary: #FAFAFA;
+  --secondary-foreground: #202020;
+  --muted-tw: #FAFAFA;
+  --muted-foreground: #5A5A5A;
+  --accent-tw: #E8FBF1;
+  --accent-foreground: #31C47A;
+  --destructive: #DC2626;
   --destructive-foreground: #ffffff;
-  --border: #D1D9E6;
-  --input: #B8C4D6;
-  --ring: #205295;
+  --border: #E5E7EB;
+  --input: #D1D5DB;
+  --ring: #512ACC;
 }
 
 @layer base {
@@ -329,7 +329,7 @@
   justify-content: center;
   gap: 0.5rem;
   color: var(--brand);
-  background: rgba(10,38,71,0.06);
+  background: rgba(81,42,204,0.06);
   border: none;
   border-radius: var(--radius-sm);
   padding: 9px 20px;
@@ -425,7 +425,7 @@
 }
 .job-card.selected {
   border-color: var(--brand);
-  box-shadow: 0 0 0 2px rgba(10,38,71,0.1);
+  box-shadow: 0 0 0 2px rgba(81,42,204,0.1);
 }
 .job-card.high-match::before  { background: var(--success); }
 .job-card.mid-match::before   { background: var(--accent-blue); }
@@ -476,7 +476,7 @@
 .badge-soft-primary {
   display: inline-flex; align-items: center; border-radius: 6px;
   font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em; padding: 3px 10px;
-  background: rgba(10,38,71,0.07); color: var(--brand);
+  background: rgba(81,42,204,0.07); color: var(--brand);
 }
 .badge-soft-secondary {
   display: inline-flex; align-items: center; border-radius: 6px;
@@ -536,7 +536,7 @@
 .field::placeholder { color: var(--subtle); }
 .field:focus {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px rgba(32,82,149,0.15);
+  box-shadow: 0 0 0 2px rgba(81,42,204,0.15);
 }
 
 /* ============================================================
@@ -627,7 +627,7 @@
   gap: 4px;
   color: var(--accent-blue);
   background: var(--accent-glow);
-  border: 1px solid rgba(32,82,149,0.15);
+  border: 1px solid rgba(81,42,204,0.15);
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -691,7 +691,7 @@
 }
 .hero-search-box:focus-within {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px rgba(32,82,149,0.15);
+  box-shadow: 0 0 0 2px rgba(81,42,204,0.15);
 }
 .hero-search-field {
   display: flex;
@@ -1140,7 +1140,7 @@
   align-items: center;
   gap: 6px;
   background: var(--accent-glow);
-  border: 1px solid rgba(32,82,149,0.2);
+  border: 1px solid rgba(81,42,204,0.2);
   border-radius: 9999px;
   padding: 4px 12px;
   font-size: 0.75rem;
@@ -1435,7 +1435,7 @@
   outline: none;
   transition: border-color 0.15s ease;
 }
-.chatbot-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(32,82,149,0.12); }
+.chatbot-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(81,42,204,0.12); }
 .chatbot-input::placeholder { color: var(--subtle); }
 .chatbot-send {
   display: inline-flex;

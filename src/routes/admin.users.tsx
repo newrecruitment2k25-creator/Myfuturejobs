@@ -136,7 +136,7 @@ function AdminUsersPage() {
           <ArrowLeft className="size-4" /> Back to Admin Console
         </Link>
 
-        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ borderRadius: 16, padding: '24px 28px', background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
             <div>
@@ -161,9 +161,9 @@ function AdminUsersPage() {
           {[
             { role: "admin", color: '#dc2626' },
             { role: "employer", color: '#f36c21' },
-            { role: "job_seeker", color: '#205295' },
+            { role: "job_seeker", color: '#512ACC' },
           ].map(({ role, color }) => (
-            <div key={role} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(10,38,71,0.04)' }}>
+            <div key={role} style={{ borderRadius: 14, padding: '16px 12px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(81,42,204,0.04)' }}>
               <p style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1.1 }}>
                 {loading ? "…" : profiles.filter(p => p.role === role).length}
               </p>
@@ -188,9 +188,9 @@ function AdminUsersPage() {
           </div>
         </div>
 
-        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(10,38,71,0.04)', padding: 20 }}>
+        <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 2px 12px rgba(81,42,204,0.04)', padding: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <Users style={{ width: 18, height: 18, color: '#205295' }} />
+            <Users style={{ width: 18, height: 18, color: '#512ACC' }} />
             <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', margin: 0 }}>Users ({filtered.length})</h2>
           </div>
           {loading ? (

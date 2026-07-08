@@ -411,8 +411,8 @@ function DashboardPage() {
         {/* ── 1. Hero Welcome Banner ─────────────────────────────────────── */}
         <div style={{
           borderRadius: 20, padding: 0, overflow: 'hidden', position: 'relative',
-          boxShadow: '0 8px 32px rgba(10,38,71,0.12)',
-          background: 'linear-gradient(120deg, #0A2647 0%, #144272 40%, #1B4D8A 70%, #205295 100%)',
+          boxShadow: '0 8px 32px rgba(81,42,204,0.12)',
+          background: 'linear-gradient(120deg, #512ACC 0%, #6B4FD6 40%, #1B4D8A 70%, #512ACC 100%)',
         }}>
           {/* Decorative mesh */}
           <div style={{ position: 'absolute', right: -60, top: -60, width: 240, height: 240, borderRadius: '50%', background: 'radial-gradient(circle, rgba(243,108,33,0.15) 0%, transparent 70%)' }} />
@@ -459,14 +459,14 @@ function DashboardPage() {
         {/* ── 2. Stat Cards — new design with top accent bar ─────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
           {[
-            { label: 'Total Applications', value: totalApps,        accent: '#205295', iconBg: 'rgba(32,82,149,0.1)',  iconColor: '#205295',      Icon: Briefcase },
+            { label: 'Total Applications', value: totalApps,        accent: '#512ACC', iconBg: 'rgba(81,42,204,0.1)',  iconColor: '#512ACC',      Icon: Briefcase },
             { label: 'Hired / Offered',    value: hiredOffered,     accent: '#15803d', iconBg: '#dcfce7',              iconColor: '#15803d',      Icon: CheckCircle2 },
             { label: 'Saved Jobs',         value: savedJobs?.length ?? 0, accent: '#d97706', iconBg: '#fef3c7',              iconColor: '#d97706',      Icon: Bookmark },
             { label: 'CV Analyses',        value: totalAnalyses,    accent: '#f36c21', iconBg: 'rgba(243,108,33,0.1)', iconColor: '#f36c21',      Icon: FileText },
           ].map(({ label, value, accent, iconBg, iconColor, Icon }) => (
-            <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, transition: 'all 0.25s', boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(10,38,71,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = `${accent}30`; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(10,38,71,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
+            <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, transition: 'all 0.25s', boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(81,42,204,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = `${accent}30`; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(81,42,204,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
             >
               <div style={{ height: 3, background: `linear-gradient(90deg, ${accent} 0%, ${accent}80 100%)` }} />
               <div style={{ padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -496,20 +496,20 @@ function DashboardPage() {
           return (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {/* Profile Completion */}
-              <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
-                <div style={{ height: 3, background: `linear-gradient(90deg, #205295 0%, #4a90d9 100%)` }} />
+              <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
+                <div style={{ height: 3, background: `linear-gradient(90deg, #512ACC 0%, #4a90d9 100%)` }} />
                 <div style={{ padding: '18px 22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(32,82,149,0.12)' }}>
-                        <Target style={{ width: 16, height: 16, color: '#205295' }} />
+                      <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(81,42,204,0.12)' }}>
+                        <Target style={{ width: 16, height: 16, color: '#512ACC' }} />
                       </div>
                       <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Profile Completion</span>
                     </div>
-                    <span style={{ fontSize: 22, fontWeight: 900, color: '#205295', letterSpacing: '-0.03em' }}>{pct}%</span>
+                    <span style={{ fontSize: 22, fontWeight: 900, color: '#512ACC', letterSpacing: '-0.03em' }}>{pct}%</span>
                   </div>
                   <div style={{ height: 8, borderRadius: 999, background: 'var(--line)', overflow: 'hidden', marginBottom: 14 }}>
-                    <div style={{ height: '100%', borderRadius: 999, background: 'linear-gradient(90deg, #205295 0%, #4a90d9 100%)', width: `${pct}%`, transition: 'width 0.6s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 999, background: 'linear-gradient(90deg, #512ACC 0%, #4a90d9 100%)', width: `${pct}%`, transition: 'width 0.6s ease' }} />
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {checks.map(c => (
@@ -523,7 +523,7 @@ function DashboardPage() {
               </div>
 
               {/* Career Insights Mini */}
-              <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+              <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
                 <div style={{ height: 3, background: `linear-gradient(90deg, #f36c21 0%, #ff8c42 100%)` }} />
                 <div style={{ padding: '18px 22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
@@ -533,9 +533,9 @@ function DashboardPage() {
                     <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Career Insights</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                    <div style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 12, background: 'rgba(32,82,149,0.06)', border: '1px solid rgba(32,82,149,0.08)' }}>
-                      <TrendingUp style={{ width: 16, height: 16, color: '#205295', margin: '0 auto 6px' }} />
-                      <div style={{ fontSize: 18, fontWeight: 900, color: '#205295', lineHeight: 1 }}>{topIndustries.length}</div>
+                    <div style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 12, background: 'rgba(81,42,204,0.06)', border: '1px solid rgba(81,42,204,0.08)' }}>
+                      <TrendingUp style={{ width: 16, height: 16, color: '#512ACC', margin: '0 auto 6px' }} />
+                      <div style={{ fontSize: 18, fontWeight: 900, color: '#512ACC', lineHeight: 1 }}>{topIndustries.length}</div>
                       <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 3, fontWeight: 600 }}>Industries</div>
                     </div>
                     <div style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 12, background: 'rgba(243,108,33,0.06)', border: '1px solid rgba(243,108,33,0.08)' }}>
@@ -550,10 +550,10 @@ function DashboardPage() {
                     </div>
                   </div>
                   {salaryInsight && (
-                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 10, background: 'rgba(32,82,149,0.06)', border: '1px solid rgba(32,82,149,0.08)' }}>
-                      <PieChart style={{ width: 14, height: 14, color: '#205295' }} />
+                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 10, background: 'rgba(81,42,204,0.06)', border: '1px solid rgba(81,42,204,0.08)' }}>
+                      <PieChart style={{ width: 14, height: 14, color: '#512ACC' }} />
                       <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)' }}>Salary Range:</span>
-                      <span style={{ fontSize: 12, fontWeight: 800, color: '#205295' }}>{salaryInsight.label}</span>
+                      <span style={{ fontSize: 12, fontWeight: 800, color: '#512ACC' }}>{salaryInsight.label}</span>
                     </div>
                   )}
                 </div>
@@ -562,11 +562,11 @@ function DashboardPage() {
           );
         })()}
         {pocProfile && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, overflow: 'hidden', boxShadow: '0 2px 8px rgba(10,38,71,0.04)' }}>
-            <div style={{ height: 3, background: 'linear-gradient(90deg, #205295 0%, #0A2647 100%)' }} />
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, overflow: 'hidden', boxShadow: '0 2px 8px rgba(81,42,204,0.04)' }}>
+            <div style={{ height: 3, background: 'linear-gradient(90deg, #512ACC 0%, #512ACC 100%)' }} />
             <div style={{ padding: '18px 22px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg, #0A2647 0%, #205295 100%)', fontSize: 13, fontWeight: 900, color: '#fff', boxShadow: '0 2px 8px rgba(10,38,71,0.2)' }}>MY</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)', fontSize: 13, fontWeight: 900, color: '#fff', boxShadow: '0 2px 8px rgba(81,42,204,0.2)' }}>MY</span>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>PERKESO Profile — {pocProfile.candidate_id}</div>
                   {pocProfile.preferred_occupation && <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{pocProfile.preferred_occupation}</div>}
@@ -593,7 +593,7 @@ function DashboardPage() {
                   <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Skills from PERKESO</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                     {pocProfile.skills.split(/[,;|]+/).slice(0, 8).map((s: string) => s.trim()).filter(Boolean).map((s: string) => (
-                      <span key={s} style={{ padding: '4px 12px', borderRadius: 20, background: 'rgba(32,82,149,0.08)', fontSize: 11, color: '#205295', fontWeight: 600, border: '1px solid rgba(32,82,149,0.12)' }}>{s}</span>
+                      <span key={s} style={{ padding: '4px 12px', borderRadius: 20, background: 'rgba(81,42,204,0.08)', fontSize: 11, color: '#512ACC', fontWeight: 600, border: '1px solid rgba(81,42,204,0.12)' }}>{s}</span>
                     ))}
                   </div>
                 </div>
@@ -606,11 +606,11 @@ function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 16, alignItems: 'start' }}>
 
           {/* Left: Applications with Stepper */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(32,82,149,0.12)' }}>
-                  <Briefcase style={{ width: 16, height: 16, color: '#205295' }} />
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(81,42,204,0.12)' }}>
+                  <Briefcase style={{ width: 16, height: 16, color: '#512ACC' }} />
                 </div>
                 <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>My Applications</span>
               </div>
@@ -646,12 +646,12 @@ function DashboardPage() {
                   const lastNote = app.status_history?.at(-1)?.notes;
                   return (
                     <div key={app.id} style={{ borderRadius: 14, border: '1px solid var(--line)', padding: '14px 16px', background: 'var(--base)', transition: 'all 0.2s' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(10,38,71,0.04)'; }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(81,42,204,0.04)'; }}
                       onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                     >
                       {/* Top row: avatar + title + date */}
                       <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:10 }}>
-                        <div style={{ width:38, height:38, borderRadius:12, background:'linear-gradient(135deg, rgba(32,82,149,0.12) 0%, rgba(10,38,71,0.08) 100%)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:800, color:'#205295', border:'1px solid rgba(32,82,149,0.1)' }}>{initials}</div>
+                        <div style={{ width:38, height:38, borderRadius:12, background:'linear-gradient(135deg, rgba(81,42,204,0.12) 0%, rgba(81,42,204,0.08) 100%)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:800, color:'#512ACC', border:'1px solid rgba(81,42,204,0.1)' }}>{initials}</div>
                         <div style={{ minWidth:0, flex:1 }}>
                           <div style={{ fontSize:13, fontWeight:700, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{app.job_title ?? 'Unknown Job'}</div>
                           <div style={{ fontSize:11, color:'var(--muted)', marginTop: 2 }}>{app.company_name ?? ''}{app.location ? ` · ${app.location}` : ''}</div>
@@ -665,7 +665,7 @@ function DashboardPage() {
                       <AppStatusStepper status={app.status as any} />
                       {/* Status note */}
                       {lastNote && (
-                        <div style={{ marginTop:8, fontSize:10, color:'var(--muted)', background:'rgba(32,82,149,0.05)', borderRadius:8, padding:'5px 10px', border:'1px solid rgba(32,82,149,0.06)' }}>{lastNote}</div>
+                        <div style={{ marginTop:8, fontSize:10, color:'var(--muted)', background:'rgba(81,42,204,0.05)', borderRadius:8, padding:'5px 10px', border:'1px solid rgba(81,42,204,0.06)' }}>{lastNote}</div>
                       )}
                     </div>
                   );
@@ -679,7 +679,7 @@ function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* Recent CV Analyses */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
               <div style={{ padding: '14px 18px 12px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: '1px solid var(--line)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ width: 30, height: 30, borderRadius: 10, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.12)' }}>
@@ -717,7 +717,7 @@ function DashboardPage() {
             </div>
 
             {/* Saved Jobs */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
               <div style={{ padding: '14px 18px 12px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: '1px solid var(--line)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ width: 30, height: 30, borderRadius: 10, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.12)' }}>
@@ -761,7 +761,7 @@ function DashboardPage() {
 
         {/* ── 4. Personalised "For You" section ─────────────────────────── */}
         {true && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 12, background: 'linear-gradient(135deg, rgba(243,108,33,0.15) 0%, rgba(243,108,33,0.08) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.12)' }}>
@@ -812,7 +812,7 @@ function DashboardPage() {
                       to="/jobs"
                       search={{ search: job.job_title ?? '' }}
                       style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '16px 18px', borderRadius: 14, border: '1px solid var(--line)', background: 'var(--base)', textDecoration: 'none', transition: 'all 0.25s' }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(243,108,33,0.4)'; e.currentTarget.style.background = 'rgba(243,108,33,0.02)'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(10,38,71,0.08)'; }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(243,108,33,0.4)'; e.currentTarget.style.background = 'rgba(243,108,33,0.02)'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(81,42,204,0.08)'; }}
                       onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.background = 'var(--base)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
@@ -827,7 +827,7 @@ function DashboardPage() {
                         </span>
                       )}
                       {job.salary && (
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#205295' }}>{job.salary.startsWith('RM') ? job.salary : `RM ${job.salary}`}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#512ACC' }}>{job.salary.startsWith('RM') ? job.salary : `RM ${job.salary}`}</span>
                       )}
                       {job.matchReason && (
                         <span style={{ fontSize: 10, color: '#f36c21', fontWeight: 600, background: 'rgba(243,108,33,0.08)', borderRadius: 8, padding: '4px 10px', border: '1px solid rgba(243,108,33,0.06)' }}>
@@ -843,9 +843,9 @@ function DashboardPage() {
             {/* Insight strip: salary + skill gaps + industry interests */}
             <div style={{ display: 'flex', gap: 14, marginTop: 18, flexWrap: 'wrap' }}>
               {salaryInsight && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(32,82,149,0.06)', borderRadius: 12, padding: '12px 16px', flex: 1, minWidth: 180, border: '1px solid rgba(32,82,149,0.08)' }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(32,82,149,0.12)' }}>
-                    <TrendingUp style={{ width: 16, height: 16, color: '#205295' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(81,42,204,0.06)', borderRadius: 12, padding: '12px 16px', flex: 1, minWidth: 180, border: '1px solid rgba(81,42,204,0.08)' }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(81,42,204,0.12)' }}>
+                    <TrendingUp style={{ width: 16, height: 16, color: '#512ACC' }} />
                   </div>
                   <div>
                     <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your Salary Range</div>
@@ -894,11 +894,11 @@ function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
 
           {/* Col 1: Application Funnel */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '14px 18px 12px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 30, height: 30, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(32,82,149,0.12)' }}>
-                  <BarChart2 style={{ width: 15, height: 15, color: '#205295' }} />
+                <div style={{ width: 30, height: 30, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(81,42,204,0.12)' }}>
+                  <BarChart2 style={{ width: 15, height: 15, color: '#512ACC' }} />
                 </div>
                 <span style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}>Application Funnel</span>
               </div>
@@ -930,7 +930,7 @@ function DashboardPage() {
           </div>
 
           {/* Col 2: AI Tools 2×3 grid */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '14px 18px 12px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{ width: 30, height: 30, borderRadius: 10, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.12)' }}>
@@ -943,7 +943,7 @@ function DashboardPage() {
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
               {AI_TOOLS.map(({ icon: Icon, label, desc, href, bg, color }) => (
                 <Link key={label} to={href as any} style={{ display:'flex', flexDirection:'column', gap:6, padding:'14px 14px', borderRadius:14, background:'var(--base)', border:'1px solid var(--line)', textDecoration:'none', transition:'all 0.25s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${color}40`; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(10,38,71,0.06)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${color}40`; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(81,42,204,0.06)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
                   <div style={{ width:34, height:34, borderRadius:10, background:bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, border: `1px solid ${color}15` }}>
                     <Icon style={{ width:16, height:16, color }} />
@@ -962,11 +962,11 @@ function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 16, alignItems: 'start' }}>
 
           {/* Activity Timeline */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(32,82,149,0.12)' }}>
-                  <Activity style={{ width: 16, height: 16, color: '#205295' }} />
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(81,42,204,0.12)' }}>
+                  <Activity style={{ width: 16, height: 16, color: '#512ACC' }} />
                 </div>
                 <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>Recent Activity</span>
               </div>
@@ -974,7 +974,7 @@ function DashboardPage() {
             <div style={{ padding: '16px 22px' }}>
               {(() => {
                 const events: { date: string; type: string; label: string; icon: any; color: string; bg: string }[] = [];
-                (applications ?? []).slice(0, 3).forEach(a => events.push({ date: a.created_at, type: 'application', label: `Applied to ${a.job_title ?? 'a job'}`, icon: Briefcase, color: '#205295', bg: 'rgba(32,82,149,0.1)' }));
+                (applications ?? []).slice(0, 3).forEach(a => events.push({ date: a.created_at, type: 'application', label: `Applied to ${a.job_title ?? 'a job'}`, icon: Briefcase, color: '#512ACC', bg: 'rgba(81,42,204,0.1)' }));
                 (rows ?? []).slice(0, 2).forEach(r => events.push({ date: r.created_at, type: 'analysis', label: `CV Analysis scored ${r.overall_score}`, icon: FileText, color: '#f36c21', bg: 'rgba(243,108,33,0.1)' }));
                 (savedJobs ?? []).slice(0, 2).forEach(s => events.push({ date: s.created_at, type: 'saved', label: `Saved ${s.job_title ?? 'a job'}`, icon: Bookmark, color: '#d97706', bg: '#fef3c7' }));
                 events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -1005,7 +1005,7 @@ function DashboardPage() {
           </div>
 
           {/* Achievement Badges */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid var(--line)' }}>
               <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, rgba(243,108,33,0.15) 0%, rgba(243,108,33,0.08) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(243,108,33,0.12)' }}>
                 <Trophy style={{ width: 16, height: 16, color: '#f36c21' }} />
@@ -1015,7 +1015,7 @@ function DashboardPage() {
             <div style={{ padding: '16px 22px' }}>
               {(() => {
                 const badges = [
-                  { label: 'First Steps', desc: 'Created account', icon: Rocket, earned: true, color: '#205295', bg: 'rgba(32,82,149,0.1)' },
+                  { label: 'First Steps', desc: 'Created account', icon: Rocket, earned: true, color: '#512ACC', bg: 'rgba(81,42,204,0.1)' },
                   { label: 'Job Hunter', desc: 'Applied to 1+ jobs', icon: Briefcase, earned: (totalApps) > 0, color: '#1d4ed8', bg: '#dbeafe' },
                   { label: 'CV Pro', desc: 'Analysed CV', icon: FileText, earned: totalAnalyses > 0, color: '#7c3aed', bg: '#ede9fe' },
                   { label: 'Bookmarker', desc: 'Saved 1+ jobs', icon: Bookmark, earned: (savedJobs?.length ?? 0) > 0, color: '#d97706', bg: '#fef3c7' },
@@ -1046,7 +1046,7 @@ function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
 
           {/* Upcoming Events */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(220,38,38,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(220,38,38,0.1)' }}>
@@ -1059,7 +1059,7 @@ function DashboardPage() {
             <div style={{ padding: '16px 22px' }}>
               {(() => {
                 const mockEvents = [
-                  { title: 'Career Fair 2025', date: '15 Jul 2025', location: 'Kuala Lumpur Convention Centre', type: 'Career Fair', icon: Users2, color: '#205295', bg: 'rgba(32,82,149,0.08)' },
+                  { title: 'Career Fair 2025', date: '15 Jul 2025', location: 'Kuala Lumpur Convention Centre', type: 'Career Fair', icon: Users2, color: '#512ACC', bg: 'rgba(81,42,204,0.08)' },
                   { title: 'Resume Workshop', date: '22 Jul 2025', location: 'Online via Zoom', type: 'Workshop', icon: GraduationCap, color: '#7c3aed', bg: '#ede9fe' },
                   { title: 'Tech Industry Talk', date: '30 Jul 2025', location: 'Bangsar South', type: 'Talk', icon: Lightbulb, color: '#d97706', bg: '#fef3c7' },
                 ];
@@ -1067,7 +1067,7 @@ function DashboardPage() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {mockEvents.map((ev, i) => (
                       <Link key={i} to="/events" style={{ display: 'flex', gap: 12, padding: '12px 14px', borderRadius: 14, border: '1px solid var(--line)', background: 'var(--base)', textDecoration: 'none', transition: 'all 0.2s' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${ev.color}30`; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(10,38,71,0.04)'; }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${ev.color}30`; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(81,42,204,0.04)'; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                       >
                         <div style={{ width: 44, height: 44, borderRadius: 12, background: ev.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `1px solid ${ev.color}15` }}>
@@ -1093,7 +1093,7 @@ function DashboardPage() {
           </div>
 
           {/* Market Pulse */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(10,38,71,0.04)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 22px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(107,70,193,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(107,70,193,0.1)' }}>
@@ -1106,7 +1106,7 @@ function DashboardPage() {
             <div style={{ padding: '16px 22px' }}>
               {(() => {
                 const stats = [
-                  { label: 'Active Vacancies', value: '5,828', trend: '+12%', trendUp: true, icon: Briefcase, color: '#205295', bg: 'rgba(32,82,149,0.08)' },
+                  { label: 'Active Vacancies', value: '5,828', trend: '+12%', trendUp: true, icon: Briefcase, color: '#512ACC', bg: 'rgba(81,42,204,0.08)' },
                   { label: 'Avg. Salary (IT)', value: 'RM 4.5k', trend: '+8%', trendUp: true, icon: TrendingUp, color: '#15803d', bg: '#dcfce7' },
                   { label: 'Hot Sector', value: 'Tech', trend: 'High demand', trendUp: true, icon: Flame, color: '#dc2626', bg: '#fee2e2' },
                   { label: 'Top Hiring State', value: 'Selangor', trend: '1,920 jobs', trendUp: true, icon: MapPin, color: '#d97706', bg: '#fef3c7' },
@@ -1141,7 +1141,7 @@ function DashboardPage() {
         </div>
 
         {/* ── 8. Quick Links Strip ──────────────────────────────────────── */}
-        <div style={{ background: 'linear-gradient(135deg, rgba(10,38,71,0.03) 0%, rgba(32,82,149,0.03) 100%)', border: '1px solid var(--line)', borderRadius: 16, padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(81,42,204,0.03) 0%, rgba(81,42,204,0.03) 100%)', border: '1px solid var(--line)', borderRadius: 16, padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Quick Links:</span>
           {[
             { label: 'Browse Jobs', href: '/jobs', icon: Search },

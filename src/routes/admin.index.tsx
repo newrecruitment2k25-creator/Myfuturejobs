@@ -239,7 +239,7 @@ function AdminConsolePage() {
   }
 
   const S = {
-    card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(10,38,71,0.04)" } as React.CSSProperties,
+    card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(81,42,204,0.04)" } as React.CSSProperties,
     heading: { fontSize: 11, fontWeight: 700, color: "var(--ink)", textTransform: "uppercase" as const, letterSpacing: "0.07em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 } as React.CSSProperties,
   };
 
@@ -249,8 +249,8 @@ function AdminConsolePage() {
 
         {/* ── Page header ── */}
         <div style={{
-          background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 16, padding: '24px 28px',
-          overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(10,38,71,0.15)',
+          background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', borderRadius: 16, padding: '24px 28px',
+          overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(81,42,204,0.15)',
         }}>
           <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
           <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
@@ -298,7 +298,7 @@ function AdminConsolePage() {
           <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 700, marginRight: 4 }}>View:</span>
           {(["daily", "monthly", "bimonthly"] as ReportView[]).map(v => (
             <button key={v} onClick={() => setReportView(v)}
-              style={{ padding: "6px 16px", borderRadius: 10, border: "1px solid var(--line)", background: reportView === v ? "linear-gradient(135deg, #0A2647 0%, #205295 100%)" : "var(--surface)", color: reportView === v ? "#fff" : "var(--muted)", fontSize: 11, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}>
+              style={{ padding: "6px 16px", borderRadius: 10, border: "1px solid var(--line)", background: reportView === v ? "linear-gradient(135deg, #512ACC 0%, #512ACC 100%)" : "var(--surface)", color: reportView === v ? "#fff" : "var(--muted)", fontSize: 11, fontWeight: 600, cursor: "pointer", transition: 'all 0.15s' }}>
               {v === "daily" ? "Daily Snapshot" : v === "monthly" ? "Monthly Report" : "Bi-Monthly (Leadership)"}
             </button>
           ))}
@@ -316,8 +316,8 @@ function AdminConsolePage() {
                 { label: "Placements Today",     val: today.placements,   prev: yest.placements,   color: "#15803d" },
               ].map(({ label, val, prev, color }) => (
                 <div key={label} style={{ ...S.card, display: "flex", flexDirection: "column", gap: 6, transition: 'all 0.2s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(10,38,71,0.08)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(10,38,71,0.04)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(81,42,204,0.08)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(81,42,204,0.04)'; }}
                 >
                   <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -379,10 +379,10 @@ function AdminConsolePage() {
                   { label: "Placements",          val: stats?.placements ?? 0 },
                 ].map(({ label, val }) => (
                   <div key={label} style={{ background: "var(--base)", border: "1px solid var(--line)", borderRadius: 10, padding: "12px 12px", textAlign: "center", transition: 'all 0.15s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
                   >
-                    <p style={{ fontSize: 20, fontWeight: 800, color: "#205295", letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val.toLocaleString()}</p>
+                    <p style={{ fontSize: 20, fontWeight: 800, color: "#512ACC", letterSpacing: '-0.02em' }}>{statsLoading ? "…" : val.toLocaleString()}</p>
                     <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
                   </div>
                 ))}
@@ -464,7 +464,7 @@ function AdminConsolePage() {
         {reportView === "bimonthly" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {/* Leadership summary header */}
-            <div style={{ background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 14, padding: '20px 24px', border: 'none', boxShadow: '0 4px 20px rgba(10,38,71,0.15)', overflow: 'hidden', position: 'relative' }}>
+            <div style={{ background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', borderRadius: 14, padding: '20px 24px', border: 'none', boxShadow: '0 4px 20px rgba(81,42,204,0.15)', overflow: 'hidden', position: 'relative' }}>
               <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
               <div style={{ position: 'relative' }}>
                 <p style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
@@ -603,7 +603,7 @@ function AdminConsolePage() {
                   { label: "Behaviour Records",     val: bhvStats.total.toLocaleString() },
                 ].map(({ label, val }) => (
                   <div key={label} style={{ textAlign: "center", background: "var(--base)", borderRadius: 10, padding: "12px 6px", border: "1px solid var(--line)" }}>
-                    <p style={{ fontSize: 18, fontWeight: 800, color: "#205295", letterSpacing: '-0.02em' }}>{val}</p>
+                    <p style={{ fontSize: 18, fontWeight: 800, color: "#512ACC", letterSpacing: '-0.02em' }}>{val}</p>
                     <p style={{ fontSize: 10, color: "var(--muted)", marginTop: 2, fontWeight: 500 }}>{label}</p>
                   </div>
                 ))}
@@ -620,10 +620,10 @@ function AdminConsolePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
             {NAV_LINKS.map(({ href, icon: Icon, label, desc }) => (
               <Link key={href} to={href} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: "var(--base)", border: "1px solid var(--line)", borderRadius: 12, textDecoration: "none", transition: "all 0.2s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(32,82,149,0.3)"; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(81,42,204,0.3)"; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.transform = 'none'; }}>
-                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon style={{ width: 16, height: 16, color: "#205295" }} />
+                <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon style={{ width: 16, height: 16, color: "#512ACC" }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: 0 }}>{label}</p>

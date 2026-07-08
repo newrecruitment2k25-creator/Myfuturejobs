@@ -83,7 +83,7 @@ function RecommendedJobsPage() {
       <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", padding: "1.5rem 2rem" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", background: "rgba(32,82,149,0.08)", borderRadius: 6, padding: "3px 10px" }}>Intelligence</span>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", background: "rgba(81,42,204,0.08)", borderRadius: 6, padding: "3px 10px" }}>Intelligence</span>
             <Link to="/jobs" style={{ fontSize: "0.75rem", color: "var(--muted)", textDecoration: "none" }}>← Job Search</Link>
           </div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.25rem,3vw,1.75rem)", fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.025em", margin: 0 }}>
@@ -142,11 +142,11 @@ function RecommendedJobsPage() {
                 >
                   {/* Rank badge */}
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-                    <span style={{ background: "rgba(32,82,149,0.08)", color: "var(--accent-blue)", borderRadius: 6, fontSize: "0.6875rem", fontWeight: 800, padding: "2px 8px" }}>
+                    <span style={{ background: "rgba(81,42,204,0.08)", color: "var(--accent-blue)", borderRadius: 6, fontSize: "0.6875rem", fontWeight: 800, padding: "2px 8px" }}>
                       #{idx + 1}
                     </span>
                     {job.score !== undefined && (
-                      <span style={{ background: "rgba(13,124,102,0.09)", color: "#0d7c66", borderRadius: 6, fontSize: "0.6875rem", fontWeight: 700, padding: "2px 8px" }}>
+                      <span style={{ background: "rgba(49,196,122,0.09)", color: "#31C47A", borderRadius: 6, fontSize: "0.6875rem", fontWeight: 700, padding: "2px 8px" }}>
                         {Math.round(job.score * 100)}% match
                       </span>
                     )}

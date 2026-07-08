@@ -309,9 +309,9 @@ function EmployerDashboardPage() {
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 16px' }}>
           {/* ── Welcome Header ── */}
           <div style={{
-            background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)', borderRadius: 16, padding: '24px 28px',
+            background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)', borderRadius: 16, padding: '24px 28px',
             display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 24,
-            overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(10,38,71,0.15)',
+            overflow: 'hidden', position: 'relative', boxShadow: '0 4px 20px rgba(81,42,204,0.15)',
           }}>
             <div style={{ position: 'absolute', right: -40, top: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
             <div style={{ position: 'absolute', right: 80, bottom: -70, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
@@ -345,7 +345,7 @@ function EmployerDashboardPage() {
           </div>
 
           {showForm && (
-            <form onSubmit={onSubmit} style={{ marginTop:16, display:'grid', gap:16, gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:16, padding:24, boxShadow: '0 4px 20px rgba(10,38,71,0.08)' }}>
+            <form onSubmit={onSubmit} style={{ marginTop:16, display:'grid', gap:16, gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:16, padding:24, boxShadow: '0 4px 20px rgba(81,42,204,0.08)' }}>
               <div style={{ gridColumn:'1/-1' }}>
                 <h2 style={{ fontSize:18, fontWeight:800, color:'var(--ink)', letterSpacing:'-0.02em' }}>
                   {editingJob ? "Edit Job" : "Post a New Job"}
@@ -397,7 +397,7 @@ function EmployerDashboardPage() {
                 />
               </div>
               <div style={{ gridColumn:'1/-1' }}>
-                <button type="submit" disabled={submitting} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #0A2647 0%, #205295 100%)', border:'none', borderRadius:10, padding:'10px 24px', cursor:'pointer', boxShadow: '0 2px 10px rgba(10,38,71,0.2)' }}>
+                <button type="submit" disabled={submitting} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)', border:'none', borderRadius:10, padding:'10px 24px', cursor:'pointer', boxShadow: '0 2px 10px rgba(81,42,204,0.2)' }}>
                   {submitting ? (
                     <><Loader2 className="size-4 animate-spin" /> {editingJob ? "Updating…" : "Posting…"}</>
                   ) : (
@@ -411,8 +411,8 @@ function EmployerDashboardPage() {
           {/* Recent Applications Section */}
           <div style={{ marginTop: 32 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Users style={{ width: 16, height: 16, color: '#205295' }} />
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Users style={{ width: 16, height: 16, color: '#512ACC' }} />
               </div>
               <div>
                 <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Recent Applications</h2>
@@ -485,8 +485,8 @@ function EmployerDashboardPage() {
                       return (b.match_score || 0) - (a.match_score || 0);
                     })
                     .map((app) => (
-                    <li key={app.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:12, padding:'14px 16px', gap:12, transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; }}
+                    <li key={app.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:12, padding:'14px 16px', gap:12, transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(81,42,204,0.04)' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; }}
                       onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
                     >
                       <div style={{ flex:1, minWidth:0 }}>
@@ -500,8 +500,8 @@ function EmployerDashboardPage() {
                       </div>
                       <div style={{ display:'flex', alignItems:'center', gap:8, flexShrink:0, flexWrap:'wrap', justifyContent:'flex-end' }}>
                         <span style={{ fontSize:11, fontWeight:600, borderRadius:6, padding:'3px 10px',
-                          background: app.status === 'hired' || app.status === 'Placed' ? '#dcfce7' : app.status === 'rejected' || app.status === 'Rejected' ? '#fee2e2' : app.status === 'interview' || app.status === 'Interview' ? 'rgba(32,82,149,0.1)' : app.status === 'shortlisted' || app.status === 'Shortlisted' ? '#fef3c7' : 'rgba(32,82,149,0.08)',
-                          color: app.status === 'hired' || app.status === 'Placed' ? '#15803d' : app.status === 'rejected' || app.status === 'Rejected' ? '#dc2626' : app.status === 'interview' || app.status === 'Interview' ? '#205295' : app.status === 'shortlisted' || app.status === 'Shortlisted' ? '#92400e' : '#205295'
+                          background: app.status === 'hired' || app.status === 'Placed' ? '#dcfce7' : app.status === 'rejected' || app.status === 'Rejected' ? '#fee2e2' : app.status === 'interview' || app.status === 'Interview' ? 'rgba(81,42,204,0.1)' : app.status === 'shortlisted' || app.status === 'Shortlisted' ? '#fef3c7' : 'rgba(81,42,204,0.08)',
+                          color: app.status === 'hired' || app.status === 'Placed' ? '#15803d' : app.status === 'rejected' || app.status === 'Rejected' ? '#dc2626' : app.status === 'interview' || app.status === 'Interview' ? '#512ACC' : app.status === 'shortlisted' || app.status === 'Shortlisted' ? '#92400e' : '#512ACC'
                         }}>{app.status}</span>
                         <Select value={app.status} onValueChange={(val) => void updateAppStatus(app.id, val, app.job_title)}>
                           <SelectTrigger style={{ width:130, height:28, fontSize:11 }}><SelectValue /></SelectTrigger>
@@ -516,7 +516,7 @@ function EmployerDashboardPage() {
                           </SelectContent>
                         </Select>
                         {app.user_id && (
-                          <Link to="/employer/candidate/$candidateId" params={{ candidateId: app.user_id }} style={{ fontSize:11, fontWeight:600, color:'#205295', background:'rgba(32,82,149,0.08)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>View Profile</Link>
+                          <Link to="/employer/candidate/$candidateId" params={{ candidateId: app.user_id }} style={{ fontSize:11, fontWeight:600, color:'#512ACC', background:'rgba(81,42,204,0.08)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>View Profile</Link>
                         )}
                       </div>
                     </li>
@@ -528,7 +528,7 @@ function EmployerDashboardPage() {
 
           {/* Interview Options Panel */}
           {interviewPanel?.open && (
-            <div style={{ marginTop: 20, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 24, boxShadow: '0 4px 20px rgba(10,38,71,0.08)' }}>
+            <div style={{ marginTop: 20, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 24, boxShadow: '0 4px 20px rgba(81,42,204,0.08)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <div>
                   <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 2 }}>Interview Options</h2>
@@ -591,8 +591,8 @@ function EmployerDashboardPage() {
 
           <div style={{ marginTop: 32 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(32,82,149,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Briefcase style={{ width: 16, height: 16, color: '#205295' }} />
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Briefcase style={{ width: 16, height: 16, color: '#512ACC' }} />
               </div>
               <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Your Job Posts</h2>
             </div>
@@ -609,24 +609,24 @@ function EmployerDashboardPage() {
             ) : (
               <ul style={{ display:'flex', flexDirection:'column', gap:12 }}>
                 {jobs?.map((j) => (
-                  <li key={j.id} style={{ background:'var(--surface)', border:'1px solid var(--line)', borderRadius:14, padding:'16px 18px', transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(10,38,71,0.04)' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(32,82,149,0.3)'; }}
+                  <li key={j.id} style={{ background:'var(--surface)', border:'1px solid var(--line)', borderRadius:14, padding:'16px 18px', transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(81,42,204,0.04)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(81,42,204,0.3)'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)'; }}
                   >
                     <div style={{ display:'flex', flexWrap:'wrap', alignItems:'flex-start', justifyContent:'space-between', gap:12 }}>
                       <div style={{ flex:1 }}>
-                        <h3 style={{ fontSize:15, fontWeight:700, color:'#205295', margin:0 }}>{j.job_title}</h3>
+                        <h3 style={{ fontSize:15, fontWeight:700, color:'#512ACC', margin:0 }}>{j.job_title}</h3>
                         <p style={{ fontSize:12, color:'var(--muted)', marginTop:4 }}>
                           {j.company_name} · {j.employer_type} · {j.location}
                         </p>
                       </div>
                       <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:6 }}>
                         <span style={{ fontSize:11, color:'var(--muted)' }}>{formatDate(j.created_at)}</span>
-                        <span style={{ fontSize:11, fontWeight:600, color:'#205295', background:'rgba(32,82,149,0.08)', borderRadius:6, padding:'3px 10px', textTransform:'capitalize' }}>{j.status}</span>
-                        <Link to="/employer/vacancies/$jobId/candidates" params={{ jobId: j.id }} style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, fontWeight:600, color:'#205295', background:'rgba(32,82,149,0.07)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>
+                        <span style={{ fontSize:11, fontWeight:600, color:'#512ACC', background:'rgba(81,42,204,0.08)', borderRadius:6, padding:'3px 10px', textTransform:'capitalize' }}>{j.status}</span>
+                        <Link to="/employer/vacancies/$jobId/candidates" params={{ jobId: j.id }} style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, fontWeight:600, color:'#512ACC', background:'rgba(81,42,204,0.07)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>
                           <Users className="size-3.5" /> Match
                         </Link>
-                        <Link to="/employer/vacancies/$jobId/occupation" params={{ jobId: j.id }} style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, fontWeight:600, color:'#205295', background:'rgba(32,82,149,0.07)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>
+                        <Link to="/employer/vacancies/$jobId/occupation" params={{ jobId: j.id }} style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, fontWeight:600, color:'#512ACC', background:'rgba(81,42,204,0.07)', border:'1px solid var(--line)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>
                           <Brain className="size-3.5" /> MASCO AI
                         </Link>
                         <Link to="/employer/vacancy/$jobId/optimize" params={{ jobId: j.id }} style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, fontWeight:600, color:'#f36c21', background:'rgba(243,108,33,0.08)', border:'1px solid rgba(243,108,33,0.2)', borderRadius:8, padding:'5px 12px', textDecoration:'none' }}>

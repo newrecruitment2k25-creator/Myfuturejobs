@@ -231,7 +231,7 @@ function SkillsPassportPage() {
 
         {/* ── Hero header with score ring ─────────────────── */}
         <div style={{
-          background: 'linear-gradient(135deg, #0A2647 0%, #144272 50%, #1e40af 100%)',
+          background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 50%, #1e40af 100%)',
           padding: '40px 16px 500px',
           position: 'relative',
           overflow: 'hidden',
@@ -268,7 +268,7 @@ function SkillsPassportPage() {
             {/* ── Score Hero Card ────────────────────────────── */}
             <div style={{
               background: '#fff', borderRadius: 20, padding: 28,
-              boxShadow: '0 4px 24px rgba(10,38,71,0.08)',
+              boxShadow: '0 4px 24px rgba(81,42,204,0.08)',
               border: '1px solid #e2e8f0',
               display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 24,
             }}>
@@ -284,7 +284,7 @@ function SkillsPassportPage() {
                   />
                 </svg>
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                  <span style={{ fontSize: 36, fontWeight: 800, color: '#0A2647', lineHeight: 1 }}>{analysis.overall}</span>
+                  <span style={{ fontSize: 36, fontWeight: 800, color: '#512ACC', lineHeight: 1 }}>{analysis.overall}</span>
                   <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>out of 100</span>
                 </div>
               </div>
@@ -295,10 +295,10 @@ function SkillsPassportPage() {
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: scoreColor }} />
                   <span style={{ fontSize: 11, fontWeight: 700, color: scoreColor }}>{scoreLabel}</span>
                 </div>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0A2647', margin: '0 0 4px' }}>Employability Score</h2>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#512ACC', margin: '0 0 4px' }}>Employability Score</h2>
                 <p style={{ fontSize: 13, color: '#64748b', margin: 0, lineHeight: 1.5 }}>
-                  Based on your CV analysis in the <strong style={{ color: '#0A2647' }}>{analysis.industry}</strong> sector.
-                  {topReadiness && <> Best fit: <strong style={{ color: '#0A2647' }}>{topReadiness.label}</strong> ({topReadiness.score}%).</>}
+                  Based on your CV analysis in the <strong style={{ color: '#512ACC' }}>{analysis.industry}</strong> sector.
+                  {topReadiness && <> Best fit: <strong style={{ color: '#512ACC' }}>{topReadiness.label}</strong> ({topReadiness.score}%).</>}
                 </p>
               </div>
 
@@ -308,21 +308,21 @@ function SkillsPassportPage() {
                   <div style={{ width: 48, height: 48, borderRadius: 12, background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
                     <CheckCircle2 style={{ width: 22, height: 22, color: '#10b981' }} />
                   </div>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{strong.length}</p>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#512ACC', margin: 0 }}>{strong.length}</p>
                   <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>Strong</p>
                 </div>
                 <div style={{ textAlign: 'center', width: 56 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
                     <AlertCircle style={{ width: 22, height: 22, color: '#f59e0b' }} />
                   </div>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{moderate.length}</p>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#512ACC', margin: 0 }}>{moderate.length}</p>
                   <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>Moderate</p>
                 </div>
                 <div style={{ textAlign: 'center', width: 56 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px' }}>
                     <Target style={{ width: 22, height: 22, color: '#ef4444' }} />
                   </div>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: '#0A2647', margin: 0 }}>{improve.length + gaps.length}</p>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: '#512ACC', margin: 0 }}>{improve.length + gaps.length}</p>
                   <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, margin: 0 }}>To Develop</p>
                 </div>
               </div>
@@ -348,7 +348,7 @@ function SkillsPassportPage() {
                       <span style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>{r.label}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
-                      <span style={{ fontSize: 28, fontWeight: 800, color: '#0A2647', lineHeight: 1 }}>{r.score}</span>
+                      <span style={{ fontSize: 28, fontWeight: 800, color: '#512ACC', lineHeight: 1 }}>{r.score}</span>
                       <span style={{ fontSize: 13, fontWeight: 600, color: '#94a3b8', marginBottom: 2 }}>%</span>
                     </div>
                     <div style={{ height: 6, borderRadius: 3, background: '#f1f5f9', overflow: 'hidden' }}>
@@ -364,15 +364,15 @@ function SkillsPassportPage() {
               {/* Skill category bars */}
               <div style={{ background: '#fff', borderRadius: 16, padding: 20, border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                  <BarChart3 style={{ width: 16, height: 16, color: '#205295' }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skill Categories</h3>
+                  <BarChart3 style={{ width: 16, height: 16, color: '#512ACC' }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#512ACC', margin: 0 }}>Skill Categories</h3>
                 </div>
                 <div>
                   {radar.map((cat) => (
                     <div key={cat.category} style={{ marginBottom: 14 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
                         <span style={{ fontSize: 12, fontWeight: 600, color: '#475569' }}>{cat.category}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#0A2647' }}>{cat.score}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#512ACC' }}>{cat.score}</span>
                       </div>
                       <div style={{ height: 8, borderRadius: 4, background: '#f1f5f9', overflow: 'hidden' }}>
                         <div style={{
@@ -390,7 +390,7 @@ function SkillsPassportPage() {
               <div style={{ background: '#fff', borderRadius: 16, padding: 20, border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                   <Award style={{ width: 16, height: 16, color: '#f36c21' }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skill Levels</h3>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#512ACC', margin: 0 }}>Skill Levels</h3>
                 </div>
                 {[
                   { label: 'Strong Skills', count: strong.length, items: strong, color: '#10b981', bg: '#ecfdf5', icon: Trophy },
@@ -430,7 +430,7 @@ function SkillsPassportPage() {
 
             {/* ── Passport ID Card ────────────────────────────── */}
             <div style={{
-              background: 'linear-gradient(135deg, #0A2647 0%, #144272 60%, #1e3a5f 100%)',
+              background: 'linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #1e3a5f 100%)',
               borderRadius: 16, padding: 22, color: '#fff',
               position: 'relative', overflow: 'hidden',
             }}>
@@ -463,7 +463,7 @@ function SkillsPassportPage() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Star style={{ width: 16, height: 16, color: '#f36c21' }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: 0 }}>Skills Inventory</h3>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#512ACC', margin: 0 }}>Skills Inventory</h3>
                 </div>
                 <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8' }}>{skills.length} skills identified</span>
               </div>
@@ -522,7 +522,7 @@ function SkillsPassportPage() {
                   <TrendingUp style={{ width: 20, height: 20, color: '#f59e0b' }} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0A2647', margin: '0 0 2px' }}>Skills to Develop</h3>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: '#512ACC', margin: '0 0 2px' }}>Skills to Develop</h3>
                   <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>Close these gaps to boost your employability score.</p>
                 </div>
               </div>
@@ -540,7 +540,7 @@ function SkillsPassportPage() {
               <div style={{ borderTop: '1px solid #fde68a', paddingTop: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
                   <BookOpen style={{ width: 14, height: 14, color: '#f59e0b' }} />
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#0A2647' }}>Recommended Training</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#512ACC' }}>Recommended Training</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 8 }}>
                   {TRAINING_LINKS.map((l) => (

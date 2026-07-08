@@ -51,7 +51,7 @@ function LandingPage() {
       body: t("landingCap1Body"),
       cta: t("landingCap1Cta"),
       ctaTo: "/poc/ai-matching",
-      accentColor: "#205295",
+      accentColor: "#512ACC",
       Icon: Zap,
       flip: false,
       image: "/landing-ai-matching.png",
@@ -62,7 +62,7 @@ function LandingPage() {
       body: t("landingCap2Body"),
       cta: t("landingCap2Cta"),
       ctaTo: "/skill-gap",
-      accentColor: "#0d7c66",
+      accentColor: "#31C47A",
       Icon: Brain,
       flip: true,
       image: "/landing-skill-gap.png",
@@ -73,7 +73,7 @@ function LandingPage() {
       body: t("landingCap3Body"),
       cta: t("landingCap3Cta"),
       ctaTo: "/taxonomy",
-      accentColor: "#b97c0e",
+      accentColor: "#F29F04",
       Icon: GitBranch,
       flip: false,
       image: "/landing-taxonomy.png",
@@ -84,7 +84,7 @@ function LandingPage() {
       body: t("landingCap4Body"),
       cta: t("landingCap4Cta"),
       ctaTo: "/labour-insights",
-      accentColor: "#2c74b3",
+      accentColor: "#3B82F6",
       Icon: BarChart2,
       flip: true,
       image: "/landing-labour-insights.png",
@@ -92,12 +92,12 @@ function LandingPage() {
   ];
 
   const INTEL_MODULES = [
-    { icon: Brain,      label: t("landingCap2Tag"),   desc: t("landingCap2Title"),   to: "/skill-gap",             accent: "#205295" },
-    { icon: TrendingUp, label: t("navCareerPathway"),     desc: t("landingIntelCareerDesc"),        to: "/career-pathway",        accent: "#0d7c66" },
-    { icon: FileSearch, label: t("navDocumentIntel"), desc: t("landingIntelDocDesc"), to: "/document-intelligence", accent: "#b97c0e" },
-    { icon: GitBranch,  label: t("landingCap3Tag"),   desc: t("landingCap3Title"),   to: "/taxonomy",              accent: "#2c74b3" },
-    { icon: BarChart2,  label: t("landingCap4Tag"),   desc: t("landingCap4Title"),   to: "/labour-insights",       accent: "#6b46c1" },
-    { icon: Sparkles,   label: t("navRecommendedJobs"),      desc: t("landingIntelRecDesc"),   to: "/recommended-jobs",      accent: "#205295" },
+    { icon: Brain,      label: t("landingCap2Tag"),   desc: t("landingCap2Title"),   to: "/skill-gap",             accent: "#512ACC" },
+    { icon: TrendingUp, label: t("navCareerPathway"),     desc: t("landingIntelCareerDesc"),        to: "/career-pathway",        accent: "#31C47A" },
+    { icon: FileSearch, label: t("navDocumentIntel"), desc: t("landingIntelDocDesc"), to: "/document-intelligence", accent: "#F29F04" },
+    { icon: GitBranch,  label: t("landingCap3Tag"),   desc: t("landingCap3Title"),   to: "/taxonomy",              accent: "#3B82F6" },
+    { icon: BarChart2,  label: t("landingCap4Tag"),   desc: t("landingCap4Title"),   to: "/labour-insights",       accent: "#F43F5E" },
+    { icon: Sparkles,   label: t("navRecommendedJobs"),      desc: t("landingIntelRecDesc"),   to: "/recommended-jobs",      accent: "#512ACC" },
   ];
 
 
@@ -105,34 +105,34 @@ function LandingPage() {
     <div>
       {/*  HERO  */}
       <section style={{
-        background: "linear-gradient(135deg, #0A2647 0%, #144272 40%, #205295 100%)",
+        background: "linear-gradient(135deg, #FAFAFA 0%, #F5F3FF 50%, #EDE9FE 100%)",
         padding: "90px 2rem 80px",
         position: "relative",
         overflow: "hidden",
       }}>
         {/* decorative shapes */}
-        <div style={{ position:"absolute", top:-100, right:-100, width:400, height:400, borderRadius:"50%", background:"rgba(255,255,255,0.04)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", bottom:-80, left:80, width:250, height:250, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", top:"30%", right:"15%", width:150, height:150, borderRadius:"50%", background:"rgba(125,211,252,0.05)", pointerEvents:"none" }} />
+        <div style={{ position:"absolute", top:-100, right:-100, width:400, height:400, borderRadius:"50%", background:"rgba(81,42,204,0.06)", pointerEvents:"none" }} />
+        <div style={{ position:"absolute", bottom:-80, left:80, width:250, height:250, borderRadius:"50%", background:"rgba(49,196,122,0.06)", pointerEvents:"none" }} />
+        <div style={{ position:"absolute", top:"30%", right:"15%", width:150, height:150, borderRadius:"50%", background:"rgba(242,159,4,0.06)", pointerEvents:"none" }} />
 
         <div style={{ maxWidth:1280, margin:"0 auto", position:"relative", zIndex:1 }}>
           {/* eyebrow */}
-          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, padding:"5px 16px", fontSize:"0.6875rem", fontWeight:700, color:"rgba(255,255,255,0.85)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:32 }}>
-            <span style={{ width:7, height:7, borderRadius:"50%", background:"#4ade80", display:"inline-block", boxShadow:"0 0 8px rgba(74,222,128,0.5)" }} />
+          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(81,42,204,0.08)", border:"1px solid rgba(81,42,204,0.15)", borderRadius:20, padding:"5px 16px", fontSize:"0.6875rem", fontWeight:700, color:"#512ACC", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:32 }}>
+            <span style={{ width:7, height:7, borderRadius:"50%", background:"#31C47A", display:"inline-block", boxShadow:"0 0 8px rgba(49,196,122,0.5)" }} />
             {t("landingEyebrow")}
           </div>
 
           {/* headline */}
-          <h1 style={{ fontFamily:"var(--font-heading)", fontSize:"clamp(2rem,4.5vw,3.5rem)", fontWeight:800, lineHeight:1.05, letterSpacing:"-0.035em", color:"#ffffff", margin:"0 0 1.25rem", maxWidth:720 }}>
+          <h1 style={{ fontFamily:"var(--font-heading)", fontSize:"clamp(2rem,4.5vw,3.5rem)", fontWeight:800, lineHeight:1.05, letterSpacing:"-0.035em", color:"#202020", margin:"0 0 1.25rem", maxWidth:720 }}>
             {t("landingHeroTitle")}<br />
-            <span style={{ background:"linear-gradient(90deg, #7dd3fc 0%, #38bdf8 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>{t("landingHeroHighlight")}</span>
+            <span style={{ background:"linear-gradient(90deg, #512ACC 0%, #7B5CE0 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>{t("landingHeroHighlight")}</span>
           </h1>
-          <p style={{ fontSize:"1.0625rem", color:"rgba(255,255,255,0.65)", lineHeight:1.7, margin:"0 0 2.5rem", maxWidth:580 }}>
+          <p style={{ fontSize:"1.0625rem", color:"rgba(32,32,32,0.65)", lineHeight:1.7, margin:"0 0 2.5rem", maxWidth:580 }}>
             {t("landingHeroSub")}
           </p>
 
           {/* search bar */}
-          <div style={{ display:"flex", maxWidth:600, background:"#fff", borderRadius:12, overflow:"hidden", boxShadow:"0 8px 32px rgba(0,0,0,0.2)", marginBottom:"1.25rem" }}>
+          <div style={{ display:"flex", maxWidth:600, background:"#fff", borderRadius:50, overflow:"hidden", boxShadow:"0 8px 32px rgba(81,42,204,0.12)", marginBottom:"1.25rem", border:"1px solid rgba(81,42,204,0.12)" }}>
             <div style={{ display:"flex", alignItems:"center", flex:1, padding:"0 1.25rem", gap:10 }}>
               <Search size={18} style={{ color:"var(--muted)", flexShrink:0 }} />
               <input
@@ -146,7 +146,7 @@ function LandingPage() {
             </div>
             <button
               onClick={() => goSearch(query)}
-              style={{ flexShrink:0, background:"linear-gradient(135deg, #205295 0%, #144272 100%)", color:"#fff", border:"none", fontSize:"0.875rem", fontWeight:700, cursor:"pointer", padding:"0 1.75rem", transition:"all 0.15s", display:"flex", alignItems:"center", gap:6 }}
+              style={{ flexShrink:0, background:"linear-gradient(135deg, #31C47A 0%, #27A866 100%)", color:"#fff", border:"none", fontSize:"0.875rem", fontWeight:700, cursor:"pointer", padding:"0 2rem", transition:"all 0.15s", display:"flex", alignItems:"center", gap:6, borderRadius:50 }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; }}
             >
@@ -156,33 +156,33 @@ function LandingPage() {
 
           {/* example chips */}
           <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem", alignItems:"center" }}>
-            <span style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.45)", fontWeight:500 }}>{t("landingTry")}</span>
+            <span style={{ fontSize:"0.75rem", color:"rgba(32,32,32,0.45)", fontWeight:500 }}>{t("landingTry")}</span>
             {SEARCH_CHIPS.map(chip => (
               <button key={chip} onClick={() => goSearch(chip)}
-                style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:20, fontSize:"0.75rem", fontWeight:500, color:"rgba(255,255,255,0.75)", padding:"5px 14px", cursor:"pointer", transition:"all 0.15s" }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.15)"; el.style.color="#fff"; el.style.borderColor="rgba(255,255,255,0.25)"; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.06)"; el.style.color="rgba(255,255,255,0.75)"; el.style.borderColor="rgba(255,255,255,0.12)"; }}
+                style={{ background:"rgba(81,42,204,0.06)", border:"1px solid rgba(81,42,204,0.12)", borderRadius:20, fontSize:"0.75rem", fontWeight:500, color:"#512ACC", padding:"5px 14px", cursor:"pointer", transition:"all 0.15s" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(81,42,204,0.12)"; el.style.color="#3B1A99"; el.style.borderColor="rgba(81,42,204,0.25)"; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(81,42,204,0.06)"; el.style.color="#512ACC"; el.style.borderColor="rgba(81,42,204,0.12)"; }}
               >{chip}</button>
             ))}
           </div>
 
           {/* role quick-links */}
           <div style={{ display:"flex", gap:12, marginTop:36, flexWrap:"wrap" }}>
-            <Link to="/signup" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"rgba(255,255,255,0.9)", textDecoration:"none", transition:"all 0.15s" }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
+            <Link to="/signup" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(81,42,204,0.08)", border:"1px solid rgba(81,42,204,0.15)", borderRadius:50, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"#512ACC", textDecoration:"none", transition:"all 0.15s" }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(81,42,204,0.15)"; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(81,42,204,0.08)"; }}
             >
               <Users size={14} /> {t("landingRoleJobSeeker")}
             </Link>
-            <Link to="/signup" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"rgba(255,255,255,0.9)", textDecoration:"none", transition:"all 0.15s" }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
+            <Link to="/signup" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(49,196,122,0.08)", border:"1px solid rgba(49,196,122,0.15)", borderRadius:50, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"#27A866", textDecoration:"none", transition:"all 0.15s" }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(49,196,122,0.15)"; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(49,196,122,0.08)"; }}
             >
               <Building2 size={14} /> {t("landingRoleEmployer")}
             </Link>
-            <Link to="/login?tab=admin" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:10, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"rgba(255,255,255,0.9)", textDecoration:"none", transition:"all 0.15s" }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.18)"; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.1)"; }}
+            <Link to="/login?tab=admin" style={{ display:"inline-flex", alignItems:"center", gap:6, background:"rgba(242,159,4,0.08)", border:"1px solid rgba(242,159,4,0.15)", borderRadius:50, padding:"8px 16px", fontSize:"0.8125rem", fontWeight:600, color:"#C67A02", textDecoration:"none", transition:"all 0.15s" }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(242,159,4,0.15)"; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background="rgba(242,159,4,0.08)"; }}
             >
               <Shield size={14} /> {t("landingRoleAdmin")}
             </Link>
@@ -191,7 +191,7 @@ function LandingPage() {
       </section>
 
       {/*  TRUST BAR  */}
-      <section style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"0", boxShadow:"0 2px 12px rgba(10,38,71,0.04)" }}>
+      <section style={{ background:"#fff", borderBottom:"1px solid var(--line)", padding:"0", boxShadow:"0 2px 12px rgba(81,42,204,0.04)" }}>
         <div style={{ maxWidth:1280, margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(4,1fr)" }}>
           {TRUST_STATS.map((s, i) => (
             <div key={s.label} style={{
@@ -203,7 +203,7 @@ function LandingPage() {
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--base-alt)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
             >
-              <div style={{ fontFamily:"var(--font-heading)", fontSize:"2rem", fontWeight:800, background:"linear-gradient(135deg, var(--brand) 0%, var(--accent-blue) 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", lineHeight:1 }}>{s.value}</div>
+              <div style={{ fontFamily:"var(--font-heading)", fontSize:"2rem", fontWeight:800, background:"linear-gradient(135deg, #512ACC 0%, #31C47A 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", lineHeight:1 }}>{s.value}</div>
               <div style={{ fontSize:"0.875rem", fontWeight:700, color:"var(--ink)" }}>{s.label}</div>
               <div style={{ fontSize:"0.75rem", color:"var(--muted)" }}>{s.sub}</div>
             </div>
@@ -212,7 +212,7 @@ function LandingPage() {
       </section>
 
       {/*  CAPABILITIES  alternating rows  */}
-      <section style={{ background:"var(--base-alt)", padding:"5rem 2rem" }}>
+      <section style={{ background:"var(--base)", padding:"5rem 2rem" }}>
         <div style={{ maxWidth:1280, margin:"0 auto" }}>
           <div style={{ textAlign:"center", marginBottom:"3.5rem" }}>
             <div style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:"0.6875rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--accent-blue)", marginBottom:10, padding:"4px 14px", borderRadius:20, background:"var(--accent-glow)" }}>{t("landingCapEyebrow")}</div>
@@ -281,7 +281,7 @@ function LandingPage() {
       </section>
 
       {/*  INTELLIGENCE MODULES  grid  */}
-      <section style={{ background:"#fff", borderTop:"1px solid var(--line)", borderBottom:"1px solid var(--line)", padding:"4rem 2rem" }}>
+      <section style={{ background:"var(--base)", borderTop:"1px solid var(--line)", borderBottom:"1px solid var(--line)", padding:"4rem 2rem" }}>
         <div style={{ maxWidth:1280, margin:"0 auto" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"2rem" }}>
             <div>
@@ -311,7 +311,7 @@ function LandingPage() {
                   transition:"all 0.2s",
                   height:"100%",
                 }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow="0 8px 24px rgba(10,38,71,0.08)"; el.style.transform="translateY(-3px)"; el.style.borderColor=`${mod.accent}40`; }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow="0 8px 24px rgba(81,42,204,0.08)"; el.style.transform="translateY(-3px)"; el.style.borderColor=`${mod.accent}40`; }}
                   onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow="none"; el.style.transform="none"; el.style.borderColor="var(--line)"; }}
                 >
                   <div style={{ width:40, height:40, borderRadius:10, background:`${mod.accent}12`, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1rem" }}>
@@ -330,7 +330,7 @@ function LandingPage() {
       </section>
 
       {/*  CTA BANNER  */}
-      <section style={{ background:"linear-gradient(135deg, #0A2647 0%, #144272 50%, #205295 100%)", padding:"4.5rem 2rem", position:"relative", overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg, #512ACC 0%, #6B4FD6 50%, #F29F04 100%)", padding:"4.5rem 2rem", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-80, right:-80, width:300, height:300, borderRadius:"50%", background:"rgba(255,255,255,0.04)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-60, left:-40, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
         <div style={{ maxWidth:720, margin:"0 auto", textAlign:"center", position:"relative", zIndex:1 }}>

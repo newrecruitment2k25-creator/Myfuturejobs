@@ -35,7 +35,7 @@ function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradie
   const panels: Record<Role, { bg: string; bgGradient: string; eyebrow: string; heading: string; sub: string; features: string[]; quote: string; author: string; statValue: string; statLabel: string }> = {
     job_seeker: {
       bg: "var(--brand)",
-      bgGradient: "linear-gradient(160deg, #0A2647 0%, #144272 60%, #1a4a82 100%)",
+      bgGradient: "linear-gradient(160deg, #512ACC 0%, #6B4FD6 60%, #1a4a82 100%)",
       eyebrow: t("loginSeekerEyebrow"),
       heading: t("loginSeekerHeading"),
       sub: t("loginSeekerSub"),
@@ -47,7 +47,7 @@ function getPanelInfo(t: (k: any) => string, role: Role): { bg: string; bgGradie
     },
     employer: {
       bg: "var(--accent)",
-      bgGradient: "linear-gradient(160deg, #144272 0%, #205295 60%, #2C74B3 100%)",
+      bgGradient: "linear-gradient(160deg, #6B4FD6 0%, #512ACC 60%, #7B5CE0 100%)",
       eyebrow: t("loginEmployerEyebrow"),
       heading: t("loginEmployerHeading"),
       sub: t("loginEmployerSub"),
@@ -252,7 +252,7 @@ function LoginPage() {
             height: 48, background: `linear-gradient(135deg, ${btnColor} 0%, ${btnColor}dd 100%)`, color: "#fff", border: "none",
             borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.15s",
-            boxShadow: "0 4px 12px rgba(10,38,71,0.15)",
+            boxShadow: "0 4px 12px rgba(81,42,204,0.15)",
           }}
           onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; }}

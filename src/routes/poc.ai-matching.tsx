@@ -100,9 +100,9 @@ function ScorePill({ label, value, color }: { label: string; value: string; colo
 
 function SkillTag({ label, variant }: { label: string; variant: "match" | "miss" | "transfer" | "train" }) {
   const styles = {
-    match:    { background: "rgba(13,124,102,0.08)", color: "#0d7c66", border: "1px solid rgba(13,124,102,0.2)" },
+    match:    { background: "rgba(49,196,122,0.08)", color: "#31C47A", border: "1px solid rgba(49,196,122,0.2)" },
     miss:     { background: "rgba(185,28,28,0.07)",  color: "#b91c1c", border: "1px solid rgba(185,28,28,0.18)" },
-    transfer: { background: "rgba(32,82,149,0.08)",  color: "#205295", border: "1px solid rgba(32,82,149,0.2)" },
+    transfer: { background: "rgba(81,42,204,0.08)",  color: "#512ACC", border: "1px solid rgba(81,42,204,0.2)" },
     train:    { background: "rgba(180,120,14,0.08)", color: "#b47c0e", border: "1px solid rgba(180,120,14,0.2)" },
   }[variant];
   return (
@@ -214,7 +214,7 @@ function PocAiMatchingPage() {
       <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", padding: "1.5rem 2rem" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", background: "rgba(32,82,149,0.08)", borderRadius: 6, padding: "3px 10px" }}>PERKESO POC</span>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", background: "rgba(81,42,204,0.08)", borderRadius: 6, padding: "3px 10px" }}>PERKESO POC</span>
             <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Semantic AI Demonstration</span>
           </div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.25rem,3vw,1.75rem)", fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.025em", margin: 0 }}>
@@ -231,7 +231,7 @@ function PocAiMatchingPage() {
               { Icon: Search,    label: "Vector Search Active" },
               { Icon: Brain,     label: "Semantic AI Enabled" },
             ].map(({ Icon, label }) => (
-              <div key={label} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(32,82,149,0.07)", border: "1px solid rgba(32,82,149,0.15)", borderRadius: 6, padding: "4px 12px", fontSize: "0.75rem", fontWeight: 600, color: "var(--accent-blue)" }}>
+              <div key={label} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(81,42,204,0.07)", border: "1px solid rgba(81,42,204,0.15)", borderRadius: 6, padding: "4px 12px", fontSize: "0.75rem", fontWeight: 600, color: "var(--accent-blue)" }}>
                 <Icon size={13} />
                 {label}
               </div>
@@ -269,7 +269,7 @@ function PocAiMatchingPage() {
                   {filteredVacancies.map(v => (
                     <button key={v.id}
                       onClick={() => { setSelectedVacancy(v); setCandidates([]); setSelectedCandidate(null); setReport(null); setCandidateError(null); setCandidateWarning(null); }}
-                      style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedVacancy?.id === v.id ? "2px solid var(--accent-blue)" : "1px solid var(--line)", background: selectedVacancy?.id === v.id ? "rgba(32,82,149,0.05)" : "#fff", cursor: "pointer", transition: "all 0.1s" }}
+                      style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedVacancy?.id === v.id ? "2px solid var(--accent-blue)" : "1px solid var(--line)", background: selectedVacancy?.id === v.id ? "rgba(81,42,204,0.05)" : "#fff", cursor: "pointer", transition: "all 0.1s" }}
                     >
                       <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.3 }}>{v.job_title || v.occupation_name || "Untitled"}</div>
                       <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{v.state}{v.city ? `, ${v.city}` : ""}{v.salary ? `  ${v.salary}` : ""}</div>
@@ -320,18 +320,18 @@ function PocAiMatchingPage() {
               const pct = Math.round((c.semanticScore ?? 0) * 100);
               const isSelected = selectedCandidate?.id === c.id;
               return (
-                <div key={c.id} style={{ border: isSelected ? "2px solid var(--accent-blue)" : "1px solid var(--line)", borderRadius: 10, padding: "10px 12px", background: isSelected ? "rgba(32,82,149,0.04)" : "#fff" }}>
+                <div key={c.id} style={{ border: isSelected ? "2px solid var(--accent-blue)" : "1px solid var(--line)", borderRadius: 10, padding: "10px 12px", background: isSelected ? "rgba(81,42,204,0.04)" : "#fff" }}>
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 6, marginBottom: 6 }}>
                     <div>
                       <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{c.preferred_name || c.previous_occupation || `Candidate ${c.id.slice(0, 6)}`}</div>
                       <div style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{c.previous_occupation || ""}</div>
                     </div>
-                    <span style={{ flexShrink: 0, background: pct >= 70 ? "rgba(13,124,102,0.1)" : "rgba(32,82,149,0.08)", color: pct >= 70 ? "#0d7c66" : "var(--accent-blue)", borderRadius: 6, fontSize: "0.75rem", fontWeight: 800, padding: "2px 8px" }}>{pct}%</span>
+                    <span style={{ flexShrink: 0, background: pct >= 70 ? "rgba(49,196,122,0.1)" : "rgba(81,42,204,0.08)", color: pct >= 70 ? "#31C47A" : "var(--accent-blue)", borderRadius: 6, fontSize: "0.75rem", fontWeight: 800, padding: "2px 8px" }}>{pct}%</span>
                   </div>
                   {c.skills && <div style={{ fontSize: "0.6875rem", color: "var(--muted)", marginBottom: 6, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{c.skills}</div>}
                   {/* Score bar */}
                   <div style={{ height: 4, background: "var(--line)", borderRadius: 2, marginBottom: 8 }}>
-                    <div style={{ height: 4, width: `${pct}%`, background: pct >= 70 ? "#0d7c66" : "var(--accent-blue)", borderRadius: 2, transition: "width 0.4s ease" }} />
+                    <div style={{ height: 4, width: `${pct}%`, background: pct >= 70 ? "#31C47A" : "var(--accent-blue)", borderRadius: 2, transition: "width 0.4s ease" }} />
                   </div>
                   <button
                     onClick={() => generateReport(c)}
@@ -376,12 +376,12 @@ function PocAiMatchingPage() {
               {/* Score row */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.75rem" }}>
                 <ScorePill label="Match Score"        value={`${report.matchScore}`}                                                                 color="var(--accent-blue)" />
-                <ScorePill label="Semantic Similarity" value={report.semanticScore != null ? `${Math.round(report.semanticScore * 100)}%` : ""} color="#205295" />
-                <ScorePill label="Skill Match"        value={`${report.skillGap.score}%`}                                                            color="#0d7c66" />
+                <ScorePill label="Semantic Similarity" value={report.semanticScore != null ? `${Math.round(report.semanticScore * 100)}%` : ""} color="#512ACC" />
+                <ScorePill label="Skill Match"        value={`${report.skillGap.score}%`}                                                            color="#31C47A" />
               </div>
 
               {/* Summary */}
-              <div style={{ background: "rgba(32,82,149,0.04)", border: "1px solid rgba(32,82,149,0.12)", borderLeft: "3px solid var(--accent-blue)", borderRadius: 8, padding: "0.875rem 1rem" }}>
+              <div style={{ background: "rgba(81,42,204,0.04)", border: "1px solid rgba(81,42,204,0.12)", borderLeft: "3px solid var(--accent-blue)", borderRadius: 8, padding: "0.875rem 1rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-blue)" }}>
                   <Brain size={13} /> Summary
                 </div>
@@ -405,7 +405,7 @@ function PocAiMatchingPage() {
               </div>
 
               {/* Recommendation */}
-              <div style={{ background: "rgba(32,82,149,0.05)", border: "1px solid rgba(32,82,149,0.18)", borderRadius: 8, padding: "0.875rem 1rem" }}>
+              <div style={{ background: "rgba(81,42,204,0.05)", border: "1px solid rgba(81,42,204,0.18)", borderRadius: 8, padding: "0.875rem 1rem" }}>
                 <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-blue)", marginBottom: 6 }}>Recommendation</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span style={{ background: "var(--accent-blue)", color: "#fff", borderRadius: 6, fontSize: "0.8125rem", fontWeight: 700, padding: "4px 12px", textTransform: "capitalize" }}>
@@ -418,14 +418,14 @@ function PocAiMatchingPage() {
               {/* Strengths + Gaps */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                 <div style={{ border: "1px solid var(--line)", borderRadius: 8, padding: "0.875rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#0d7c66", marginBottom: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#31C47A", marginBottom: 8 }}>
                     <CheckCircle2 size={12} /> Strengths
                   </div>
                   {report.explanation.strengths.length === 0 ? <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>None listed.</p> : (
                     <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
                       {report.explanation.strengths.map((s, i) => (
                         <li key={i} style={{ fontSize: "0.8125rem", color: "var(--muted)", display: "flex", gap: 6 }}>
-                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#0d7c66", flexShrink: 0, marginTop: 5 }} />{s}
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#31C47A", flexShrink: 0, marginTop: 5 }} />{s}
                         </li>
                       ))}
                     </ul>

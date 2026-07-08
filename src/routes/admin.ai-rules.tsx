@@ -162,7 +162,7 @@ function AdminAiRulesPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--base)" }}>
-      <div style={{ background: "linear-gradient(135deg, #0A2647 0%, #144272 60%, #205295 100%)", padding: "40px 24px 32px", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "linear-gradient(135deg, #512ACC 0%, #6B4FD6 60%, #512ACC 100%)", padding: "40px 24px 32px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", right: -40, top: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
         <div style={{ position: "absolute", right: 80, bottom: -70, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.03)" }} />
         <div style={{ maxWidth: 760, margin: "0 auto", position: "relative" }}>

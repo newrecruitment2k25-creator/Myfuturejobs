@@ -395,7 +395,7 @@ function InterviewRoomPage() {
         {/* Left: AI Avatar panel */}
         <div className="flex w-[40%] flex-col" style={{ background: '#111827', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
           {/* Avatar display */}
-          <div className="relative flex-1 flex items-center justify-center" style={{ background: '#1a1a2e' }}>
+          <div className="relative flex-1 flex items-center justify-center" style={{ background: '#202020' }}>
             {avatarVideoUrl ? (
               <video
                 ref={avatarVideoRef}

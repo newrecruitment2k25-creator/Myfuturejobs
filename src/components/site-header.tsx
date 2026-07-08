@@ -142,7 +142,7 @@ export function SiteHeader() {
       <header className="perkeso-header" style={{
         background: "#fff",
         borderBottom: "2px solid var(--brand)",
-        boxShadow: "0 2px 12px rgba(10,38,71,0.06)",
+        boxShadow: "0 2px 12px rgba(81,42,204,0.06)",
       }}>
         <div className="perkeso-header-inner" style={{ height: 60, gap: "1.5rem" }}>
           {/* Brand */}
@@ -151,7 +151,7 @@ export function SiteHeader() {
               display: "inline-flex", width: 32, height: 32, borderRadius: 8,
               background: "linear-gradient(135deg, var(--brand) 0%, var(--accent-blue) 100%)",
               alignItems: "center", justifyContent: "center", flexShrink: 0,
-              boxShadow: "0 2px 8px rgba(10,38,71,0.2)",
+              boxShadow: "0 2px 8px rgba(81,42,204,0.2)",
             }}>
               <span style={{ width: 12, height: 12, background: "#fff", borderRadius: 3 }} />
             </span>
@@ -181,7 +181,7 @@ export function SiteHeader() {
                   <ChevronDown size={13} style={{ transition: "transform 0.15s", transform: intelOpen ? "rotate(180deg)" : "none" }} />
                 </button>
                 {intelOpen && (
-                  <div className="perkeso-dropdown-menu" style={{ minWidth: 300, borderRadius: 12, boxShadow: "0 8px 32px rgba(10,38,71,0.12)", border: "1px solid var(--line)" }}>
+                  <div className="perkeso-dropdown-menu" style={{ minWidth: 300, borderRadius: 12, boxShadow: "0 8px 32px rgba(81,42,204,0.12)", border: "1px solid var(--line)" }}>
                     {intelItems.map(item => (
                       <Link key={item.to} to={item.to as any} className="perkeso-dropdown-item" style={{ borderRadius: 8, padding: "10px 12px", margin: "2px 0" }}>
                         <div style={{ width: 32, height: 32, borderRadius: 8, background: "var(--accent-glow)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -227,7 +227,7 @@ export function SiteHeader() {
                 <ChevronDown size={11} style={{ transition: "transform 0.15s", transform: langOpen ? "rotate(180deg)" : "none" }} />
               </button>
               {langOpen && (
-                <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, background: "#fff", border: "1px solid var(--line)", borderRadius: 10, boxShadow: "0 8px 24px rgba(10,38,71,0.12)", padding: 4, zIndex: 1000, minWidth: 120 }}>
+                <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, background: "#fff", border: "1px solid var(--line)", borderRadius: 10, boxShadow: "0 8px 24px rgba(81,42,204,0.12)", padding: 4, zIndex: 1000, minWidth: 120 }}>
                   {LANG_OPTIONS.map(l => (
                     <button key={l} onClick={() => { setLang(l); setLangOpen(false); }}
                       style={{
@@ -284,7 +284,7 @@ export function SiteHeader() {
                   background: "linear-gradient(135deg, var(--brand) 0%, var(--accent-blue) 100%)",
                   color: "#fff", border: "none", borderRadius: 8,
                   padding: "7px 16px", fontSize: "0.8125rem", fontWeight: 700,
-                  textDecoration: "none", boxShadow: "0 2px 8px rgba(10,38,71,0.15)",
+                  textDecoration: "none", boxShadow: "0 2px 8px rgba(81,42,204,0.15)",
                 }}>
                 {t("headerSignIn")} <ArrowRight size={12} />
               </Link>

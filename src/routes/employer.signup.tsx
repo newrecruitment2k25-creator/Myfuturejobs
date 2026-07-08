@@ -70,7 +70,7 @@ function EmployerSignupPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--base)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}>
-      <div style={{ width: '100%', maxWidth: 420, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 20, padding: '40px 36px', boxShadow: '0 8px 40px rgba(10,38,71,0.08)' }}>
+      <div style={{ width: '100%', maxWidth: 420, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 20, padding: '40px 36px', boxShadow: '0 8px 40px rgba(81,42,204,0.08)' }}>
 
         <div style={{ marginBottom: 28 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: '#f36c21', textTransform: 'uppercase', marginBottom: 8, padding: '3px 10px', borderRadius: 20, background: 'rgba(243,108,33,0.08)' }}>
@@ -85,23 +85,23 @@ function EmployerSignupPage() {
           <div>
             <label htmlFor="email" style={labelStyle}>Work Email</label>
             <input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputStyle}
-              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(32,82,149,0.4)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(32,82,149,0.08)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(81,42,204,0.4)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(81,42,204,0.08)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.boxShadow = 'none'; }}
             />
           </div>
           <div>
             <label htmlFor="password" style={labelStyle}>Password</label>
             <input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} style={inputStyle}
-              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(32,82,149,0.4)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(32,82,149,0.08)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(81,42,204,0.4)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(81,42,204,0.08)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.boxShadow = 'none'; }}
             />
           </div>
           {error && <p style={{ fontSize: 13, color: '#dc2626', margin: 0, background: 'rgba(220,38,38,0.06)', borderRadius: 8, padding: '8px 12px' }}>{error}</p>}
           <button type="submit" disabled={submitting} style={{
-            height: 46, background: 'linear-gradient(135deg, #0A2647 0%, #205295 100%)', color: '#fff', border: 'none',
+            height: 46, background: 'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)', color: '#fff', border: 'none',
             borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            boxShadow: '0 4px 16px rgba(10,38,71,0.15)', transition: 'all 0.15s',
+            boxShadow: '0 4px 16px rgba(81,42,204,0.15)', transition: 'all 0.15s',
           }}>
             {submitting ? <><Loader2 className="size-4 animate-spin" /> Creating account…</> : 'Sign Up as Employer'}
           </button>
@@ -133,7 +133,7 @@ function EmployerSignupPage() {
           Already have an account? <Link to="/employer/login" style={{ color: '#f36c21', fontWeight: 700, textDecoration: 'none' }}>Log in</Link>
         </p>
         <p style={{ marginTop: 8, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-          <Link to="/signup" style={{ color: '#205295', textDecoration: 'none', fontWeight: 600 }}>Job Seeker Sign Up</Link>
+          <Link to="/signup" style={{ color: '#512ACC', textDecoration: 'none', fontWeight: 600 }}>Job Seeker Sign Up</Link>
         </p>
       </div>
     </div>

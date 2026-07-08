@@ -32,9 +32,9 @@ type SkillGap  = {
 
 function Tag({ label, variant }: { label: string; variant: "match" | "miss" | "transfer" | "train" }) {
   const s = {
-    match:    { background: "rgba(13,124,102,0.09)",  color: "#0d7c66", border: "1px solid rgba(13,124,102,0.22)" },
+    match:    { background: "rgba(49,196,122,0.09)",  color: "#31C47A", border: "1px solid rgba(49,196,122,0.22)" },
     miss:     { background: "rgba(185,28,28,0.07)",   color: "#b91c1c", border: "1px solid rgba(185,28,28,0.18)" },
-    transfer: { background: "rgba(32,82,149,0.08)",   color: "#205295", border: "1px solid rgba(32,82,149,0.2)" },
+    transfer: { background: "rgba(81,42,204,0.08)",   color: "#512ACC", border: "1px solid rgba(81,42,204,0.2)" },
     train:    { background: "rgba(180,120,14,0.08)",  color: "#b47c0e", border: "1px solid rgba(180,120,14,0.2)" },
   }[variant];
   return <span style={{ ...s, borderRadius: 6, fontSize: "0.75rem", fontWeight: 600, padding: "3px 10px" }}>{label}</span>;
@@ -92,7 +92,7 @@ function SkillGapPage() {
       <div style={{ background: "#fff", borderBottom: "1px solid var(--line)", padding: "1.5rem 2rem" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#0d7c66", background: "rgba(13,124,102,0.08)", borderRadius: 6, padding: "3px 10px" }}>Intelligence</span>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#31C47A", background: "rgba(49,196,122,0.08)", borderRadius: 6, padding: "3px 10px" }}>Intelligence</span>
             <Link to="/poc/ai-matching" style={{ fontSize: "0.75rem", color: "var(--muted)", textDecoration: "none" }}>← AI Matching</Link>
           </div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(1.25rem,3vw,1.75rem)", fontWeight: 800, color: "var(--ink)", letterSpacing: "-0.025em", margin: 0 }}>
@@ -111,7 +111,7 @@ function SkillGapPage() {
             <button
               onClick={loadData}
               disabled={loading}
-              style={{ background: "#0d7c66", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: "0.875rem", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
+              style={{ background: "#31C47A", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: "0.875rem", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               {loading ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Brain size={14} />}
               Load Candidates & Vacancies
@@ -123,11 +123,11 @@ function SkillGapPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
             {/* Candidate picker */}
             <div style={card}>
-              <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#0d7c66", marginBottom: "0.75rem" }}>1. Select Candidate</div>
+              <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#31C47A", marginBottom: "0.75rem" }}>1. Select Candidate</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 300, overflowY: "auto" }}>
                 {candidates.map(c => (
                   <button key={c.id} onClick={() => setSelectedC(c)}
-                    style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedC?.id === c.id ? "2px solid #0d7c66" : "1px solid var(--line)", background: selectedC?.id === c.id ? "rgba(13,124,102,0.05)" : "#fff", cursor: "pointer" }}
+                    style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedC?.id === c.id ? "2px solid #31C47A" : "1px solid var(--line)", background: selectedC?.id === c.id ? "rgba(49,196,122,0.05)" : "#fff", cursor: "pointer" }}
                   >
                     <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{c.preferred_name || c.previous_occupation || `Candidate ${c.id.slice(0,8)}`}</div>
                     <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{c.previous_occupation || "—"}</div>
@@ -138,11 +138,11 @@ function SkillGapPage() {
 
             {/* Vacancy picker */}
             <div style={card}>
-              <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#0d7c66", marginBottom: "0.75rem" }}>2. Select Target Vacancy</div>
+              <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#31C47A", marginBottom: "0.75rem" }}>2. Select Target Vacancy</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 300, overflowY: "auto" }}>
                 {vacancies.map(v => (
                   <button key={v.id} onClick={() => setSelectedV(v)}
-                    style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedV?.id === v.id ? "2px solid #0d7c66" : "1px solid var(--line)", background: selectedV?.id === v.id ? "rgba(13,124,102,0.05)" : "#fff", cursor: "pointer" }}
+                    style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedV?.id === v.id ? "2px solid #31C47A" : "1px solid var(--line)", background: selectedV?.id === v.id ? "rgba(49,196,122,0.05)" : "#fff", cursor: "pointer" }}
                   >
                     <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{v.job_title || v.occupation_name || "Untitled"}</div>
                     {v.skills && <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{v.skills.slice(0,60)}…</div>}
@@ -159,7 +159,7 @@ function SkillGapPage() {
             <button
               onClick={runAnalysis}
               disabled={!selectedC || !selectedV || running}
-              style={{ background: selectedC && selectedV && !running ? "#0d7c66" : "var(--line)", color: selectedC && selectedV && !running ? "#fff" : "var(--muted)", border: "none", borderRadius: 8, padding: "10px 28px", fontSize: "0.875rem", fontWeight: 700, cursor: selectedC && selectedV && !running ? "pointer" : "not-allowed", display: "inline-flex", alignItems: "center", gap: 8 }}
+              style={{ background: selectedC && selectedV && !running ? "#31C47A" : "var(--line)", color: selectedC && selectedV && !running ? "#fff" : "var(--muted)", border: "none", borderRadius: 8, padding: "10px 28px", fontSize: "0.875rem", fontWeight: 700, cursor: selectedC && selectedV && !running ? "pointer" : "not-allowed", display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               {running ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Sparkles size={14} />}
               Run Skill Gap Analysis
@@ -177,12 +177,12 @@ function SkillGapPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             {/* Score */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1rem" }}>
-              <div style={{ ...card, textAlign: "center", borderTop: "3px solid #0d7c66" }}>
-                <div style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 800, color: "#0d7c66" }}>{result.score}%</div>
+              <div style={{ ...card, textAlign: "center", borderTop: "3px solid #31C47A" }}>
+                <div style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 800, color: "#31C47A" }}>{result.score}%</div>
                 <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 4 }}>Skill Match Score</div>
               </div>
-              <div style={{ ...card, textAlign: "center", borderTop: "3px solid #205295" }}>
-                <div style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 800, color: "#205295" }}>{result.matchedSkills.length}</div>
+              <div style={{ ...card, textAlign: "center", borderTop: "3px solid #512ACC" }}>
+                <div style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 800, color: "#512ACC" }}>{result.matchedSkills.length}</div>
                 <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 4 }}>Matched Skills</div>
               </div>
               <div style={{ ...card, textAlign: "center", borderTop: "3px solid #b91c1c" }}>
@@ -193,8 +193,8 @@ function SkillGapPage() {
 
             {/* Summary */}
             {result.summary && (
-              <div style={{ ...card, borderLeft: "3px solid #0d7c66" }}>
-                <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#0d7c66", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ ...card, borderLeft: "3px solid #31C47A" }}>
+                <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#31C47A", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                   <Brain size={12} /> Summary
                 </div>
                 <p style={{ fontSize: "0.9375rem", color: "var(--muted)", lineHeight: 1.7, margin: 0 }}>{result.summary}</p>
@@ -204,7 +204,7 @@ function SkillGapPage() {
             {/* Skill tags grid */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div style={card}>
-                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#0d7c66", marginBottom: 10 }}><CheckCircle2 size={12} /> Matched Skills</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", fontWeight: 700, color: "#31C47A", marginBottom: 10 }}><CheckCircle2 size={12} /> Matched Skills</div>
                 {result.matchedSkills.length === 0 ? <p style={{ fontSize: "0.8125rem", color: "var(--muted)" }}>None identified.</p> : (
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{result.matchedSkills.map((s, i) => <Tag key={i} label={s} variant="match" />)}</div>
                 )}
@@ -219,7 +219,7 @@ function SkillGapPage() {
 
             {result.transferableSkills.length > 0 && (
               <div style={card}>
-                <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><GitBranch size={12} style={{ color: "#205295" }} /> Transferable Skills</div>
+                <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--ink)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><GitBranch size={12} style={{ color: "#512ACC" }} /> Transferable Skills</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{result.transferableSkills.map((s, i) => <Tag key={i} label={s} variant="transfer" />)}</div>
               </div>
             )}
@@ -237,7 +237,7 @@ function SkillGapPage() {
                 <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
                   {result.nextSteps.map((step, i) => (
                     <li key={i} style={{ fontSize: "0.875rem", color: "var(--muted)", display: "flex", gap: 8 }}>
-                      <ArrowRight size={13} style={{ color: "#0d7c66", flexShrink: 0, marginTop: 2 }} />{step}
+                      <ArrowRight size={13} style={{ color: "#31C47A", flexShrink: 0, marginTop: 2 }} />{step}
                     </li>
                   ))}
                 </ul>
