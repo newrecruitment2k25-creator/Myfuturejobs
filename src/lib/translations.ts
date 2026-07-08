@@ -17,16 +17,16 @@ export const translations = {
     howItWorks: "How It Works",
 
     // AI Tools dropdown
-    analyzeCv: "Analyze CV",
-    resumeBuilder: "AI Resume Builder",
+    analyzeCv: "Check Resume Score",
+    resumeBuilder: "Resume Builder",
     linkedinReview: "LinkedIn Review",
     interviewPrep: "Interview Prep",
 
     // Hiring Tools dropdown
-    postVacancy: "Post Vacancy",
-    candidateMatching: "Candidate Matching",
+    postVacancy: "Create Job Posting",
+    candidateMatching: "Smart Match",
     interviewTemplates: "Interview Templates",
-    labourMarket: "Labour Market Intelligence",
+    labourMarket: "Market Insights",
 
     // Jobs page
     search: "Search",
@@ -72,8 +72,8 @@ export const translations = {
     employerSubtitle: "From posting to hiring",
     browseJobs: "Browse Jobs",
     employerPortal: "Employer Portal",
-    postVacancyBtn: "Post a Vacancy",
-    analyzeCvBtn: "Analyze My CV",
+    postVacancyBtn: "Create a Job Posting",
+    analyzeCvBtn: "Check My Resume Score",
     latestJobs: "Latest Job Opportunities",
     latestJobsSubtitle: "From Malaysia's national job portal · 5,828+ live vacancies",
     activeVacancies: "Active Vacancies",

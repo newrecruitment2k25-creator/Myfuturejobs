@@ -4,7 +4,7 @@ import { Loader2, Plus, Briefcase, Edit, X, Video, Users, Brain, Sparkles, BarCh
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { getEmployerApplications, updateApplicationStatus, sendAiInterviewInvitation, schedulePracticalInterview } from "@/lib/ops-api";
+import { getEmployerApplications, updateApplicationStatus, sendAiInterviewInvitation, schedulePracticalInterview, type AppStatus } from "@/lib/ops-api";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -176,7 +176,7 @@ function EmployerDashboardPage() {
 
   const updateAppStatus = async (appId: string, newStatus: string, jobTitle?: string) => {
     try {
-      await updateApplicationStatus(appId, newStatus);
+      await updateApplicationStatus(appId, newStatus as AppStatus);
       await loadApplications();
       if (newStatus.toLowerCase() === "interview") {
         await loadInterviewTemplates();
@@ -320,26 +320,26 @@ function EmployerDashboardPage() {
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
                 Employer Portal
               </div>
-              <h1 style={{ marginTop: 4, fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>My Dashboard</h1>
-              <p style={{ marginTop: 4, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Manage vacancies, candidates, and applications.</p>
+              <h1 style={{ marginTop: 4, fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Recruiter Dashboard</h1>
+              <p style={{ marginTop: 4, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Manage job postings, candidates, and applications.</p>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, position: 'relative' }}>
               <Link to="/employer/labour-market-intelligence" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
               >
-                <BarChart2 className="size-4" /> Labour Market
+                <BarChart2 className="size-4" /> Market Insights
               </Link>
               <Link to="/employer/vacancy-builder" style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.9)', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:10, padding:'8px 14px', textDecoration:'none', transition: 'all 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.18)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; }}
               >
-                <Sparkles className="size-4" /> Vacancy Builder
+                <Sparkles className="size-4" /> Create Job Posting
               </Link>
-              <button style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #f36c21 0%, #e85d10 100%)', border:'none', borderRadius:10, padding:'8px 16px', cursor:'pointer', boxShadow: '0 2px 10px rgba(243,108,33,0.3)' }} onClick={() => {
+              <button style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #31C47A 0%, #27A866 100%)', border:'none', borderRadius:10, padding:'8px 16px', cursor:'pointer', boxShadow: '0 2px 10px rgba(49,196,122,0.3)' }} onClick={() => {
                 if (showForm) { resetForm(); } else { setShowForm(true); }
               }}>
-                {showForm ? <><X className="size-4" /> Cancel</> : <><Plus className="size-4" /> Post a Job</>}
+                {showForm ? <><X className="size-4" /> Cancel</> : <><Plus className="size-4" /> Create Job Posting</>}
               </button>
             </div>
           </div>
@@ -348,7 +348,7 @@ function EmployerDashboardPage() {
             <form onSubmit={onSubmit} style={{ marginTop:16, display:'grid', gap:16, gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:16, padding:24, boxShadow: '0 4px 20px rgba(81,42,204,0.08)' }}>
               <div style={{ gridColumn:'1/-1' }}>
                 <h2 style={{ fontSize:18, fontWeight:800, color:'var(--ink)', letterSpacing:'-0.02em' }}>
-                  {editingJob ? "Edit Job" : "Post a New Job"}
+                  {editingJob ? "Edit Job Posting" : "Create New Job Posting"}
                 </h2>
               </div>
               <div style={{ gridColumn:'1/-1', display:'grid', gap:6 }}>
@@ -397,11 +397,11 @@ function EmployerDashboardPage() {
                 />
               </div>
               <div style={{ gridColumn:'1/-1' }}>
-                <button type="submit" disabled={submitting} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #512ACC 0%, #512ACC 100%)', border:'none', borderRadius:10, padding:'10px 24px', cursor:'pointer', boxShadow: '0 2px 10px rgba(81,42,204,0.2)' }}>
+                <button type="submit" disabled={submitting} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg, #31C47A 0%, #27A866 100%)', border:'none', borderRadius:10, padding:'10px 24px', cursor:'pointer', boxShadow: '0 2px 10px rgba(49,196,122,0.2)' }}>
                   {submitting ? (
-                    <><Loader2 className="size-4 animate-spin" /> {editingJob ? "Updating…" : "Posting…"}</>
+                    <><Loader2 className="size-4 animate-spin" /> {editingJob ? "Saving…" : "Creating…"}</>
                   ) : (
-                    editingJob ? "Update Job" : "Post Job"
+                    editingJob ? "Save Changes" : "Create Job Posting"
                   )}
                 </button>
               </div>
@@ -531,20 +531,20 @@ function EmployerDashboardPage() {
             <div style={{ marginTop: 20, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 24, boxShadow: '0 4px 20px rgba(81,42,204,0.08)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <div>
-                  <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 2 }}>Interview Options</h2>
-                  <p style={{ fontSize: 12, color: 'var(--muted)' }}>Candidate is now at Interview stage for {interviewPanel.jobTitle}. Choose how to proceed.</p>
+                  <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 2 }}>Schedule Interview</h2>
+                  <p style={{ fontSize: 12, color: 'var(--muted)' }}>Candidate is at Interview stage for {interviewPanel.jobTitle}. Choose how to proceed.</p>
                 </div>
                 <button onClick={() => setInterviewPanel(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}><X className="size-5" /></button>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, marginBottom: 16 }}>
                 <button onClick={() => setInterviewMode('practical')}
-                  style={{ padding: 18, borderRadius: 14, border: interviewMode === 'practical' ? '2px solid #f36c21' : '1px solid var(--line)', background: interviewMode === 'practical' ? 'rgba(243,108,33,0.05)' : 'var(--base)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                  style={{ padding: 18, borderRadius: 14, border: interviewMode === 'practical' ? '2px solid #31C47A' : '1px solid var(--line)', background: interviewMode === 'practical' ? 'rgba(49,196,122,0.05)' : 'var(--base)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(243,108,33,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Calendar className="size-5" style={{ color: '#f36c21' }} />
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(49,196,122,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Calendar className="size-5" style={{ color: '#31C47A' }} />
                     </div>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Schedule Practical Interview</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Schedule Interview</span>
                   </div>
                   <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>Set a real-world date, time, location or meeting link, and mode (in-person or online).</p>
                 </button>
@@ -580,8 +580,8 @@ function EmployerDashboardPage() {
                   </div>
                   <div style={{ gridColumn: '1 / -1' }}>
                     <button onClick={() => void submitPracticalInterview()} disabled={!practicalDate || !practicalTime || sendingInterview}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #f36c21 0%, #e85d10 100%)', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: (!practicalDate || !practicalTime || sendingInterview) ? 0.6 : 1, boxShadow: '0 2px 10px rgba(243,108,33,0.2)' }}>
-                      {sendingInterview ? <><Loader2 className="size-4 animate-spin" /> Scheduling…</> : <><Calendar className="size-4" /> Schedule Interview</>}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #31C47A 0%, #27A866 100%)', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: (!practicalDate || !practicalTime || sendingInterview) ? 0.6 : 1, boxShadow: '0 2px 10px rgba(49,196,122,0.2)' }}>
+                      {sendingInterview ? <><Loader2 className="size-4 animate-spin" /> Scheduling…</> : <><Calendar className="size-4" /> Send Invite</>}
                     </button>
                   </div>
                 </div>
@@ -594,7 +594,7 @@ function EmployerDashboardPage() {
               <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(81,42,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Briefcase style={{ width: 16, height: 16, color: '#512ACC' }} />
               </div>
-              <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Your Job Posts</h2>
+              <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Active Job Postings</h2>
             </div>
             {error && <p style={{ fontSize:13, color:'#dc2626', marginBottom:12 }}>{error}</p>}
             {jobs === null && !error ? (
@@ -604,7 +604,7 @@ function EmployerDashboardPage() {
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
                   <Briefcase style={{ width:24, height:24, color:'var(--muted)' }} />
                 </div>
-                <p style={{ fontSize:13, color:'var(--muted)' }}>You haven't posted any jobs yet.</p>
+                <p style={{ fontSize:13, color:'var(--muted)' }}>You haven't created any job postings yet.</p>
               </div>
             ) : (
               <ul style={{ display:'flex', flexDirection:'column', gap:12 }}>

@@ -15,8 +15,8 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
   head: () => ({
     meta: [
-      { title: "Dashboard — MYFutureJobs" },
-      { name: "description", content: "Your saved CV analyses." },
+      { title: "My Dashboard — MYFutureJobs" },
+      { name: "description", content: "Your personal job matching dashboard." },
     ],
   }),
 });
@@ -393,7 +393,7 @@ function DashboardPage() {
   const maxFunnelCount = Math.max(1, ...Object.values(statusCounts));
 
   const AI_TOOLS = [
-    { icon: FileText,     label: 'Analyse CV',       desc: 'Score your CV',        href: '/analyze',                 bg: '#ede9fe', color: '#7c3aed' },
+    { icon: FileText,     label: 'Check Resume Score',       desc: 'Score your CV',        href: '/analyze',                 bg: '#ede9fe', color: '#7c3aed' },
     { icon: Brain,        label: 'Resume Builder',   desc: 'Build with AI',        href: '/resume-builder',          bg: '#fef3c7', color: '#d97706' },
     { icon: Star,         label: 'Skills Passport',  desc: 'Track your skills',    href: '/skills-passport',         bg: '#dbeafe', color: '#1d4ed8' },
     { icon: MapPin,       label: 'Career Pathway',   desc: 'Plan your career',     href: '/career-pathway',          bg: '#fce7f3', color: '#be185d' },
@@ -446,11 +446,11 @@ function DashboardPage() {
               >
                 <FileText style={{ width: 14, height: 14 }} /> My CV
               </Link>
-              <Link to="/analyze" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 18px', borderRadius:12, background:'linear-gradient(135deg, #f36c21 0%, #ff8c42 100%)', color:'#fff', fontSize:13, fontWeight:700, textDecoration:'none', boxShadow: '0 4px 16px rgba(243,108,33,0.35)', transition: 'all 0.2s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(243,108,33,0.45)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(243,108,33,0.35)'; }}
+              <Link to="/analyze" style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 18px', borderRadius:12, background:'linear-gradient(135deg, #31C47A 0%, #27A866 100%)', color:'#fff', fontSize:13, fontWeight:700, textDecoration:'none', boxShadow: '0 4px 16px rgba(49,196,122,0.3)', transition: 'all 0.2s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(49,196,122,0.4)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(49,196,122,0.3)'; }}
               >
-                <FileText style={{ width: 14, height: 14 }} /> Analyse CV
+                <FileText style={{ width: 14, height: 14 }} /> Check Resume Score
               </Link>
             </div>
           </div>
@@ -462,7 +462,7 @@ function DashboardPage() {
             { label: 'Total Applications', value: totalApps,        accent: '#512ACC', iconBg: 'rgba(81,42,204,0.1)',  iconColor: '#512ACC',      Icon: Briefcase },
             { label: 'Hired / Offered',    value: hiredOffered,     accent: '#15803d', iconBg: '#dcfce7',              iconColor: '#15803d',      Icon: CheckCircle2 },
             { label: 'Saved Jobs',         value: savedJobs?.length ?? 0, accent: '#d97706', iconBg: '#fef3c7',              iconColor: '#d97706',      Icon: Bookmark },
-            { label: 'CV Analyses',        value: totalAnalyses,    accent: '#f36c21', iconBg: 'rgba(243,108,33,0.1)', iconColor: '#f36c21',      Icon: FileText },
+            { label: 'Resume Scores',        value: totalAnalyses,    accent: '#31C47A', iconBg: 'rgba(49,196,122,0.1)', iconColor: '#31C47A',      Icon: FileText },
           ].map(({ label, value, accent, iconBg, iconColor, Icon }) => (
             <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: 0, transition: 'all 0.25s', boxShadow: '0 2px 8px rgba(81,42,204,0.04)', overflow: 'hidden' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(81,42,204,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = `${accent}30`; }}
@@ -485,7 +485,7 @@ function DashboardPage() {
         {/* ── 2c. Profile Completion + Quick Insights Strip ─────────────── */}
         {(() => {
           const checks = [
-            { label: 'CV Analysis', done: (rows?.length ?? 0) > 0, icon: FileText, href: '/analyze' },
+            { label: 'Resume Score', done: (rows?.length ?? 0) > 0, icon: FileText, href: '/analyze' },
             { label: 'Job Applications', done: (applications?.length ?? 0) > 0, icon: Briefcase, href: '/jobs' },
             { label: 'Saved Jobs', done: (savedJobs?.length ?? 0) > 0, icon: Bookmark, href: '/jobs' },
             { label: 'Skills Passport', done: !!pocProfile?.skills, icon: Star, href: '/skills-passport' },
@@ -539,9 +539,9 @@ function DashboardPage() {
                       <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 3, fontWeight: 600 }}>Industries</div>
                     </div>
                     <div style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 12, background: 'rgba(243,108,33,0.06)', border: '1px solid rgba(243,108,33,0.08)' }}>
-                      <Zap style={{ width: 16, height: 16, color: '#f36c21', margin: '0 auto 6px' }} />
-                      <div style={{ fontSize: 18, fontWeight: 900, color: '#f36c21', lineHeight: 1 }}>{missingSkillsInsight.length}</div>
-                      <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 3, fontWeight: 600 }}>Skill Gaps</div>
+                      <Zap style={{ width: 16, height: 16, color: '#F29F04', margin: '0 auto 6px' }} />
+                      <div style={{ fontSize: 18, fontWeight: 900, color: '#F29F04', lineHeight: 1 }}>{missingSkillsInsight.length}</div>
+                      <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 3, fontWeight: 600 }}>Skill Checks</div>
                     </div>
                     <div style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 12, background: 'rgba(21,128,61,0.06)', border: '1px solid rgba(21,128,61,0.08)' }}>
                       <Award style={{ width: 16, height: 16, color: '#15803d', margin: '0 auto 6px' }} />

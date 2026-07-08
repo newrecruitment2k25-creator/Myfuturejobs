@@ -7,13 +7,14 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Menu, X, ChevronDown, LogOut,
   BarChart2, FileSearch, GitBranch, TrendingUp,
-  Sparkles, Play, ArrowRight, Brain, Globe,
+  Sparkles, Play, ArrowRight, Brain, Globe, User, Settings, LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/lib/language-context";
 import { supabase } from "@/integrations/supabase/client";
+import { NotificationBell } from "@/components/notification-bell";
 
-import { Briefcase, Users, Shield, FileText, Video, LayoutDashboard, Building2, FileSearch as FileSearchIcon, Settings, Activity, MapPin } from "lucide-react";
+import { Briefcase, Users, Shield, FileText, Video, Building2, FileSearch as FileSearchIcon, Activity, MapPin } from "lucide-react";
 
 const INTEL_ITEMS_ALL = [
   { to: "/skill-gap",             icon: Brain,      labelKey: "navSkillGap",         descKey: "intelSkillGapDesc" },
@@ -31,57 +32,57 @@ const INTEL_ITEMS_JOB_SEEKER = INTEL_ITEMS_ALL.filter(i =>
 
 // Role-specific navigation links
 const JOB_SEEKER_LINKS = [
-  { to: "/dashboard",     labelKey: "navDashboard" },
-  { to: "/jobs",          labelKey: "navJobSearch" },
-  { to: "/my-cv",         labelKey: "navMyCV" },
-  { to: "/about",         labelKey: "navAbout" },
-  { to: "/events",        labelKey: "navEvents" },
-  { to: "/contact",       labelKey: "navContact" },
+  { to: "/dashboard",     labelKey: "navDashboard", label: "Dashboard" },
+  { to: "/jobs",          labelKey: "navJobSearch", label: "Find Jobs" },
+  { to: "/my-cv",         labelKey: "navMyCV", label: "My CV" },
+  { to: "/about",         labelKey: "navAbout", label: "About Us" },
+  { to: "/events",        labelKey: "navEvents", label: "Events" },
+  { to: "/contact",       labelKey: "navContact", label: "Contact" },
 ] as const;
 
 const EMPLOYER_LINKS = [
-  { to: "/employer/dashboard",           labelKey: "navDashboard" },
-  { to: "/employer/vacancy-builder",     labelKey: "navPostJob" },
-  { to: "/employer/talent-discovery",    labelKey: "navTalentDiscovery" },
-  { to: "/employer/labour-market-intelligence", labelKey: "navLabourIntel" },
-  { to: "/about",         labelKey: "navAbout" },
-  { to: "/events",        labelKey: "navEvents" },
-  { to: "/contact",       labelKey: "navContact" },
+  { to: "/employer/dashboard",           labelKey: "navDashboard", label: "Dashboard" },
+  { to: "/employer/vacancy-builder",     labelKey: "navPostJob", label: "Post a Job" },
+  { to: "/employer/talent-discovery",    labelKey: "navTalentDiscovery", label: "Talent Discovery" },
+  { to: "/employer/labour-market-intelligence", labelKey: "navLabourIntel", label: "Market Insights" },
+  { to: "/about",         labelKey: "navAbout", label: "About Us" },
+  { to: "/events",        labelKey: "navEvents", label: "Events" },
+  { to: "/contact",       labelKey: "navContact", label: "Contact" },
 ] as const;
 
 const ADMIN_LINKS = [
-  { to: "/admin",                    labelKey: "navConsole" },
-  { to: "/admin/users",              labelKey: "navUsers" },
-  { to: "/admin/candidates",         labelKey: "navCandidates" },
-  { to: "/admin/audit-logs",         labelKey: "navAuditLogs" },
-  { to: "/admin/system-monitoring",  labelKey: "navSystem" },
-  { to: "/admin/configuration",      labelKey: "navConfig" },
-  { to: "/about",         labelKey: "navAbout" },
-  { to: "/events",        labelKey: "navEvents" },
-  { to: "/contact",       labelKey: "navContact" },
+  { to: "/admin",                    labelKey: "navConsole", label: "Console" },
+  { to: "/admin/users",              labelKey: "navUsers", label: "Users" },
+  { to: "/admin/candidates",         labelKey: "navCandidates", label: "Candidates" },
+  { to: "/admin/audit-logs",         labelKey: "navAuditLogs", label: "Audit Logs" },
+  { to: "/admin/system-monitoring",  labelKey: "navSystem", label: "System" },
+  { to: "/admin/configuration",      labelKey: "navConfig", label: "Settings" },
+  { to: "/about",         labelKey: "navAbout", label: "About Us" },
+  { to: "/events",        labelKey: "navEvents", label: "Events" },
+  { to: "/contact",       labelKey: "navContact", label: "Contact" },
 ] as const;
 
 const PUBLIC_LINKS = [
-  { to: "/",                labelKey: "navHome" },
-  { to: "/jobs",            labelKey: "navJobSearch" },
-  { to: "/poc/ai-matching", labelKey: "navAiMatching" },
-  { to: "/about",           labelKey: "navAbout" },
-  { to: "/events",          labelKey: "navEvents" },
-  { to: "/contact",         labelKey: "navContact" },
+  { to: "/",                labelKey: "navHome", label: "Home" },
+  { to: "/jobs",            labelKey: "navJobSearch", label: "Find Jobs" },
+  { to: "/poc/ai-matching", labelKey: "navAiMatching", label: "Smart Match" },
+  { to: "/about",           labelKey: "navAbout", label: "About Us" },
+  { to: "/events",          labelKey: "navEvents", label: "Events" },
+  { to: "/contact",         labelKey: "navContact", label: "Contact" },
 ] as const;
 
 const MOBILE_LINKS_PUBLIC = [
-  { to: "/",                      labelKey: "navHome" },
-  { to: "/jobs",                  labelKey: "navJobSearch" },
-  { to: "/poc/ai-matching",       labelKey: "navAiMatching" },
-  { to: "/about",                 labelKey: "navAbout" },
-  { to: "/events",                labelKey: "navEvents" },
-  { to: "/contact",               labelKey: "navContact" },
-  { to: "/skill-gap",             labelKey: "navSkillGap" },
-  { to: "/career-pathway",        labelKey: "navCareerPathway" },
-  { to: "/labour-insights",       labelKey: "navLabourInsights" },
-  { to: "/recommended-jobs",      labelKey: "navRecommendedJobs" },
-  { to: "/demo",                  labelKey: "headerGuidedDemo" },
+  { to: "/",                      labelKey: "navHome", label: "Home" },
+  { to: "/jobs",                  labelKey: "navJobSearch", label: "Find Jobs" },
+  { to: "/poc/ai-matching",       labelKey: "navAiMatching", label: "Smart Match" },
+  { to: "/about",                 labelKey: "navAbout", label: "About Us" },
+  { to: "/events",                labelKey: "navEvents", label: "Events" },
+  { to: "/contact",               labelKey: "navContact", label: "Contact" },
+  { to: "/skill-gap",             labelKey: "navSkillGap", label: "Skill Check" },
+  { to: "/career-pathway",        labelKey: "navCareerPathway", label: "Career Pathway" },
+  { to: "/labour-insights",       labelKey: "navLabourInsights", label: "Market Insights" },
+  { to: "/recommended-jobs",      labelKey: "navRecommendedJobs", label: "Recommended Jobs" },
+  { to: "/demo",                  labelKey: "headerGuidedDemo", label: "Guided Demo" },
 ] as const;
 
 function isActive(pathname: string, to: string) {
@@ -101,8 +102,10 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [intelOpen, setIntelOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
   const intelRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
+  const userRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) { setRole(null); return; }
@@ -114,20 +117,21 @@ export function SiteHeader() {
     const handler = (e: MouseEvent) => {
       if (intelRef.current && !intelRef.current.contains(e.target as Node)) setIntelOpen(false);
       if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+      if (userRef.current && !userRef.current.contains(e.target as Node)) setUserOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); setIntelOpen(false); setLangOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setIntelOpen(false); setLangOpen(false); setUserOpen(false); }, [pathname]);
 
   const handleSignOut = async () => {
     await signOut();
     void navigate({ to: "/" });
   };
 
-  // Build role-specific nav links with translated labels
-  const translateLink = (link: { to: string; labelKey: string }) => ({ to: link.to, label: t(link.labelKey as any) });
+  // Build role-specific nav links with redesigned labels
+  const translateLink = (link: { to: string; labelKey: string; label: string }) => ({ to: link.to, label: link.label ?? t(link.labelKey as any) });
   const navLinks = (user && role === "employer" ? EMPLOYER_LINKS
     : user && role === "admin" ? ADMIN_LINKS
     : user && role === "job_seeker" ? JOB_SEEKER_LINKS
@@ -141,10 +145,10 @@ export function SiteHeader() {
     <>
       <header className="perkeso-header" style={{
         background: "#fff",
-        borderBottom: "2px solid var(--brand)",
-        boxShadow: "0 2px 12px rgba(81,42,204,0.06)",
+        borderBottom: "1px solid var(--line)",
+        boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
       }}>
-        <div className="perkeso-header-inner" style={{ height: 60, gap: "1.5rem" }}>
+        <div className="perkeso-header-inner" style={{ height: 56, gap: "1.25rem" }}>
           {/* Brand */}
           <Link to="/" className="perkeso-brand" style={{ gap: 8 }}>
             <span style={{
@@ -156,8 +160,8 @@ export function SiteHeader() {
               <span style={{ width: 12, height: 12, background: "#fff", borderRadius: 3 }} />
             </span>
             <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-              <span className="perkeso-brand-name" style={{ fontSize: "1rem" }}>MYFutureJobs</span>
-              <span style={{ fontSize: "0.625rem", color: "var(--subtle)", fontWeight: 500, letterSpacing: "0.02em" }}>PERKESO Employment Intelligence</span>
+              <span className="perkeso-brand-name" style={{ fontSize: "0.9375rem" }}>MYFutureJobs</span>
+              <span style={{ fontSize: "0.625rem", color: "var(--subtle)", fontWeight: 500, letterSpacing: "0.02em" }}>PERKESO Career Gateway</span>
             </div>
           </Link>
 
@@ -171,13 +175,13 @@ export function SiteHeader() {
               </Link>
             ))}
 
-            {/* Intelligence dropdown — only for public + job seekers */}
+            {/* Tools dropdown — only for public + job seekers */}
             {showIntelDropdown && (
               <div ref={intelRef} className="perkeso-dropdown">
                 <button onClick={() => setIntelOpen(v => !v)}
                   className={`perkeso-nav-link${intelItems.some(i => isActive(pathname, i.to)) ? " active" : ""}`}
                   style={{ background: "none", border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontSize: "0.8125rem", fontWeight: 600 }}>
-                  {t("headerIntelligence")}
+                  {role === "employer" ? "Hiring Tools" : "Career Tools"}
                   <ChevronDown size={13} style={{ transition: "transform 0.15s", transform: intelOpen ? "rotate(180deg)" : "none" }} />
                 </button>
                 {intelOpen && (
@@ -209,6 +213,9 @@ export function SiteHeader() {
             )}
 
             <span style={{ flex: 1 }} />
+
+            {/* Notification bell for logged-in users */}
+            {user && <NotificationBell />}
 
             {/* Language toggle */}
             <div ref={langRef} style={{ position: "relative" }}>
@@ -249,44 +256,72 @@ export function SiteHeader() {
               )}
             </div>
 
-            {/* Role badge */}
-            {user && role && (
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: 5,
-                fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.03em",
-                padding: "3px 10px", borderRadius: 20,
-                background: role === "admin" ? "#fef2f2" : role === "employer" ? "var(--accent-glow)" : "var(--success-light)",
-                color: role === "admin" ? "#dc2626" : role === "employer" ? "var(--accent-blue)" : "var(--success)",
-              }}>
-                {role === "admin" ? <Shield size={10} /> : role === "employer" ? <Building2 size={10} /> : <Users size={10} />}
-                {role === "admin" ? t("loginRoleAdmin") : role === "employer" ? t("loginRoleEmployer") : t("loginRoleJobSeeker")}
-              </span>
-            )}
-
+            {/* User menu */}
             {user ? (
-              <button onClick={handleSignOut}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  background: "none", border: "1px solid var(--line)", borderRadius: 8,
-                  padding: "6px 14px", fontSize: "0.8125rem", fontWeight: 600,
-                  color: "var(--muted)", cursor: "pointer", fontFamily: "inherit",
-                  transition: "all 0.15s",
-                }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--brand)"; el.style.color = "var(--brand)"; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--line)"; el.style.color = "var(--muted)"; }}
-              >
-                <LogOut size={13} /> {t("headerSignOut")}
-              </button>
+              <div ref={userRef} style={{ position: "relative" }}>
+                <button onClick={() => setUserOpen(v => !v)}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    background: "none", border: "1px solid var(--line)", borderRadius: 50,
+                    padding: "4px 4px 4px 12px", cursor: "pointer", fontFamily: "inherit",
+                    transition: "all 0.15s",
+                  }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--brand)"; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--line)"; }}
+                >
+                  <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{user.email?.split("@")[0] ?? "Account"}</span>
+                  <span style={{ display: "inline-flex", width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, var(--brand) 0%, #7B5CE0 100%)", alignItems: "center", justifyContent: "center" }}>
+                    <User size={14} color="#fff" />
+                  </span>
+                </button>
+                {userOpen && (
+                  <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 8, background: "#fff", border: "1px solid var(--line)", borderRadius: 14, boxShadow: "0 8px 32px rgba(81,42,204,0.12)", padding: 8, zIndex: 1000, minWidth: 200 }}>
+                    <div style={{ padding: "10px 12px", borderBottom: "1px solid var(--line)", marginBottom: 6 }}>
+                      <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.email}</div>
+                      <div style={{ fontSize: "0.6875rem", color: "var(--muted)", textTransform: "capitalize", marginTop: 2 }}>{role ? `${role.replace("_", " ")}` : ""}</div>
+                    </div>
+                    <Link to={role === "employer" ? "/employer/dashboard" : role === "admin" ? "/admin" : "/dashboard"}
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 8, fontSize: "0.8125rem", fontWeight: 600, color: "var(--ink)", textDecoration: "none", transition: "background 0.1s" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--base)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                    >
+                      <LayoutDashboard size={15} /> Dashboard
+                    </Link>
+                    <Link to="/my-cv"
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 8, fontSize: "0.8125rem", fontWeight: 600, color: "var(--ink)", textDecoration: "none", transition: "background 0.1s" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--base)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                    >
+                      <User size={15} /> Profile
+                    </Link>
+                    <Link to="/admin/configuration"
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 8, fontSize: "0.8125rem", fontWeight: 600, color: "var(--ink)", textDecoration: "none", transition: "background 0.1s" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--base)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                    >
+                      <Settings size={15} /> Settings
+                    </Link>
+                    <div style={{ height: 1, background: "var(--line)", margin: "6px 0" }} />
+                    <button onClick={handleSignOut}
+                      style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 12px", borderRadius: 8, border: "none", background: "transparent", fontSize: "0.8125rem", fontWeight: 600, color: "#dc2626", cursor: "pointer", fontFamily: "inherit", transition: "background 0.1s" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "#fef2f2"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                    >
+                      <LogOut size={15} /> Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link to="/login"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
-                  background: "linear-gradient(135deg, var(--brand) 0%, var(--accent-blue) 100%)",
+                  background: "linear-gradient(135deg, #31C47A 0%, #27A866 100%)",
                   color: "#fff", border: "none", borderRadius: 8,
                   padding: "7px 16px", fontSize: "0.8125rem", fontWeight: 700,
-                  textDecoration: "none", boxShadow: "0 2px 8px rgba(81,42,204,0.15)",
+                  textDecoration: "none", boxShadow: "0 2px 8px rgba(49,196,122,0.2)",
                 }}>
-                {t("headerSignIn")} <ArrowRight size={12} />
+                Sign In <ArrowRight size={12} />
               </Link>
             )}
           </nav>
@@ -348,12 +383,12 @@ export function SiteHeader() {
             {user ? (
               <button onClick={handleSignOut}
                 style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "12px 16px", color: "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", width: "100%", fontFamily: "inherit" }}>
-                <LogOut size={14} /> {t("headerSignOut")}
+                <LogOut size={14} /> Sign Out
               </button>
             ) : (
               <Link to="/login"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#fff", borderRadius: 10, padding: "12px 16px", color: "var(--brand)", fontSize: "0.875rem", fontWeight: 700, textDecoration: "none" }}>
-                {t("headerSignIn")}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #31C47A 0%, #27A866 100%)", borderRadius: 10, padding: "12px 16px", color: "#fff", fontSize: "0.875rem", fontWeight: 700, textDecoration: "none" }}>
+                Sign In
               </Link>
             )}
           </div>

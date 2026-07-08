@@ -18,13 +18,13 @@ export const Route = createFileRoute("/admin/")({
 });
 
 const NAV_LINKS = [
-  { href: "/admin/users",             icon: Users,      label: "User Management",      desc: "View all users, manage roles and account status" },
-  { href: "/admin/candidates",        icon: BarChart3,  label: "Candidate Management", desc: "360 candidate profiles, scores, applications, interviews" },
-  { href: "/admin/employers",         icon: Briefcase,  label: "Employer Management",  desc: "Employers, vacancies, candidate activity" },
-  { href: "/admin/placements",        icon: MapPin,     label: "Placement Tracking",   desc: "Placement records, salary, retention metrics" },
+  { href: "/admin/users",             icon: Users,      label: "User Accounts",        desc: "View all users, manage roles and account status" },
+  { href: "/admin/candidates",        icon: BarChart3,  label: "Candidate 360°",       desc: "360 candidate profiles, scores, applications, interviews" },
+  { href: "/admin/employers",         icon: Briefcase,  label: "Employer Directory",   desc: "Employers, job postings, candidate activity" },
+  { href: "/admin/placements",        icon: MapPin,     label: "Placements & Outcomes", desc: "Placement records, salary, retention metrics" },
   { href: "/admin/audit-logs",        icon: FileText,   label: "Audit Logs",           desc: "Full system action log with filters" },
   { href: "/admin/system-monitoring", icon: Activity,   label: "System Monitoring",    desc: "Live table counts and module health" },
-  { href: "/admin/rbac",              icon: Shield,     label: "RBAC",                 desc: "Role-based access control and permissions" },
+  { href: "/admin/rbac",              icon: Shield,     label: "Roles & Permissions",  desc: "Role-based access control and permissions" },
   { href: "/admin/configuration",     icon: Settings,   label: "Configuration",        desc: "Matching weights, thresholds, feature flags" },
   { href: "/admin/taxonomy",          icon: Database,   label: "Taxonomy",             desc: "MASCO codes, skills, occupation categories" },
 ];
@@ -401,7 +401,7 @@ function AdminConsolePage() {
               ) : (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
                   {[
-                    { label: "CV Analyses",  key: "analyses",     color: "#6366f1" },
+                    { label: "Resume Scores",  key: "analyses",     color: "#31C47A" },
                     { label: "Applications", key: "applications", color: "#0369a1" },
                     { label: "Interviews",   key: "interviews",   color: "#d97706" },
                     { label: "Placements",   key: "placements",   color: "#15803d" },
@@ -476,7 +476,7 @@ function AdminConsolePage() {
                     { label: "Total Candidates", val: (stats?.total_candidates ?? 0).toLocaleString(), icon: "👥" },
                     { label: "Employers Served", val: (stats?.employers ?? 0).toLocaleString(),         icon: "🏢" },
                     { label: "Job Placements",   val: (stats?.placements ?? 0).toLocaleString(),        icon: "✅" },
-                    { label: "CV Analyses",      val: (stats?.analyses ?? 0).toLocaleString(),          icon: "📄" },
+                    { label: "Resume Scores",      val: (stats?.analyses ?? 0).toLocaleString(),          icon: "📄" },
                   ].map(({ label, val, icon }) => (
                     <div key={label} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 16px", textAlign: "center", border: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ fontSize: 22 }}>{icon}</div>
@@ -511,7 +511,7 @@ function AdminConsolePage() {
                 const placed   = Math.min(stats?.placements ?? 0, interviewed);
                 const steps = [
                   { label: "Registered",  val: total,       color: "#6366f1" },
-                  { label: "Analysed CV", val: analysed,    color: "#0369a1" },
+                  { label: "Resume Scored", val: analysed,    color: "#31C47A" },
                   { label: "Applied",     val: applied,     color: "#d97706" },
                   { label: "Interviewed", val: interviewed, color: "#15803d" },
                   { label: "Placed",      val: placed,      color: "#dc2626" },
@@ -616,7 +616,7 @@ function AdminConsolePage() {
 
         {/* ── Admin Modules ── */}
         <div style={S.card}>
-          <p style={S.heading}><Settings style={{ width: 14, height: 14, color: "#f36c21" }} /> Admin Modules</p>
+          <p style={S.heading}><Settings style={{ width: 14, height: 14, color: "#f36c21" }} /> Platform Modules</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
             {NAV_LINKS.map(({ href, icon: Icon, label, desc }) => (
               <Link key={href} to={href} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", background: "var(--base)", border: "1px solid var(--line)", borderRadius: 12, textDecoration: "none", transition: "all 0.2s" }}
