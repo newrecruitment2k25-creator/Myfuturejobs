@@ -5,6 +5,7 @@ import {
   GitBranch, Sparkles, AlertCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth-context";
 import { SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/skill-gap")({
@@ -41,6 +42,7 @@ function Tag({ label, variant }: { label: string; variant: "match" | "miss" | "t
 }
 
 function SkillGapPage() {
+  const { user } = useAuth();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [vacancies,  setVacancies]  = useState<Vacancy[]>([]);
   const [loaded,     setLoaded]     = useState(false);
@@ -53,12 +55,23 @@ function SkillGapPage() {
 
   async function loadData() {
     setLoading(true);
-    const [{ data: cands }, { data: vacs }] = await Promise.all([
-      supabase.from("poc_candidates").select("id,preferred_name,previous_occupation,skills").limit(30),
-      supabase.from("poc_vacancies").select("id,job_title,occupation_name,skills").limit(30),
-    ]);
-    setCandidates((cands as Candidate[]) ?? []);
+    const { data: vacs } = await supabase.from("poc_vacancies").select("id,job_title,occupation_name,skills").limit(30);
     setVacancies((vacs as Vacancy[]) ?? []);
+
+    let cands: Candidate[] = [];
+    if (user) {
+      try {
+        const { data: prof } = await supabase.from("profiles").select("poc_candidate_id").eq("id", user.id).maybeSingle();
+        const pocId = (prof as any)?.poc_candidate_id;
+        if (pocId) {
+          const { data: cand } = await supabase.from("poc_candidates").select("id,preferred_name,previous_occupation,skills").eq("candidate_id", pocId).maybeSingle();
+          if (cand) cands = [cand as Candidate];
+        }
+      } catch (e) {
+        console.warn("Skill gap candidate load failed:", e);
+      }
+    }
+    setCandidates(cands);
     setLoaded(true);
     setLoading(false);
   }
