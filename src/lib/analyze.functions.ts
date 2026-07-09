@@ -41,6 +41,16 @@ export type AnalysisResult = {
 
 const SYSTEM_PROMPT = `You are a Senior Recruitment Consultant and Workforce Intelligence Analyst specializing in the Malaysian employment market. You work with PERKESO, HRD Corp, and major employers (GLCs, MNCs, Government) to evaluate candidate readiness. Your assessments are recruiter-grade and government-ready.
 
+## Document Type Validation
+
+First, determine if the provided text is actually a CV/resume. A CV/resume must contain:
+- Personal information (name, contact details)
+- Work experience or employment history
+- Education or qualifications
+- Skills or competencies
+
+If the document is NOT a CV/resume (e.g., a research paper, book chapter, news article, contract, etc.), return an error with is_cv=false and explanation.
+
 ## Analysis Framework
 
 Evaluate the CV across 5 dimensions with detailed reasoning:
@@ -105,6 +115,14 @@ const ANALYSIS_TOOL = {
     parameters: {
       type: "object",
       properties: {
+        is_cv: {
+          type: "boolean",
+          description: "Whether the provided document is actually a CV/resume. Set to false if document is not a CV (e.g., research paper, article, contract)",
+        },
+        document_type_error: {
+          type: "string",
+          description: "If is_cv is false, explain what type of document this is and why it's not suitable for CV analysis",
+        },
         overall_score: {
           type: "number",
           description: "Overall employability score 0-100 based on recruiter assessment criteria",
@@ -202,6 +220,7 @@ const ANALYSIS_TOOL = {
         },
       },
       required: [
+        "is_cv",
         "overall_score",
         "overall_assessment",
         "structure",
@@ -255,7 +274,18 @@ Generate the comprehensive analysis now.`;
     const parsed = toolArgs as AnalysisResult & {
       overall_assessment?: string;
       recruiter_recommendation?: string;
+      is_cv?: boolean;
+      document_type_error?: string;
     };
+
+    // Check if document is not a CV/resume
+    if (parsed.is_cv === false) {
+      console.log("[CV Analysis] Document rejected as non-CV:", parsed.document_type_error);
+      return {
+        error: "invalid_document_type",
+        message: parsed.document_type_error || "The uploaded document does not appear to be a CV or resume. Please upload a CV/resume for analysis.",
+      };
+    }
 
     // Persist (best-effort, don’t block returning result on failure)
     try {

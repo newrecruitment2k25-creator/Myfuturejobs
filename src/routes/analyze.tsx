@@ -135,7 +135,7 @@ function AnalyzePage() {
     if (!canSubmit) return;
     setSubmitting(true);
     try {
-      const { result, analysis_id } = await analyze({
+      const response = await analyze({
         data: {
           cv_text: cvText,
           company_type: companyType,
@@ -144,6 +144,15 @@ function AnalyzePage() {
           language_preference: language,
         },
       });
+
+      // Check if document was rejected as non-CV
+      if (response.error === "invalid_document_type") {
+        toast.error(response.message || "The uploaded document does not appear to be a CV or resume. Please upload a CV/resume for analysis.", { duration: 8000 });
+        setSubmitting(false);
+        return;
+      }
+
+      const { result, analysis_id } = response;
       sessionStorage.setItem(
         "MYFutureJobs:lastResult",
         JSON.stringify({ result, cv_text: cvText, meta: { companyType, industry, experience, language } }),
