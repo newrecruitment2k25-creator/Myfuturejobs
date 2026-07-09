@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Brain, Loader2, ArrowRight, CheckCircle2, XCircle,
-  GitBranch, Sparkles, AlertCircle,
+  GitBranch, Sparkles,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -52,32 +52,15 @@ function SkillGapPage() {
   const [result,     setResult]     = useState<SkillGap | null>(null);
   const [running,    setRunning]    = useState(false);
   const [error,      setError]      = useState<string | null>(null);
-  const [noPocLink,  setNoPocLink]  = useState(false);
 
   async function loadData() {
     setLoading(true);
     const { data: vacs } = await supabase.from("poc_vacancies").select("id,job_title,occupation_name,skills").limit(30);
     setVacancies((vacs as Vacancy[]) ?? []);
 
-    let cands: Candidate[] = [];
-    if (user) {
-      try {
-        const { data: prof } = await supabase.from("profiles").select("poc_candidate_id").eq("id", user.id).maybeSingle();
-        const pocId = (prof as any)?.poc_candidate_id;
-        if (pocId) {
-          const { data: cand } = await supabase.from("poc_candidates").select("id,preferred_name,previous_occupation,skills").eq("candidate_id", pocId).maybeSingle();
-          if (cand) cands = [cand as Candidate];
-          else setNoPocLink(true);
-        } else {
-          setNoPocLink(true);
-        }
-      } catch (e) {
-        console.warn("Skill gap candidate load failed:", e);
-      }
-    } else {
-      setNoPocLink(true);
-    }
-    setCandidates(cands);
+    // Load all candidates for skill gap analysis
+    const { data: cands } = await supabase.from("poc_candidates").select("id,preferred_name,previous_occupation,skills").limit(50);
+    setCandidates((cands as Candidate[]) ?? []);
     setLoaded(true);
     setLoading(false);
   }
@@ -143,23 +126,16 @@ function SkillGapPage() {
             {/* Candidate picker */}
             <div style={card}>
               <div style={{ fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#31C47A", marginBottom: "0.75rem" }}>1. Select Candidate</div>
-              {noPocLink ? (
-                <div style={{ padding: "12px", background: "rgba(185,28,28,0.05)", border: "1px solid rgba(185,28,28,0.15)", borderRadius: 8, fontSize: "0.8125rem", color: "#b91c1c", display: "flex", alignItems: "center", gap: 6 }}>
-                  <AlertCircle size={14} />
-                  No PERKESO candidate linked to your account. Contact admin to link your profile.
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 300, overflowY: "auto" }}>
-                  {candidates.map(c => (
-                    <button key={c.id} onClick={() => setSelectedC(c)}
-                      style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedC?.id === c.id ? "2px solid #31C47A" : "1px solid var(--line)", background: selectedC?.id === c.id ? "rgba(49,196,122,0.05)" : "#fff", cursor: "pointer" }}
-                    >
-                      <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{c.preferred_name || c.previous_occupation || `Candidate ${c.id.slice(0,8)}`}</div>
-                      <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{c.previous_occupation || "—"}</div>
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 300, overflowY: "auto" }}>
+                {candidates.map(c => (
+                  <button key={c.id} onClick={() => setSelectedC(c)}
+                    style={{ textAlign: "left", padding: "10px 12px", borderRadius: 8, border: selectedC?.id === c.id ? "2px solid #31C47A" : "1px solid var(--line)", background: selectedC?.id === c.id ? "rgba(49,196,122,0.05)" : "#fff", cursor: "pointer" }}
+                  >
+                    <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--ink)" }}>{c.preferred_name || c.previous_occupation || `Candidate ${c.id.slice(0,8)}`}</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 2 }}>{c.previous_occupation || "—"}</div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Vacancy picker */}
